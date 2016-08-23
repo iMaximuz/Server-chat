@@ -1,0 +1,5 @@
+c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\bin\Debug\ServerData.dll
+c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\bin\Debug\ServerData.pdb
+c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\obj\Debug\ServerData.csprojResolveAssemblyReference.cache
+c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\obj\Debug\ServerData.dll
+c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\obj\Debug\ServerData.pdb
