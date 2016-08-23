@@ -80,7 +80,7 @@ namespace Client
                 Thread thread = new Thread( ReadData );
                 thread.Start();
 
-                // Wait so whe can get an id back from the server
+                // Wait so we can get an id back from the server
                 Thread.Sleep( 500 );
 
                 while (true) {
