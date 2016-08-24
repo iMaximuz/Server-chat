@@ -11,21 +11,39 @@ using ServerData;
 
 namespace Server
 {
+    struct ServerInfo{
+        public static string ID = "server";
+        public static string name = "max's Server";
+        public static string motd = "Welcome!";
+    }
+
     class Server {
 
         static Socket serverSocket;
         static List<ClientData> clients;
+        public static IPEndPoint serverAddress;
 
         static void Main( string[] args ) {
 
             // Setting server up
-            Console.WriteLine( "Starting server on " + NetData.GetIP4Address() );
             serverSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
             clients = new List<ClientData>();
 
-            IPEndPoint ip = new IPEndPoint( IPAddress.Parse( NetData.GetIP4Address() ), NetData.PORT );
-            serverSocket.Bind(ip);
+            Console.WriteLine( "Start on localhost? (Y/N)" );
+            string ans = Console.ReadLine().ToLower();
 
+            if (ans[0] != 'y') {
+                Console.WriteLine( "Starting server on " + NetData.GetIP4Address() );
+
+                serverAddress = new IPEndPoint( IPAddress.Parse( NetData.GetIP4Address() ), NetData.PORT );
+                serverSocket.Bind( serverAddress );
+            }
+            else {
+                Console.WriteLine( "Starting server on " + NetData.localhost );
+
+                serverAddress = new IPEndPoint( NetData.localhost, NetData.PORT );
+                serverSocket.Bind( serverAddress );
+            }
             Thread listenThread = new Thread( ListenThread );
             listenThread.Start();
             Console.WriteLine( "Server started" );
@@ -40,6 +58,7 @@ namespace Server
                 ClientData client = new ClientData( serverSocket.Accept() );
                 clients.Add( client );
                 Console.WriteLine( "Client connected: " + client.id );
+                SendWelcomeMessage( client.socket );
             }
         }
 
@@ -86,6 +105,12 @@ namespace Server
 
         }
 
+        public static void SendWelcomeMessage(Socket socket) {
+            Packet p = new Packet( PacketType.Chat, ServerInfo.ID );
+            p.data.Add( ServerInfo.name);
+            p.data.Add( ServerInfo.motd );
+            socket.Send( p.ToBytes() );
+        }
 
     }
     class ClientData {
@@ -112,10 +137,10 @@ namespace Server
         }
 
         public void SendRegistrationPacket() {
-            Packet p = new Packet( PacketType.Registration, id);
-
+            Packet p = new Packet( PacketType.Registration, id );
             socket.Send( p.ToBytes() );
-
         }
+
+
     }
 }

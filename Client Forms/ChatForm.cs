@@ -24,6 +24,8 @@ namespace Client_Forms {
         IPEndPoint hostAddress;
         IPAddress hostIPAddress;
         bool connected = false;
+        Thread receiveThread;
+
 
         public ChatForm() {
             InitializeComponent();
@@ -62,47 +64,106 @@ namespace Client_Forms {
         delegate void AttemptConnection();
         void ConnectToServer() {
 
-            WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
+            if (!connected) {
 
-            //TODO: quitar la ip harcodeada
-            hostIPAddress = NetData.localhost;
+                WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
 
-            clientScoket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+                //TODO: quitar la ip harcodeada
+                hostIPAddress = NetData.localhost;
 
-            hostAddress = new IPEndPoint( hostIPAddress, NetData.PORT );
+                clientScoket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 
-            // Try to connect to host
-            int connAttempts = 0;
+                hostAddress = new IPEndPoint( hostIPAddress, NetData.PORT );
 
-            while (connAttempts < 10) {
+                // Try to connect to host
+                int connAttempts = 0;
 
-                try {
+                while (connAttempts < 10) {
 
-                    connAttempts++;
-                    clientScoket.Connect( hostAddress );
-                    connected = true;
+                    try {
+
+                        connAttempts++;
+                        clientScoket.Connect( hostAddress );
+                        connected = true;
+                        break;
+                    }
+                    catch (SocketException ex) {
+
+                        this.Invoke( writeLine, new object[] { txtOut, "Could not connect to host... Attempt " + connAttempts.ToString() } );
+
+                        if (connAttempts == 10)
+                            this.Invoke( writeLine, new object[] { txtOut, ex.Message } );
+                    }
                 }
-                catch (SocketException ex) {
 
-                   this.Invoke(writeLine, new object[] { txtOut, "Could not connect to host... Attempt " + connAttempts.ToString() } );
-
-                    if (connAttempts == 10)
-                        this.Invoke( writeLine, new object[] { txtOut, ex.Message } );
+                if (connected) {
+                    receiveThread = new Thread( GetPacket );
+                    receiveThread.Start();
                 }
             }
-
-            if (connected) {
-
+            else {
+                MessageBox.Show( "Already connected." );
             }
         }
 
         void GetPacket() {
 
+            byte[] buffer = new byte[clientScoket.ReceiveBufferSize];
+            int recivedData;
+
+            try {
+                while (true) {
+
+                    //TODO: User disconnections;
+
+                    recivedData = clientScoket.Receive( buffer );
+
+                    if (recivedData > 0) {
+
+                        Packet packet = new Packet( buffer );
+                        DispatchPacket( packet );
+
+                    }
+
+                }
+            }
+            catch( SocketException ex) {
+
+            }
+
         }
 
-        void DispatchPacket() {
+        void DispatchPacket( Packet p ) {
+
+            WriteDelegate write = new WriteDelegate( Write );
+            WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
+
+            switch(p.type) {
+                case PacketType.Registration: {
+
+                        clientID = p.senderID;
+                        this.Invoke( writeLine, new object[] { txtOut, "Connected to server." } );
+                        this.Invoke( writeLine, new object[] { txtOut, "Client id recieved: " + clientID } );
+                        break;
+                    }
+                case PacketType.Chat: {
+
+                        this.Invoke( writeLine, new object[] { txtOut, p.data[0] + ": " + p.data[1] } );
+
+                        break;
+                    }
+            }
 
         }
 
+        private void ChatForm_FormClosing( object sender, FormClosingEventArgs e ) {
+            if(receiveThread != null)
+                receiveThread.Abort();
+
+            //TODO: Enviarlo a una funcion con validaciones
+            clientScoket.Shutdown( SocketShutdown.Both );
+            clientScoket.Close();
+
+        }
     }
 }
