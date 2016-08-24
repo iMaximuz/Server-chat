@@ -3,3 +3,8 @@ c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\S
 c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\obj\Debug\ServerData.csprojResolveAssemblyReference.cache
 c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\obj\Debug\ServerData.dll
 c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\ServerData\obj\Debug\ServerData.pdb
+D:\Proyectos\Repositorios\Server-chat\ServerData\obj\Debug\ServerData.csprojResolveAssemblyReference.cache
+D:\Proyectos\Repositorios\Server-chat\ServerData\obj\Debug\ServerData.dll
+D:\Proyectos\Repositorios\Server-chat\ServerData\obj\Debug\ServerData.pdb
+D:\Proyectos\Repositorios\Server-chat\ServerData\bin\Debug\ServerData.dll
+D:\Proyectos\Repositorios\Server-chat\ServerData\bin\Debug\ServerData.pdb

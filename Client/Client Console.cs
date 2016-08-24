@@ -13,7 +13,7 @@ namespace Client
 {
 
 
-    class Client {
+    class Console {
 
         static Socket socket;
         public static string name;
@@ -28,21 +28,21 @@ namespace Client
             socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
             IPAddress ipAddress = IPAddress.Any;
 
-            Console.Write( "Enter username: \n>" );
-            name = Console.ReadLine();
-            Console.Write( "Enter color id: \n>" );
-            chatColor = int.Parse(Console.ReadLine());
+            System.Console.Write( "Enter username: \n>" );
+            name = System.Console.ReadLine();
+            System.Console.Write( "Enter color id: \n>" );
+            chatColor = int.Parse( System.Console.ReadLine());
             bool validIp = true;
             do {
-               
-                Console.Write( "Enter host IP address: \n>" );
-                string ip = Console.ReadLine();
+
+                System.Console.Write( "Enter host IP address: \n>" );
+                string ip = System.Console.ReadLine();
                 try {
                     ipAddress = IPAddress.Parse( ip );
                     validIp = true;
                 }
                 catch (FormatException ex) {
-                    Console.WriteLine( ex.Message );
+                    System.Console.WriteLine( ex.Message );
                     validIp = false;
                     
                 }
@@ -50,7 +50,7 @@ namespace Client
             } while (!validIp);
 
 
-            IPEndPoint endPoint = new IPEndPoint( ipAddress, Packet.PORT );
+            IPEndPoint endPoint = new IPEndPoint( ipAddress, NetData.PORT );
 
             int connAttempts = 0;
 
@@ -63,9 +63,9 @@ namespace Client
                     break;
                 }
                 catch (SocketException ex) {
-                    Console.WriteLine( "Could not connect to host! Attempt... {0}", connAttempts );
+                    System.Console.WriteLine( "Could not connect to host! Attempt... {0}", connAttempts );
                     if (connAttempts == 10) {
-                        Console.WriteLine( "There was an error when trying to connect: " + ex.Message );
+                        System.Console.WriteLine( "There was an error when trying to connect: " + ex.Message );
                         Thread.Sleep( 2000 );
                     }
                 }
@@ -74,12 +74,12 @@ namespace Client
 
             if (connected) {
 
-                Console.WriteLine( "Connected to server..." );
-                Console.WriteLine( "Joining chat room..." );
-                
-                Thread thread = new Thread( ReadData );
+                Thread thread = new Thread( GetPacket );
                 thread.Start();
 
+                System.Console.WriteLine( "Connected to server..." );
+                System.Console.WriteLine( "Joining chat room..." );
+                
                 // Wait so we can get an id back from the server
                 Thread.Sleep( 500 );
 
@@ -87,7 +87,7 @@ namespace Client
                     Packet chatPacket = new Packet( PacketType.Chat, id );
 
                     //Console.Write( ">" );
-                    string message = Console.ReadLine();
+                    string message = System.Console.ReadLine();
 
                     chatPacket.data.Add( name );
                     chatPacket.data.Add( message );
@@ -98,7 +98,7 @@ namespace Client
             }
         }
 
-        static void ReadData() {
+        static void GetPacket() {
 
             byte[] buffer;
             int readBytes;
@@ -109,26 +109,26 @@ namespace Client
 
                 if( readBytes > 0) {
                     Packet packet = new Packet( buffer );
-                    DataManager( packet );
+                    DispatchPacket( packet );
                 }
             }
 
         }
 
-        static void DataManager( Packet p ) {
+        static void DispatchPacket( Packet p ) {
 
             switch(p.type) {
                 case PacketType.Registration:
-                    Console.WriteLine( "Registration completed with server.\nClient Id Received... ");
+                    System.Console.WriteLine( "Registration completed with server.\nClient Id Received... ");
                     id = p.senderID;
                     break;
                 case PacketType.Chat:
                     {
-                        ConsoleColor c = Console.ForegroundColor;
-                        Console.ForegroundColor = (ConsoleColor)p.packetInt;
+                        ConsoleColor c = System.Console.ForegroundColor;
+                        System.Console.ForegroundColor = (ConsoleColor)p.packetInt;
 
-                        Console.WriteLine( "{0}: {1}", p.data[0], p.data[1] );
-                        Console.ForegroundColor = c;
+                        System.Console.WriteLine( "{0}: {1}", p.data[0], p.data[1] );
+                        System.Console.ForegroundColor = c;
                     }
                     break;
                     

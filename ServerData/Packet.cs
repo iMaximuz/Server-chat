@@ -7,11 +7,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Net;
 using System.IO;
 
-namespace ServerData
-{
+namespace ServerData {
     [Serializable]
-    public class Packet
-    {
+    public class Packet {
         public List<string> data;
         public int packetInt;
         public bool packetBool;
@@ -24,9 +22,9 @@ namespace ServerData
             this.type = type;
         }
 
-        public Packet( byte[] packetBytes ) { 
+        public Packet( byte[] packetBytes ) {
             BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream(packetBytes);
+            MemoryStream ms = new MemoryStream( packetBytes );
 
             Packet p = (Packet)bf.Deserialize( ms );
             ms.Close();
@@ -48,21 +46,6 @@ namespace ServerData
             ms.Close();
             return bytes;
         }
-
-        public static int PORT = 4040;
-        public static string GetIP4Address() {
-
-            IPAddress[] ips = Dns.GetHostAddresses( Dns.GetHostName() );
-
-            foreach( IPAddress i in ips) {
-
-                if(i.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) 
-                    return i.ToString();
-            }
-
-            return "127.0.0.1";
-        }
-
     }
 
     public enum PacketType {

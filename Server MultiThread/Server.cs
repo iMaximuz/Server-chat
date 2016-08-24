@@ -16,16 +16,14 @@ namespace Server
         static Socket serverSocket;
         static List<ClientData> clients;
 
-        
-
         static void Main( string[] args ) {
 
             // Setting server up
-            Console.WriteLine( "Starting server on " + Packet.GetIP4Address() );
+            Console.WriteLine( "Starting server on " + NetData.GetIP4Address() );
             serverSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
             clients = new List<ClientData>();
 
-            IPEndPoint ip = new IPEndPoint( IPAddress.Parse( Packet.GetIP4Address() ), Packet.PORT );
+            IPEndPoint ip = new IPEndPoint( IPAddress.Parse( NetData.GetIP4Address() ), NetData.PORT );
             serverSocket.Bind(ip);
 
             Thread listenThread = new Thread( ListenThread );
@@ -45,7 +43,7 @@ namespace Server
             }
         }
 
-        public static void ReadData( object obj ) {
+        public static void GetPacket( object obj ) {
             Socket clientSocket = (Socket)obj;
 
             byte[] buffer;
@@ -59,14 +57,14 @@ namespace Server
                 if(readBytes > 0) { 
                     //Make a packet from serialized array of bytes
                     Packet packet = new Packet( buffer );
-                    DataManager( packet );
+                    DispatchPacket( packet );
 
                 }
             }
 
         }
 
-        public static void DataManager( Packet p ) {
+        public static void DispatchPacket( Packet p ) {
 
             switch ( p.type ) {
                 case PacketType.Chat:
@@ -99,7 +97,7 @@ namespace Server
 
         public ClientData() {
             id = Guid.NewGuid().ToString();
-            thread = new Thread( Server.ReadData );
+            thread = new Thread( Server.GetPacket );
             thread.Start( socket );
             SendRegistrationPacket();
         }
@@ -108,7 +106,7 @@ namespace Server
             this.socket = clientScoket;
             id = Guid.NewGuid().ToString();
 
-            thread = new Thread( Server.ReadData );
+            thread = new Thread( Server.GetPacket );
             thread.Start( socket );
             SendRegistrationPacket();
         }
