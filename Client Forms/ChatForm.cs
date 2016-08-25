@@ -32,7 +32,19 @@ namespace Client_Forms {
         }
 
         private void btnSend_Click( object sender, EventArgs e ) {
-            MessageBox.Show( e.ToString() );
+
+            Packet p = new Packet( PacketType.Chat, clientID );
+            p.data.Add( txtName.Text );
+            p.data.Add( txtOut.Text );
+
+            //Send message to server
+
+            WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
+
+            clientScoket.Send(p.ToBytes());
+
+            txtOut.Text = "";
+            txtOut.Focus();
         }
 
 
@@ -51,13 +63,13 @@ namespace Client_Forms {
 
         delegate void WriteDelegate( RichTextBox obj, string text );
         void Write( RichTextBox obj, string text ) {
-            Debug.Assert( txtOut.InvokeRequired == false );
+            Debug.Assert( txtIn.InvokeRequired == false );
             obj.Text += text;
         }
 
         delegate void WriteLineDelegate( RichTextBox obj, string text );
         void WriteLine( RichTextBox obj, string text ) {
-            Debug.Assert( txtOut.InvokeRequired == false );
+            Debug.Assert( txtIn.InvokeRequired == false );
             obj.Text += text + '\n';
         }
 
@@ -92,7 +104,7 @@ namespace Client_Forms {
                         this.Invoke( writeLine, new object[] { txtOut, "Could not connect to host... Attempt " + connAttempts.ToString() } );
 
                         if (connAttempts == 10)
-                            this.Invoke( writeLine, new object[] { txtOut, ex.Message } );
+                            this.Invoke( writeLine, new object[] { txtIn, ex.Message } );
                     }
                 }
 
@@ -142,13 +154,13 @@ namespace Client_Forms {
                 case PacketType.Registration: {
 
                         clientID = p.senderID;
-                        this.Invoke( writeLine, new object[] { txtOut, "Connected to server." } );
-                        this.Invoke( writeLine, new object[] { txtOut, "Client id recieved: " + clientID } );
+                        this.Invoke( writeLine, new object[] { txtIn, "Connected to server." } );
+                        this.Invoke( writeLine, new object[] { txtIn, "Client id recieved: " + clientID } );
                         break;
                     }
                 case PacketType.Chat: {
 
-                        this.Invoke( writeLine, new object[] { txtOut, p.data[0] + ": " + p.data[1] } );
+                        this.Invoke( writeLine, new object[] { txtIn, p.data[0] + ": " + p.data[1] } );
 
                         break;
                     }

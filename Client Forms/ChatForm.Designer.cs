@@ -23,34 +23,35 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.txtOut = new System.Windows.Forms.RichTextBox();
+            this.txtIn = new System.Windows.Forms.RichTextBox();
             this.lbUserlist = new System.Windows.Forms.ListBox();
             this.btnSend = new System.Windows.Forms.Button();
-            this.txtIn = new System.Windows.Forms.RichTextBox();
+            this.txtOut = new System.Windows.Forms.RichTextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnDisconect = new System.Windows.Forms.Button();
+            this.txtName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // txtOut
+            // txtIn
             // 
-            this.txtOut.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.txtOut.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtOut.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.txtOut.Location = new System.Drawing.Point(118, 12);
-            this.txtOut.Name = "txtOut";
-            this.txtOut.ReadOnly = true;
-            this.txtOut.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtOut.Size = new System.Drawing.Size(348, 186);
-            this.txtOut.TabIndex = 0;
-            this.txtOut.TabStop = false;
-            this.txtOut.Text = "";
+            this.txtIn.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtIn.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtIn.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtIn.Location = new System.Drawing.Point(118, 12);
+            this.txtIn.Name = "txtIn";
+            this.txtIn.ReadOnly = true;
+            this.txtIn.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtIn.Size = new System.Drawing.Size(348, 186);
+            this.txtIn.TabIndex = 0;
+            this.txtIn.TabStop = false;
+            this.txtIn.Text = "";
             // 
             // lbUserlist
             // 
             this.lbUserlist.FormattingEnabled = true;
-            this.lbUserlist.Location = new System.Drawing.Point(12, 12);
+            this.lbUserlist.Location = new System.Drawing.Point(12, 38);
             this.lbUserlist.Name = "lbUserlist";
-            this.lbUserlist.Size = new System.Drawing.Size(100, 186);
+            this.lbUserlist.Size = new System.Drawing.Size(100, 160);
             this.lbUserlist.Sorted = true;
             this.lbUserlist.TabIndex = 1;
             this.lbUserlist.TabStop = false;
@@ -65,14 +66,14 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
-            // txtIn
+            // txtOut
             // 
-            this.txtIn.Location = new System.Drawing.Point(118, 204);
-            this.txtIn.Name = "txtIn";
-            this.txtIn.Size = new System.Drawing.Size(267, 51);
-            this.txtIn.TabIndex = 0;
-            this.txtIn.Text = "";
-            this.txtIn.KeyDown += new System.Windows.Forms.KeyEventHandler(this.chatKeyDown);
+            this.txtOut.Location = new System.Drawing.Point(118, 204);
+            this.txtOut.Name = "txtOut";
+            this.txtOut.Size = new System.Drawing.Size(267, 51);
+            this.txtOut.TabIndex = 0;
+            this.txtOut.Text = "";
+            this.txtOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.chatKeyDown);
             // 
             // btnConnect
             // 
@@ -93,32 +94,43 @@
             this.btnDisconect.Text = "Disconnect";
             this.btnDisconect.UseVisualStyleBackColor = true;
             // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(12, 12);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(100, 20);
+            this.txtName.TabIndex = 4;
+            this.txtName.Text = "Usuario";
+            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 262);
+            this.Controls.Add(this.txtName);
             this.Controls.Add(this.btnDisconect);
             this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.txtIn);
+            this.Controls.Add(this.txtOut);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.lbUserlist);
-            this.Controls.Add(this.txtOut);
+            this.Controls.Add(this.txtIn);
             this.Name = "ChatForm";
             this.Text = "Chat Client";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox txtOut;
+        private System.Windows.Forms.RichTextBox txtIn;
         private System.Windows.Forms.ListBox lbUserlist;
         private System.Windows.Forms.Button btnSend;
-        private System.Windows.Forms.RichTextBox txtIn;
+        private System.Windows.Forms.RichTextBox txtOut;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnDisconect;
+        private System.Windows.Forms.TextBox txtName;
     }
 }
 
