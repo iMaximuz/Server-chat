@@ -49,7 +49,10 @@ namespace ServerData {
     }
 
     public enum PacketType {
-        Registration,
+        Server_Registration,
+        Server_Closing,
+        Client_LogOut,
+        Client_LogIn,
         Chat
     }
 }

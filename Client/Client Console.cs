@@ -118,7 +118,7 @@ namespace Client
         static void DispatchPacket( Packet p ) {
 
             switch(p.type) {
-                case PacketType.Registration:
+                case PacketType.Server_Registration:
                     System.Console.WriteLine( "Registration completed with server.\nClient Id Received... ");
                     id = p.senderID;
                     break;

@@ -28,7 +28,6 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.txtOut = new System.Windows.Forms.RichTextBox();
             this.btnConnect = new System.Windows.Forms.Button();
-            this.btnDisconect = new System.Windows.Forms.Button();
             this.txtName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -77,22 +76,13 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(24, 204);
+            this.btnConnect.Location = new System.Drawing.Point(25, 218);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(75, 23);
             this.btnConnect.TabIndex = 2;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
-            // btnDisconect
-            // 
-            this.btnDisconect.Location = new System.Drawing.Point(24, 227);
-            this.btnDisconect.Name = "btnDisconect";
-            this.btnDisconect.Size = new System.Drawing.Size(75, 23);
-            this.btnDisconect.TabIndex = 3;
-            this.btnDisconect.Text = "Disconnect";
-            this.btnDisconect.UseVisualStyleBackColor = true;
             // 
             // txtName
             // 
@@ -108,7 +98,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 262);
             this.Controls.Add(this.txtName);
-            this.Controls.Add(this.btnDisconect);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.txtOut);
             this.Controls.Add(this.btnSend);
@@ -129,7 +118,6 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.RichTextBox txtOut;
         private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.Button btnDisconect;
         private System.Windows.Forms.TextBox txtName;
     }
 }

@@ -19,7 +19,7 @@ namespace Client_Forms {
 
     public partial class ChatForm : Form {
 
-        Socket clientScoket;
+        Socket connectionSocket;
         string clientID;
         IPEndPoint hostAddress;
         IPAddress hostIPAddress;
@@ -33,18 +33,20 @@ namespace Client_Forms {
 
         private void btnSend_Click( object sender, EventArgs e ) {
 
-            Packet p = new Packet( PacketType.Chat, clientID );
-            p.data.Add( txtName.Text );
-            p.data.Add( txtOut.Text );
+            if (connected) {
+                Packet p = new Packet( PacketType.Chat, clientID );
+                p.data.Add( txtName.Text );
+                p.data.Add( txtOut.Text );
 
-            //Send message to server
+                //Send message to server
 
-            WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
+                WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
 
-            clientScoket.Send(p.ToBytes());
+                connectionSocket.Send( p.ToBytes() );
 
-            txtOut.Text = "";
-            txtOut.Focus();
+                txtOut.Text = "";
+                txtOut.Focus();
+            }
         }
 
 
@@ -57,20 +59,38 @@ namespace Client_Forms {
         }
 
         private void btnConnect_Click( object sender, EventArgs e ) {
-            AttemptConnection connect = new AttemptConnection( ConnectToServer );
-            connect.BeginInvoke(null, null );
+            if (!connected) {
+                AttemptConnection connect = new AttemptConnection( ConnectToServer );
+                connect.BeginInvoke( null, null );
+                btnConnect.Text = "Disconnect";
+            }
+            else {
+                DisconnectFromServer();
+                btnConnect.Text = "Connect";
+            }
         }
 
+        //TODO: Quitar el bug con el boton de desconectar
+
+        //TODO: Pasar esto a una clase donde pueda reutilizarlo
         delegate void WriteDelegate( RichTextBox obj, string text );
         void Write( RichTextBox obj, string text ) {
-            Debug.Assert( txtIn.InvokeRequired == false );
-            obj.Text += text;
+            WriteDelegate write = new WriteDelegate( Write );
+            if( obj.InvokeRequired == false) 
+                obj.Text += text;
+            else
+                this.Invoke( write, new object[] { obj, text } );
         }
 
         delegate void WriteLineDelegate( RichTextBox obj, string text );
         void WriteLine( RichTextBox obj, string text ) {
-            Debug.Assert( txtIn.InvokeRequired == false );
-            obj.Text += text + '\n';
+
+            WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
+
+            if ( obj.InvokeRequired == false )
+                obj.Text += text + '\n';
+            else
+                this.Invoke( writeLine, new object[] { obj, text } );
         }
 
         delegate void AttemptConnection();
@@ -78,12 +98,10 @@ namespace Client_Forms {
 
             if (!connected) {
 
-                WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
-
                 //TODO: quitar la ip harcodeada
                 hostIPAddress = NetData.localhost;
 
-                clientScoket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+                connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 
                 hostAddress = new IPEndPoint( hostIPAddress, NetData.PORT );
 
@@ -95,16 +113,16 @@ namespace Client_Forms {
                     try {
 
                         connAttempts++;
-                        clientScoket.Connect( hostAddress );
+                        connectionSocket.Connect( hostAddress );
                         connected = true;
                         break;
                     }
                     catch (SocketException ex) {
 
-                        this.Invoke( writeLine, new object[] { txtOut, "Could not connect to host... Attempt " + connAttempts.ToString() } );
+                        WriteLine( txtIn, "Could not connect to host... Attempt " + connAttempts.ToString());
 
                         if (connAttempts == 10)
-                            this.Invoke( writeLine, new object[] { txtIn, ex.Message } );
+                            WriteLine( txtIn, ex.Message );
                     }
                 }
 
@@ -114,21 +132,41 @@ namespace Client_Forms {
                 }
             }
             else {
-                MessageBox.Show( "Already connected." );
+                WriteLine(txtIn, "Already connected." );
             }
+        }
+
+        void DisconnectFromServer( ) {
+            if (connected) {
+
+                Packet packet = new Packet( PacketType.Client_LogOut, clientID );
+                packet.data.Add( txtName.Text );
+
+                connectionSocket.Send( packet.ToBytes() );
+                ShutdownClient();
+            }
+        }
+
+        void ShutdownClient() {
+
+            connected = false;
+            connectionSocket.Shutdown( SocketShutdown.Both );
+            connectionSocket.Close();
+            //receiveThread.Abort();
+           
         }
 
         void GetPacket() {
 
-            byte[] buffer = new byte[clientScoket.ReceiveBufferSize];
+            byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
             int recivedData;
 
             try {
                 while (true) {
 
-                    //TODO: User disconnections;
+                    //TODO: Server disconnection;
 
-                    recivedData = clientScoket.Receive( buffer );
+                    recivedData = connectionSocket.Receive( buffer );
 
                     if (recivedData > 0) {
 
@@ -140,27 +178,47 @@ namespace Client_Forms {
                 }
             }
             catch( SocketException ex) {
-
+                if (connected) {
+                    WriteLine( txtIn, "ERROR 500: An existing connection was forcibly closed by the server " );
+                    ShutdownClient();
+                    WriteLine( txtIn, "Disconnected from server..." );
+                }
+            }
+            catch( ObjectDisposedException ex) {
+                WriteLine( txtIn, "Disconnected from server..." );
             }
 
         }
 
         void DispatchPacket( Packet p ) {
 
-            WriteDelegate write = new WriteDelegate( Write );
-            WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
 
             switch(p.type) {
-                case PacketType.Registration: {
+                case PacketType.Server_Registration: {
 
                         clientID = p.senderID;
-                        this.Invoke( writeLine, new object[] { txtIn, "Connected to server." } );
-                        this.Invoke( writeLine, new object[] { txtIn, "Client id recieved: " + clientID } );
+                        WriteLine( txtIn, "Connected to server." );
+                        WriteLine( txtIn, "Client id recieved: " + clientID );
+                        break;
+                    }
+                case PacketType.Server_Closing: {
+
+                        WriteLine( txtIn, "Server is closing..." );
+                        ShutdownClient();
+                        //TODO: Poder cambiar el texto del boton desde cualquier thread
+                        //btnConnect.Text = "Connect";
                         break;
                     }
                 case PacketType.Chat: {
 
-                        this.Invoke( writeLine, new object[] { txtIn, p.data[0] + ": " + p.data[1] } );
+                        WriteLine( txtIn, p.data[0] + ": " + p.data[1] );
+                        
+                        break;
+                    }
+                
+                case PacketType.Client_LogOut: {
+
+                        WriteLine( txtIn, "Client disconnected: " + p.data[0] );
 
                         break;
                     }
@@ -169,13 +227,9 @@ namespace Client_Forms {
         }
 
         private void ChatForm_FormClosing( object sender, FormClosingEventArgs e ) {
-            if(receiveThread != null)
-                receiveThread.Abort();
-
-            //TODO: Enviarlo a una funcion con validaciones
-            clientScoket.Shutdown( SocketShutdown.Both );
-            clientScoket.Close();
-
+            if (connected)
+                DisconnectFromServer();
         }
+
     }
 }
