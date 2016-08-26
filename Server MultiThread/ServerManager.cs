@@ -56,7 +56,7 @@ namespace Server {
             try {
                 while (true) {
                     listenSocket.Listen( 0 );
-                    ClientData client = new ClientData( this, listenSocket.Accept() );
+                    ClientData client = new ClientData( ReadMessageThread, listenSocket.Accept() );
                     clients.Add( client );
                     OnClientConnect( client );
                 }

@@ -16,10 +16,10 @@ namespace Server {
         public Thread thread;
         public string id;
 
-        public ClientData( ServerManager sm, Socket clientScoket ) {
+        public ClientData( ParameterizedThreadStart ts, Socket clientScoket ) {
             this.socket = clientScoket;
             id = Guid.NewGuid().ToString();
-            thread = new Thread( sm.ReadMessageThread );
+            thread = new Thread( ts );
             thread.Start( this );
             //TODO: Manejar este mensaje en otra parte?
             SendRegistrationPacket();

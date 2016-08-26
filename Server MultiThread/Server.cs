@@ -45,7 +45,7 @@ namespace Server
 
             server.OnStarUp = () => { Console.WriteLine( "Server started" ); };
             //NOTA: Hacer dormir el thread ayuda a enviar los mensajes correctamente
-            server.OnClientConnect = ( client ) => { Thread.Sleep( 50 ); SendWelcomeMessage( client.socket ); };
+            server.OnClientConnect = ( client ) => { Console.WriteLine( "Client connected..." ); Thread.Sleep( 50 ); SendWelcomeMessage( client.socket ); };
             server.OnClientDisconnect = ( client ) => { Console.WriteLine( "Client correclty disconnected: " + client.id ); };
             server.OnReceive = DispatchPacket;
             server.OnShutdown = () => { Console.WriteLine( "Server closed..." ); };
