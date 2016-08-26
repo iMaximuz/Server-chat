@@ -16,21 +16,74 @@ namespace Server
         public static string ID = "server";
         public static string name = "max's Server";
         public static string motd = "Welcome!";
+        
+
     }
+
+    //class ServerManager{
+
+    //    public List<Client> clients;
+
+    //    Socket listenSocket;
+    //    bool online = false;
+    //    Thread listenThread;
+    //    IPEndPoint address;
+
+    //    public Action OnConnect;
+
+    //    public ServerManager( IPEndPoint serverAddress) {
+    //        this.address = serverAddress;
+
+    //        this.StartServer();
+
+    //    }
+
+    //    void StartServer() {
+
+    //        listenSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+    //        clients = new List<Client>();
+
+    //        try {
+    //            listenSocket.Bind( address );
+    //            online = true;
+    //            listenThread = new Thread( ListenThread );
+    //            listenThread.Start();
+    //            Console.WriteLine( "Server started" );
+    //        }
+    //        catch (SocketException ex) {
+    //            Console.WriteLine( "ERROR: Server could not start. \n\t" + ex.Message );
+    //        }
+
+    //        OnConnect();
+
+    //    }
+
+
+    //    void ListenThread() {
+
+
+
+    //    }
+
+    //}
 
     class Server {
 
+        //static ServerProcessor serverProcessor;
+
+        public static List<Client> clients;
+
         static Socket serverSocket;
-        static List<Client> clients;
-        public static IPEndPoint serverAddress;
         static bool online = false;
         static Thread listenThread;
+        static IPEndPoint serverAddress;
 
         static void Main( string[] args ) {
 
             // Setting server up
             serverSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
             clients = new List<Client>();
+
 
             Console.WriteLine( "Start on localhost? (Y/N)" );
             string ans = Console.ReadLine().ToLower();
@@ -53,6 +106,10 @@ namespace Server
             catch (SocketException ex){
                 Console.WriteLine( "ERROR: Server could not start. \n\t" + ex.Message );
             }
+
+            //serverProcessor = new ServerProcessor(serverAddress);
+
+            //serverProcessor.OnConnect = () => { Console.WriteLine( "Client connected" ); };
 
             while (online) {
 
