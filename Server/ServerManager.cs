@@ -89,7 +89,7 @@ namespace Server {
                     Message m = new Message();
                     if ( messageQueue.Count > 0 ) {
                         m = messageQueue.Dequeue();
-                        //Ver si el cliente aun sigue connectado
+                        //Verificar si el cliente aun sigue connectado
                         if ( m.socket != null ) {
                             m.socket.Send( m.packet.ToBytes() );
                             Thread.Sleep( 10 );
