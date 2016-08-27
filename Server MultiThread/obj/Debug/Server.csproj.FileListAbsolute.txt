@@ -6,11 +6,11 @@ c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\S
 c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\Server MultiThread\obj\Debug\Server MultiThread.pdb
 c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\Server MultiThread\bin\Debug\ServerData.dll
 c:\users\luis aldrian\documents\visual studio 2015\Projects\Server MultiThread\Server MultiThread\bin\Debug\ServerData.pdb
-D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server MultiThread.exe.config
-D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server MultiThread.exe
-D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server MultiThread.pdb
-D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server MultiThread.exe
-D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server MultiThread.pdb
 D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\ServerData.dll
 D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\ServerData.pdb
 D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server.csprojResolveAssemblyReference.cache
+D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server.exe.config
+D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server.exe
+D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server.pdb
+D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server.exe
+D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server.pdb
