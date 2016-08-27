@@ -14,3 +14,6 @@ D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server.exe
 D:\Proyectos\Repositorios\Server-chat\Server MultiThread\bin\Debug\Server.pdb
 D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server.exe
 D:\Proyectos\Repositorios\Server-chat\Server MultiThread\obj\Debug\Server.pdb
+D:\Proyectos\Repositorios\Server-chat\Server\bin\Debug\Server.exe.config
+D:\Proyectos\Repositorios\Server-chat\Server\obj\Debug\Server.exe
+D:\Proyectos\Repositorios\Server-chat\Server\obj\Debug\Server.pdb
