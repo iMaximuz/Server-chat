@@ -22,12 +22,6 @@ namespace Server {
             thread = new Thread( ts );
             thread.Start( this );
             //TODO: Manejar este mensaje en otra parte?
-            SendRegistrationPacket();
-        }
-
-        public void SendRegistrationPacket() {
-            Packet p = new Packet( PacketType.Server_Registration, id );
-            socket.Send( p.ToBytes() );
         }
 
         public void Disconnect() {

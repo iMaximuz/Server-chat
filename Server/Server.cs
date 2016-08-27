@@ -45,7 +45,7 @@ namespace Server
 
             server.OnStarUp = () => { Console.WriteLine( "Server started" ); };
             //NOTA: Hacer dormir el thread ayuda a enviar los mensajes correctamente
-            server.OnClientConnect = ( client ) => { Console.WriteLine( "Client connected..." ); Thread.Sleep( 50 ); SendWelcomeMessage( client.socket ); };
+            server.OnClientConnect = ( client ) => { Console.WriteLine( "Client connected..." ); SendRegistrationPacket( client ); SendWelcomeMessage( client ); };
             server.OnClientDisconnect = ( client ) => { Console.WriteLine( "Client correclty disconnected: " + client.id ); };
             server.OnReceive = DispatchPacket;
             server.OnShutdown = () => { Console.WriteLine( "Server closed..." ); };
@@ -83,8 +83,8 @@ namespace Server
                     Console.WriteLine( "Retransmiting..." );
 
                     foreach(ClientData client in server.clients) {
-                        if( client.id != p.senderID )
-                            client.socket.Send( p.ToBytes() );
+                        if ( client.id != p.senderID )
+                            server.SendPacket( client, p );
                     }
 
                     break;
@@ -92,7 +92,8 @@ namespace Server
 
                         Console.WriteLine( "Client petition to disconnect " + p.senderID );
 
-                        server.clients.RemoveAll( x => x.id == p.senderID );
+                        
+                        server.RemoveClient(p.senderID);
                         foreach (ClientData client in server.clients) {
                             client.socket.Send( p.ToBytes() );
                         }
@@ -108,11 +109,16 @@ namespace Server
 
         }
 
-        public static void SendWelcomeMessage(Socket socket) {
+        public static void SendWelcomeMessage(ClientData client) {
             Packet p = new Packet( PacketType.Chat, ServerInfo.ID );
             p.data.Add( ServerInfo.name);
             p.data.Add( ServerInfo.motd );
-            socket.Send( p.ToBytes() );
+            server.SendPacket(client, p);
+        }
+
+        public static void SendRegistrationPacket(ClientData client) {
+            Packet p = new Packet( PacketType.Server_Registration, client.id );
+            server.SendPacket( client, p );
         }
 
     }
