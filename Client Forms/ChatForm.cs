@@ -231,5 +231,9 @@ namespace Client_Forms {
                 DisconnectFromServer();
         }
 
+        private void txtIn_TextChanged( object sender, EventArgs e ) {
+            txtIn.Select( txtIn.Text.Length, 0 );
+            txtIn.ScrollToCaret();
+        }
     }
 }

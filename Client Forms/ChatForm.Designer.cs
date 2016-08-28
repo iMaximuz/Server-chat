@@ -44,6 +44,7 @@
             this.txtIn.TabIndex = 0;
             this.txtIn.TabStop = false;
             this.txtIn.Text = "";
+            this.txtIn.TextChanged += new System.EventHandler(this.txtIn_TextChanged);
             // 
             // lbUserlist
             // 

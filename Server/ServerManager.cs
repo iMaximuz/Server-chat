@@ -19,6 +19,7 @@ namespace Server {
 
         Socket listenSocket;
         Thread listenThread;
+        Thread sendThread;
         IPEndPoint address;
 
         public Action OnStarUp;
@@ -27,8 +28,18 @@ namespace Server {
         public Action<ClientData> OnClientDisconnect;
         public Action OnShutdown;
 
+        class Message {
+            public Socket socket;
+            public Packet packet;
+            public Message() { }
+            public Message(Socket s, Packet p) { socket = s; packet = p; }
+        }
+
+        Queue<Message> messageQueue;
+
         public ServerManager( IPEndPoint serverAddress ) {
             this.address = serverAddress;
+            messageQueue = new Queue<Message>();
         }
 
         public void Start() {
@@ -41,6 +52,8 @@ namespace Server {
                     isOnline = true;
                     listenThread = new Thread( ListenThread );
                     listenThread.Start();
+                    sendThread = new Thread( SendThread );
+                    sendThread.Start();
                     OnStarUp();
                 }
                 catch (SocketException ex) {
@@ -56,7 +69,7 @@ namespace Server {
             try {
                 while (true) {
                     listenSocket.Listen( 0 );
-                    ClientData client = new ClientData( ReadMessageThread, listenSocket.Accept() );
+                    ClientData client = new ClientData( ClientThread, listenSocket.Accept() );
                     clients.Add( client );
                     OnClientConnect( client );
                 }
@@ -65,11 +78,35 @@ namespace Server {
                 Console.WriteLine( ex.Message );
             }
             catch (ThreadAbortException ex) {
-                Console.WriteLine( "ListenThread aborted" );
-            }
+                Console.WriteLine( "Listen Thread aborted" );
+            } 
         }
 
-        public void ReadMessageThread( object obj ) {
+        void SendThread() {
+
+            try {
+                while ( true ) {
+                    Message m = new Message();
+                    if ( messageQueue.Count > 0 ) {
+                        m = messageQueue.Dequeue();
+                        //Verificar si el cliente aun sigue connectado
+                        if ( m.socket != null ) {
+                            m.socket.Send( m.packet.ToBytes() );
+                            Thread.Sleep( 10 );
+                        }
+                    }
+                    else {
+                        Thread.Sleep( 50 );
+                    }
+                }
+            }
+            catch (ThreadAbortException ex ) {
+                Console.WriteLine( "Send Thread aborted" );
+            }
+
+        }
+
+        public void ClientThread( object obj ) {
             ClientData client = (ClientData)obj;
             Socket socket = client.socket;
 
@@ -103,6 +140,26 @@ namespace Server {
             CloseAllConnections();
         }
 
+        //SendPacket mandará el packete a la fila para ser enviado posteriormente
+        public void SendPacket(ClientData dest, Packet packet) {
+            messageQueue.Enqueue( new Message( dest.socket, packet ) );
+        }
+
+        public void SendPacket( Socket dest, Packet packet ) {
+            messageQueue.Enqueue( new Message( dest, packet ) );
+        }
+
+        //SendPacket mandará el packete a todos los clientes agregandalos a la fila de envios
+        public void SendPacketToAll(Packet packet ) {
+            foreach(ClientData client in clients ) {
+                SendPacket( client, packet );
+            }
+        }
+
+        public void RemoveClient(string id) {
+            clients.RemoveAll( x => x.id == id );
+        }
+
         void CloseAllConnections() {
             Packet p = new Packet( PacketType.Server_Closing, ServerInfo.ID );
             foreach (ClientData c in clients) {
@@ -111,6 +168,7 @@ namespace Server {
             }
             listenSocket.Close();
             listenThread.Abort();
+            sendThread.Abort();
         }
 
     }
