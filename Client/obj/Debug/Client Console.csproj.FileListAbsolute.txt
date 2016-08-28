@@ -1,0 +1,8 @@
+D:\Proyectos\Repositorios\Server-chat\Client\bin\Debug\Client.exe.config
+D:\Proyectos\Repositorios\Server-chat\Client\obj\Debug\Client.exe
+D:\Proyectos\Repositorios\Server-chat\Client\obj\Debug\Client.pdb
+D:\Proyectos\Repositorios\Server-chat\Client\bin\Debug\Client.exe
+D:\Proyectos\Repositorios\Server-chat\Client\bin\Debug\Client.pdb
+D:\Proyectos\Repositorios\Server-chat\Client\bin\Debug\ServerData.dll
+D:\Proyectos\Repositorios\Server-chat\Client\bin\Debug\ServerData.pdb
+D:\Proyectos\Repositorios\Server-chat\Client\obj\Debug\Client Console.csprojResolveAssemblyReference.cache
