@@ -19,12 +19,6 @@ namespace Client_Forms {
 
     public partial class ChatForm : Form {
 
-        Socket connectionSocket;
-        string clientID;
-        IPEndPoint hostAddress;
-        IPAddress hostIPAddress;
-        bool connected = false;
-        Thread receiveThread;
 
 
         public ChatForm() {
