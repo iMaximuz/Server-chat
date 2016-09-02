@@ -27,6 +27,10 @@ namespace Client_Forms {
             InitializeComponent();
         }
 
+        private void ChatForm_Load( object sender, EventArgs e ) {
+            client = new Client();
+        }
+
         private void btnSend_Click( object sender, EventArgs e ) {
 
             if (client.isConnected) {
@@ -90,13 +94,15 @@ namespace Client_Forms {
 
 
         private void ChatForm_FormClosing( object sender, FormClosingEventArgs e ) {
-            if (connected)
-                DisconnectFromServer();
+            if (client.isConnected)
+                client.Disconnect();
         }
 
         private void txtIn_TextChanged( object sender, EventArgs e ) {
             txtIn.Select( txtIn.Text.Length, 0 );
             txtIn.ScrollToCaret();
         }
+
+
     }
 }

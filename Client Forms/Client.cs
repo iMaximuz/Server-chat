@@ -97,7 +97,7 @@ namespace Client_Forms {
         public void Disconnect() {
             if (isConnected) {
 
-                Packet packet = new Packet( PacketType.Client_LogOut, clientID );
+                Packet packet = new Packet( PacketType.Client_LogOut, ID );
                 packet.data.Add( chatName );
 
                 //TODO: Change it to a Queue
@@ -150,9 +150,9 @@ namespace Client_Forms {
             switch (p.type) {
                 case PacketType.Server_Registration: {
 
-                        clientID = p.senderID;
+                        ID = p.senderID;
                         WriteLine( "Connected to server." );
-                        WriteLine( "Client id recieved: " + clientID );
+                        WriteLine( "Client id recieved: " + ID );
                         break;
                     }
                 case PacketType.Server_Closing: {
