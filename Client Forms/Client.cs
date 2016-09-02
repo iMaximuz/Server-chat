@@ -24,14 +24,14 @@ namespace Client_Forms {
         
         Thread receiveThread;
 
-        Action OnConnect;
-        Action<string> OnConnectionFail;
+        public Action OnConnect;
+        public Action<string> OnError;
+        public Action<string> OnConnectionFail;
 
-        Action<string> Write;
-        Action<string> WriteLine;
+        public Action<Packet> OnPacketReceived;
 
-        Action OnServerDisconnect;
-        Action OnDisconnect;
+        public Action OnServerDisconnect;
+        public Action OnDisconnect;
 
 
         public Client( ) {
@@ -80,7 +80,7 @@ namespace Client_Forms {
                     }
                     catch (SocketException ex) {
 
-                        OnConnectionFail( "Could not connect to host... Attempt " + connAttempts.ToString() );
+                        OnError( "Could not connect to host... Attempt " + connAttempts.ToString() );
 
                         if (connAttempts == 10)
                             OnConnectionFail( ex.Message );
@@ -122,15 +122,14 @@ namespace Client_Forms {
                     if (recivedData > 0) {
 
                         Packet packet = new Packet( buffer );
-                        DispatchPacket( packet );
+                        DefaultDispatchPacket( packet );
                     }
                 }
             }
             catch (SocketException ex) {
                 if (isConnected) {
-                    OnServerDisconnect(); //( "ERROR 500: An existing connection was forcibly closed by the server " );
+                    OnServerDisconnect();
                     ShutdownClient();
-                    OnDisconnect(); //  "Disconnected from server..." );
                 }
             }
             catch (ObjectDisposedException ex) {
@@ -143,38 +142,29 @@ namespace Client_Forms {
             isConnected = false;
             connectionSocket.Shutdown( SocketShutdown.Both );
             connectionSocket.Close();
+            OnDisconnect();
         }
 
-        void DispatchPacket( Packet p ) {
+        void DefaultDispatchPacket( Packet p ) {
 
             switch (p.type) {
                 case PacketType.Server_Registration: {
 
                         ID = p.senderID;
-                        WriteLine( "Connected to server." );
-                        WriteLine( "Client id recieved: " + ID );
+                        //WriteLine( "Connected to server." );
+                        //WriteLine( "Client id recieved: " + ID );
+
                         break;
                     }
                 case PacketType.Server_Closing: {
-
-                        WriteLine( "Server is closing..." );
                         ShutdownClient();
                         //TODO: Poder cambiar el texto del boton desde cualquier thread
                         //btnConnect.Text = "Connect";
                         break;
                     }
-                case PacketType.Chat: {
-
-                        WriteLine( p.data[0] + ": " + p.data[1] );
-
-                        break;
-                    }
-
-                case PacketType.Client_LogOut: {
-                        WriteLine( "Client disconnected: " + p.data[0] );
-
-                        break;
-                    }
+                default:
+                    OnPacketReceived( p );
+                    break;
             }
 
         }

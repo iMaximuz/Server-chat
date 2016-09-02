@@ -29,6 +29,27 @@ namespace Client_Forms {
 
         private void ChatForm_Load( object sender, EventArgs e ) {
             client = new Client();
+
+            client.OnConnect = () => { WriteLine(txtIn, "Connected to server..." ); };
+            client.OnError = (s) => { WriteLine( txtIn, s ); };
+            client.OnConnectionFail = (s) => {
+                WriteLine( txtIn, s );
+                EditButtonText( btnConnect, "Connect" );
+            };
+
+
+            client.OnPacketReceived = DispatchPacket;
+
+            client.OnServerDisconnect = () => {
+                WriteLine(txtIn, "ERROR 500: An existing connection was forcibly closed by the server " );
+                EditButtonText( btnConnect, "Connect" );
+            };
+
+            client.OnDisconnect = () => {
+                WriteLine( txtIn, "Disconnected from server..." );
+                EditButtonText( btnConnect, "Connect" );
+            };
+
         }
 
         private void btnSend_Click( object sender, EventArgs e ) {
@@ -42,6 +63,8 @@ namespace Client_Forms {
 
                 WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
 
+
+                //TODO: Implement Queue
                 client.connectionSocket.Send( p.ToBytes() );
 
                 txtOut.Text = "";
@@ -70,8 +93,20 @@ namespace Client_Forms {
         }
 
         //TODO: Quitar el bug con el boton de desconectar
-
         //TODO: Pasar esto a una clase donde pueda reutilizarlo
+
+        delegate void EditButtonDelegate( Button btn, string text );
+        void EditButtonText(Button btn, string text ) {
+
+            EditButtonDelegate edit = new EditButtonDelegate( EditButtonText );
+            if (btn.InvokeRequired == false) {
+                btn.Text = text;
+            }
+            else {
+                this.Invoke(edit, new object[] { btn, text } );
+            }
+        }
+        
         delegate void WriteDelegate( RichTextBox obj, string text );
         void Write( RichTextBox obj, string text ) {
             WriteDelegate write = new WriteDelegate( Write );
@@ -103,6 +138,23 @@ namespace Client_Forms {
             txtIn.ScrollToCaret();
         }
 
+        void DispatchPacket( Packet p ) {
+
+            switch (p.type) {
+                case PacketType.Chat: {
+                        WriteLine(txtIn, p.data[0] + ": " + p.data[1] );
+                        break;
+                    }
+               
+                case PacketType.Client_LogOut: {
+                        WriteLine(txtIn, "Client disconnected: " + p.data[0] );
+
+                        break;
+                    }
+            }
+
+        }
 
     }
 }
+
