@@ -9,3 +9,14 @@ C:\Users\Tertyerty\Source\Repos\Server-chat\Client Forms\obj\Debug\Client_Forms.
 C:\Users\Tertyerty\Source\Repos\Server-chat\Client Forms\obj\Debug\Client Forms.csproj.GenerateResource.Cache
 C:\Users\Tertyerty\Source\Repos\Server-chat\Client Forms\obj\Debug\Client Forms.exe
 C:\Users\Tertyerty\Source\Repos\Server-chat\Client Forms\obj\Debug\Client Forms.pdb
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.csprojResolveAssemblyReference.cache
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.ChatForm.resources
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.Properties.Resources.resources
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.csproj.GenerateResource.Cache
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.exe
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.pdb
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\Client Forms.exe.config
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\Client Forms.exe
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\Client Forms.pdb
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\ServerData.dll
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\ServerData.pdb

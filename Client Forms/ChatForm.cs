@@ -103,7 +103,7 @@ namespace Client_Forms {
 
                 connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 
-                hostAddress = new IPEndPoint( hostIPAddress, NetData.PORT );
+                hostAddress = new IPEndPoint( IPAddress.Parse(NetData.GetIP4Address()), NetData.PORT );
 
                 // Try to connect to host
                 int connAttempts = 0;
