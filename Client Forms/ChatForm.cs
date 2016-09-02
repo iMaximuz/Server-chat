@@ -20,6 +20,8 @@ namespace Client_Forms {
     public partial class ChatForm : Form {
 
 
+        Client client;
+
 
         public ChatForm() {
             InitializeComponent();
@@ -27,8 +29,8 @@ namespace Client_Forms {
 
         private void btnSend_Click( object sender, EventArgs e ) {
 
-            if (connected) {
-                Packet p = new Packet( PacketType.Chat, clientID );
+            if (client.isConnected) {
+                Packet p = new Packet( PacketType.Chat, client.ID );
                 p.data.Add( txtName.Text );
                 p.data.Add( txtOut.Text );
 
@@ -36,7 +38,7 @@ namespace Client_Forms {
 
                 WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
 
-                connectionSocket.Send( p.ToBytes() );
+                client.connectionSocket.Send( p.ToBytes() );
 
                 txtOut.Text = "";
                 txtOut.Focus();
@@ -53,13 +55,12 @@ namespace Client_Forms {
         }
 
         private void btnConnect_Click( object sender, EventArgs e ) {
-            if (!connected) {
-                AttemptConnection connect = new AttemptConnection( ConnectToServer );
-                connect.BeginInvoke( null, null );
+            if (!client.isConnected) {
+                client.Connect(NetData.localhost,  NetData.PORT);
                 btnConnect.Text = "Disconnect";
             }
             else {
-                DisconnectFromServer();
+                client.Disconnect();
                 btnConnect.Text = "Connect";
             }
         }
@@ -87,138 +88,6 @@ namespace Client_Forms {
                 this.Invoke( writeLine, new object[] { obj, text } );
         }
 
-        delegate void AttemptConnection();
-        void ConnectToServer() {
-
-            if (!connected) {
-
-                //TODO: quitar la ip harcodeada
-                hostIPAddress = NetData.localhost;
-
-                connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-
-                hostAddress = new IPEndPoint( hostIPAddress, NetData.PORT );
-
-                // Try to connect to host
-                int connAttempts = 0;
-
-                while (connAttempts < 10) {
-
-                    try {
-
-                        connAttempts++;
-                        connectionSocket.Connect( hostAddress );
-                        connected = true;
-                        break;
-                    }
-                    catch (SocketException ex) {
-
-                        WriteLine( txtIn, "Could not connect to host... Attempt " + connAttempts.ToString());
-
-                        if (connAttempts == 10)
-                            WriteLine( txtIn, ex.Message );
-                    }
-                }
-
-                if (connected) {
-                    receiveThread = new Thread( GetPacket );
-                    receiveThread.Start();
-                }
-            }
-            else {
-                WriteLine(txtIn, "Already connected." );
-            }
-        }
-
-        void DisconnectFromServer( ) {
-            if (connected) {
-
-                Packet packet = new Packet( PacketType.Client_LogOut, clientID );
-                packet.data.Add( txtName.Text );
-
-                connectionSocket.Send( packet.ToBytes() );
-                ShutdownClient();
-            }
-        }
-
-        void ShutdownClient() {
-
-            connected = false;
-            connectionSocket.Shutdown( SocketShutdown.Both );
-            connectionSocket.Close();
-            //receiveThread.Abort();
-           
-        }
-
-        void GetPacket() {
-
-            byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
-            int recivedData;
-
-            try {
-                while (true) {
-
-                    //TODO: Server disconnection;
-
-                    recivedData = connectionSocket.Receive( buffer );
-
-                    if (recivedData > 0) {
-
-                        Packet packet = new Packet( buffer );
-                        DispatchPacket( packet );
-
-                    }
-
-                }
-            }
-            catch( SocketException ex) {
-                if (connected) {
-                    WriteLine( txtIn, "ERROR 500: An existing connection was forcibly closed by the server " );
-                    ShutdownClient();
-                    WriteLine( txtIn, "Disconnected from server..." );
-                }
-            }
-            catch( ObjectDisposedException ex) {
-                WriteLine( txtIn, "Disconnected from server..." );
-            }
-
-        }
-
-        void DispatchPacket( Packet p ) {
-
-
-            switch(p.type) {
-                case PacketType.Server_Registration: {
-
-                        clientID = p.senderID;
-                        WriteLine( txtIn, "Connected to server." );
-                        WriteLine( txtIn, "Client id recieved: " + clientID );
-                        break;
-                    }
-                case PacketType.Server_Closing: {
-
-                        WriteLine( txtIn, "Server is closing..." );
-                        ShutdownClient();
-                        //TODO: Poder cambiar el texto del boton desde cualquier thread
-                        //btnConnect.Text = "Connect";
-                        break;
-                    }
-                case PacketType.Chat: {
-
-                        WriteLine( txtIn, p.data[0] + ": " + p.data[1] );
-                        
-                        break;
-                    }
-                
-                case PacketType.Client_LogOut: {
-
-                        WriteLine( txtIn, "Client disconnected: " + p.data[0] );
-
-                        break;
-                    }
-            }
-
-        }
 
         private void ChatForm_FormClosing( object sender, FormClosingEventArgs e ) {
             if (connected)
