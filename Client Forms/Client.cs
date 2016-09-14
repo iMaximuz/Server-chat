@@ -17,11 +17,11 @@ namespace Client_Forms {
         public bool isConnected = false;
 
         public Socket connectionSocket;
-        
+
         IPEndPoint hostAddress;
         IPAddress hostIPAddress;
         int port;
-        
+
         Thread receiveThread;
 
         public Action OnConnect;
@@ -34,11 +34,11 @@ namespace Client_Forms {
         public Action OnDisconnect;
 
 
-        public Client( ) {
+        public Client() {
             this.chatName = "Client";
         }
 
-        public Client(string name) {
+        public Client( string name ) {
             this.chatName = name;
         }
 
@@ -59,13 +59,7 @@ namespace Client_Forms {
         void ConnectToServer() {
             if (!isConnected) {
 
-                //TODO: quitar la ip harcodeada
-                hostIPAddress = NetData.localhost;
-
                 connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-
-                hostAddress = new IPEndPoint( hostIPAddress, port );
-
                 // Try to connect to host
                 int connAttempts = 0;
 
@@ -107,7 +101,7 @@ namespace Client_Forms {
             }
         }
 
-        void ChangeName(string newName) {
+        void ChangeName( string newName ) {
             this.chatName = newName;
         }
 
@@ -135,7 +129,7 @@ namespace Client_Forms {
             catch (ObjectDisposedException ex) {
                 OnDisconnect();
             }
-            
+
         }
 
         void ShutdownClient() {

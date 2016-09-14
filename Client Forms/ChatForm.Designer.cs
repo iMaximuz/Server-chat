@@ -23,12 +23,14 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.txtIn = new System.Windows.Forms.RichTextBox();
             this.lbUserlist = new System.Windows.Forms.ListBox();
             this.btnSend = new System.Windows.Forms.Button();
             this.txtOut = new System.Windows.Forms.RichTextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.buzzTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // txtIn
@@ -38,7 +40,6 @@
             this.txtIn.ForeColor = System.Drawing.SystemColors.WindowText;
             this.txtIn.Location = new System.Drawing.Point(118, 12);
             this.txtIn.Name = "txtIn";
-            this.txtIn.ReadOnly = true;
             this.txtIn.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.txtIn.Size = new System.Drawing.Size(348, 186);
             this.txtIn.TabIndex = 0;
@@ -93,6 +94,11 @@
             this.txtName.TabIndex = 4;
             this.txtName.Text = "Usuario";
             // 
+            // buzzTimer
+            // 
+            this.buzzTimer.Interval = 10;
+            this.buzzTimer.Tick += new System.EventHandler(this.buzzTimer_Tick);
+            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -121,6 +127,7 @@
         private System.Windows.Forms.RichTextBox txtOut;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Timer buzzTimer;
     }
 }
 

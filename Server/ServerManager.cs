@@ -18,6 +18,7 @@ namespace Server {
         public bool isOnline = false;
 
         Socket listenSocket;
+
         Thread listenThread;
         Thread sendThread;
         IPEndPoint address;

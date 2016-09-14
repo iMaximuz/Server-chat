@@ -10,6 +10,7 @@ using System.IO;
 namespace ServerData {
     [Serializable]
     public class Packet {
+        //public Dictionary<string, object> data;
         public List<string> data;
         public int packetInt;
         public bool packetBool;
@@ -53,6 +54,9 @@ namespace ServerData {
         Server_Closing,
         Client_LogOut,
         Client_LogIn,
-        Chat
+        Ping,
+        Pong,
+        Chat,
+        Chat_Buzzer
     }
 }

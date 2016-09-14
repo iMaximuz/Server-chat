@@ -12,3 +12,4 @@ C:\Users\Tertyerty\Source\Repos\Server-chat\ServerData\bin\Debug\ServerData.pdb
 C:\Users\Tertyerty\Source\Repos\Server-chat\ServerData\obj\Debug\ServerData.csprojResolveAssemblyReference.cache
 C:\Users\Tertyerty\Source\Repos\Server-chat\ServerData\obj\Debug\ServerData.dll
 C:\Users\Tertyerty\Source\Repos\Server-chat\ServerData\obj\Debug\ServerData.pdb
+D:\Proyectos\Repositorios\Server-chat\ServerData\obj\Debug\ServerData.csprojResolveAssemblyReference.cache

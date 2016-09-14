@@ -9,17 +9,16 @@ using System.Net.Sockets;
 using ServerData;
 
 
-namespace Server
-{
+namespace Server {
 
     //TODO: Crear una queue para el envio de mensajes;
 
-    struct ServerInfo{
-        
+    struct ServerInfo {
+
         public static string ID = "server";
         public static string name = "max's Server";
         public static string motd = "Welcome!";
-        
+
     }
 
     class Server {
@@ -63,7 +62,7 @@ namespace Server
             Console.ReadKey();
         }
 
-        static void DispatchServerCommands(string command) {
+        static void DispatchServerCommands( string command ) {
 
             switch (command) {
                 case "shutdown":
@@ -76,14 +75,14 @@ namespace Server
 
         public static void DispatchPacket( Packet p ) {
 
-            switch ( p.type ) {
+            switch (p.type) {
                 case PacketType.Chat:
 
                     Console.WriteLine( "Message recived from: " + p.data[0] );
                     Console.WriteLine( "Retransmiting..." );
 
-                    foreach(ClientData client in server.clients) {
-                        if ( client.id != p.senderID )
+                    foreach (ClientData client in server.clients) {
+                        if (client.id != p.senderID)
                             server.SendPacket( client, p );
                     }
 
@@ -92,15 +91,35 @@ namespace Server
 
                         Console.WriteLine( "Client petition to disconnect " + p.senderID );
 
-                        
-                        server.RemoveClient(p.senderID);
+
+                        server.RemoveClient( p.senderID );
                         foreach (ClientData client in server.clients) {
-                            client.socket.Send( p.ToBytes() );
+                            server.SendPacket( client, p );
                         }
-                                
+
 
                         break;
                     }
+                case PacketType.Ping: {
+
+                        Packet pong = new Packet( PacketType.Pong, ServerInfo.ID );
+
+                        foreach (ClientData client in server.clients) {
+                            if (p.senderID == client.id)
+                                server.SendPacket( client, pong );
+                        }
+
+                        break;
+                    }
+
+                case PacketType.Chat_Buzzer: {
+                        foreach (ClientData client in server.clients) {
+                            if (client.id != p.senderID)
+                                server.SendPacket( client, p );
+                        }
+                        break;
+                    }
+
                 default:
                     Console.WriteLine( "ERROR: Unhandled packet type" );
                     break;
@@ -109,14 +128,14 @@ namespace Server
 
         }
 
-        public static void SendWelcomeMessage(ClientData client) {
+        public static void SendWelcomeMessage( ClientData client ) {
             Packet p = new Packet( PacketType.Chat, ServerInfo.ID );
-            p.data.Add( ServerInfo.name);
+            p.data.Add( ServerInfo.name );
             p.data.Add( ServerInfo.motd );
-            server.SendPacket(client, p);
+            server.SendPacket( client, p );
         }
 
-        public static void SendRegistrationPacket(ClientData client) {
+        public static void SendRegistrationPacket( ClientData client ) {
             Packet p = new Packet( PacketType.Server_Registration, client.id );
             server.SendPacket( client, p );
         }
