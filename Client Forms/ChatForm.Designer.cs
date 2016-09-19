@@ -58,7 +58,6 @@
             this.pbTitleBar = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbProfile = new System.Windows.Forms.PictureBox();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
@@ -314,22 +313,12 @@
             this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             this.pbProfile.MouseHover += new System.EventHandler(this.PictureBoxHover);
             // 
-            // elementHost1
-            // 
-            this.elementHost1.Location = new System.Drawing.Point(373, 523);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(116, 34);
-            this.elementHost1.TabIndex = 14;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = null;
-            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(42)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(810, 569);
-            this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.pbProfile);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pbClose);
@@ -380,7 +369,6 @@
         private System.Windows.Forms.PictureBox pbTitleBar;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pbProfile;
-        private System.Windows.Forms.Integration.ElementHost elementHost1;
     }
 }
 

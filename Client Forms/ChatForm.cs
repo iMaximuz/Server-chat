@@ -88,8 +88,6 @@ namespace Client_Forms {
                 emoticons[key] = emote;
             }
 
-            elementHost1.Child = new WPFButton();
-
         }
 
         private void btnSend_Click( object sender, EventArgs e ) {
