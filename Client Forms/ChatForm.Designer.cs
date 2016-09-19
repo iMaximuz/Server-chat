@@ -24,22 +24,22 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("", 10);
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("", 9);
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("", 8);
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("", 7);
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("", 6);
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("", 5);
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("", 4);
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("", 3);
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("", 2);
-            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("", 1);
-            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("", 0);
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("", 10);
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("", 9);
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("", 8);
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("", 7);
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("", 6);
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("", 5);
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("", 4);
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("", 3);
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("", 2);
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("", 1);
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("", 0);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChatForm));
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Usuario 1");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Room 01", new System.Windows.Forms.TreeNode[] {
-            treeNode4});
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Room 02");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Usuario 1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Room 01", new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Room 02");
             this.cmsUser = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sendPrivateMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txtIn = new System.Windows.Forms.RichTextBox();
@@ -58,6 +58,7 @@
             this.pbTitleBar = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbProfile = new System.Windows.Forms.PictureBox();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
@@ -147,30 +148,30 @@
             this.lvEmoticons.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvEmoticons.Alignment = System.Windows.Forms.ListViewAlignment.Left;
             this.lvEmoticons.GridLines = true;
-            listViewItem12.StateImageIndex = 0;
-            listViewItem12.ToolTipText = ";)";
-            listViewItem13.ToolTipText = ":)";
-            listViewItem14.ToolTipText = "D\':";
-            listViewItem15.ToolTipText = ":(";
-            listViewItem16.ToolTipText = ":\'(";
-            listViewItem17.ToolTipText = ":l";
-            listViewItem18.ToolTipText = ":P";
-            listViewItem19.ToolTipText = ":laugh:";
-            listViewItem20.ToolTipText = ":D";
-            listViewItem21.ToolTipText = ":S";
-            listViewItem22.ToolTipText = ":angry:";
+            listViewItem1.StateImageIndex = 0;
+            listViewItem1.ToolTipText = ";)";
+            listViewItem2.ToolTipText = ":)";
+            listViewItem3.ToolTipText = "D\':";
+            listViewItem4.ToolTipText = ":(";
+            listViewItem5.ToolTipText = ":\'(";
+            listViewItem6.ToolTipText = ":l";
+            listViewItem7.ToolTipText = ":P";
+            listViewItem8.ToolTipText = ":laugh:";
+            listViewItem9.ToolTipText = ":D";
+            listViewItem10.ToolTipText = ":S";
+            listViewItem11.ToolTipText = ":angry:";
             this.lvEmoticons.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem12,
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16,
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20,
-            listViewItem21,
-            listViewItem22});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11});
             this.lvEmoticons.LabelWrap = false;
             this.lvEmoticons.LargeImageList = this.emoticonImageList;
             this.lvEmoticons.Location = new System.Drawing.Point(200, 415);
@@ -220,17 +221,17 @@
             this.treeView1.ItemHeight = 25;
             this.treeView1.Location = new System.Drawing.Point(12, 48);
             this.treeView1.Name = "treeView1";
-            treeNode4.ContextMenuStrip = this.cmsUser;
-            treeNode4.Name = "Node2";
-            treeNode4.StateImageIndex = 1;
-            treeNode4.Text = "Usuario 1";
-            treeNode5.Name = "Node0";
-            treeNode5.Text = "Room 01";
-            treeNode6.Name = "Node1";
-            treeNode6.Text = "Room 02";
+            treeNode1.ContextMenuStrip = this.cmsUser;
+            treeNode1.Name = "Node2";
+            treeNode1.StateImageIndex = 1;
+            treeNode1.Text = "Usuario 1";
+            treeNode2.Name = "Node0";
+            treeNode2.Text = "Room 01";
+            treeNode3.Name = "Node1";
+            treeNode3.Text = "Room 02";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode6});
+            treeNode2,
+            treeNode3});
             this.treeView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.ShowLines = false;
@@ -313,12 +314,22 @@
             this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             this.pbProfile.MouseHover += new System.EventHandler(this.PictureBoxHover);
             // 
+            // elementHost1
+            // 
+            this.elementHost1.Location = new System.Drawing.Point(373, 523);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(116, 34);
+            this.elementHost1.TabIndex = 14;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = null;
+            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(42)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(810, 569);
+            this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.pbProfile);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pbClose);
@@ -369,6 +380,7 @@
         private System.Windows.Forms.PictureBox pbTitleBar;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pbProfile;
+        private System.Windows.Forms.Integration.ElementHost elementHost1;
     }
 }
 
