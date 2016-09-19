@@ -77,10 +77,6 @@ namespace Server {
 
             switch (p.type) {
                 case PacketType.Chat:
-
-                    Console.WriteLine( "Message recived from: " + p.data[0] );
-                    Console.WriteLine( "Retransmiting..." );
-
                     foreach (ClientData client in server.clients) {
                         if (client.id != p.senderID)
                             server.SendPacket( client, p );
@@ -130,8 +126,8 @@ namespace Server {
 
         public static void SendWelcomeMessage( ClientData client ) {
             Packet p = new Packet( PacketType.Chat, ServerInfo.ID );
-            p.data.Add( ServerInfo.name );
-            p.data.Add( ServerInfo.motd );
+            p.data.Add( "name", ServerInfo.name );
+            p.data.Add( "message", ServerInfo.motd );
             server.SendPacket( client, p );
         }
 

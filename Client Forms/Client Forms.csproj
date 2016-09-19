@@ -66,6 +66,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -85,6 +86,42 @@
       <Project>{bd0b51ac-14bc-4c23-9d0f-1dfed9b69527}</Project>
       <Name>ServerData</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_pokerface.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_sad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_sad2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_winkyface.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_angry.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_badfeeling.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_laugh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_happy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_P.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_smile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\emote_sad3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

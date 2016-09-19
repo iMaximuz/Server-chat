@@ -25,6 +25,8 @@ namespace Client_Forms {
         Point windowPosition;
         float time = 0;
 
+        Dictionary<string, Image> emoticons;
+
 
         public ChatForm() {
             InitializeComponent();
@@ -54,6 +56,32 @@ namespace Client_Forms {
                 EditButtonText( btnConnect, "Connect" );
             };
 
+
+            //Load emoticons
+            emoticons = new Dictionary<string, Image>();
+            emoticons.Add( ":)", Properties.Resources.emote_smile );
+            emoticons.Add( ":D", Properties.Resources.emote_happy );
+            emoticons.Add( ":P", Properties.Resources.emote_P );
+            emoticons.Add( ":@", Properties.Resources.emote_angry );
+            emoticons.Add( ":S", Properties.Resources.emote_badfeeling );
+            emoticons.Add( ":laugh:", Properties.Resources.emote_laugh );
+            emoticons.Add( ":l", Properties.Resources.emote_pokerface );
+            emoticons.Add( ":(", Properties.Resources.emote_sad2 );
+            emoticons.Add( ":'(", Properties.Resources.emote_sad );
+            emoticons.Add( "D':", Properties.Resources.emote_sad3 );
+            emoticons.Add( ";)", Properties.Resources.emote_winkyface );
+         
+
+            //Set backgroundColor to match richtextbox backColor
+            List<string> keys = new List<string>( emoticons.Keys );
+            foreach(string key in keys) {
+                Bitmap emote = new Bitmap( emoticons[key].Width, emoticons[key].Height );
+                Graphics graphics = Graphics.FromImage( emote );
+                graphics.Clear( txtIn.BackColor );
+                graphics.DrawImage( emoticons[key], new Rectangle( Point.Empty, new Size( emote.Width, emote.Height ) ) );
+                emoticons[key] = emote;
+            }
+
         }
 
         private void btnSend_Click( object sender, EventArgs e ) {
@@ -66,15 +94,15 @@ namespace Client_Forms {
             else {
                 if (client.isConnected) {
                     Packet p = new Packet( PacketType.Chat, client.ID );
-                    p.data.Add( txtName.Text );
-                    p.data.Add( txtOut.Text );
-
-                    WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
-
+                    p.data.Add( "name", txtName.Text );
+                    p.data.Add( "message", txtOut.Text );
                     //Send message to server
                     //TODO: Implement Queue
                     client.connectionSocket.Send( p.ToBytes() );
+
+                    //WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
                 }
+                WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
             }
             txtOut.Text = "";
             txtOut.Focus();
@@ -101,7 +129,6 @@ namespace Client_Forms {
             }
         }
 
-        //TODO: Quitar el bug con el boton de desconectar
         //TODO: Pasar esto a una clase donde pueda reutilizarlo
 
         delegate void EditButtonDelegate( Button btn, string text );
@@ -119,36 +146,49 @@ namespace Client_Forms {
         delegate void WriteDelegate( RichTextBox obj, string text );
         void Write( RichTextBox obj, string text ) {
             WriteDelegate write = new WriteDelegate( Write );
-            if (obj.InvokeRequired == false)
+            if (obj.InvokeRequired == false) {
                 obj.AppendText( text );
+                SetEmoticons( obj );
+            }
             else
                 this.Invoke( write, new object[] { obj, text } );
         }
 
         delegate void WriteLineDelegate( RichTextBox obj, string text );
         void WriteLine( RichTextBox obj, string text ) {
-
             WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
-
-
-
             if (obj.InvokeRequired == false) {
-                txtIn.ReadOnly = false;
                 obj.AppendText( text + '\n' );
-                //while (txtIn.Text.Contains( "CAT" )) {
-                //    int ind = txtIn.Text.IndexOf( "CAT" );
-                //    txtIn.Select( ind, "CAT".Length );
-                //    Clipboard.Clear();
-                //    Clipboard.SetImage( (Image)Client_Forms.Properties.Resources.cat );
-                //    txtIn.Paste();
-                //    break;
-                //}
-                //txtIn.ReadOnly = false;
+                SetEmoticons( obj );
             }
             else
                 this.Invoke( writeLine, new object[] { obj, text } );
         }
 
+        void SetEmoticons(RichTextBox rtb ) {
+            rtb.ReadOnly = false;
+            IDataObject currentClipboard = Clipboard.GetDataObject();
+
+            foreach (string key in emoticons.Keys) {
+
+                while (rtb.Text.Contains( key )) {
+
+                    //Bitmap emote = new Bitmap( emoticons[key].Width, emoticons[key].Height );
+                    //Graphics graphics = Graphics.FromImage( emote );
+                    //graphics.Clear( rtb.BackColor );
+                    //graphics.DrawImage( emoticons[key], new Rectangle(Point.Empty, new Size(emote.Width, emote.Height)));
+
+                    int index = txtIn.Text.IndexOf( key );
+                    rtb.Select( index, key.Length );
+                    Clipboard.Clear();
+                    Clipboard.SetImage( emoticons[key] );
+    
+                    rtb.Paste();
+                }
+            }
+            Clipboard.SetDataObject( currentClipboard );
+            rtb.ReadOnly = false;
+        }
 
         private void ChatForm_FormClosing( object sender, FormClosingEventArgs e ) {
             if (client.isConnected)
@@ -185,13 +225,13 @@ namespace Client_Forms {
 
             switch (p.type) {
                 case PacketType.Chat: {
-                        WriteLine( txtIn, p.data[0] + ": " + p.data[1] );
+                        WriteLine( txtIn, p.data["name"] + ": " + p.data["message"] );
 
                         break;
                     }
 
                 case PacketType.Client_LogOut: {
-                        WriteLine( txtIn, "Client disconnected: " + p.data[0] );
+                        WriteLine( txtIn, "Client disconnected: " + p.data["name"] );
 
                         break;
                     }
@@ -202,9 +242,7 @@ namespace Client_Forms {
                     }
                 case PacketType.Chat_Buzzer: {
                         if (!buzzTimer.Enabled) {
-                            startTimer ST = new startTimer( StartTimer );
-
-                            //buzzTimer.Start();
+                            StartTimerDelegate ST = new StartTimerDelegate( StartTimer );
                             this.Invoke( ST );
                             time = 0;
                             windowPosition = this.Location;
@@ -215,7 +253,7 @@ namespace Client_Forms {
 
         }
 
-        delegate void startTimer();
+        delegate void StartTimerDelegate();
         void StartTimer() {
             buzzTimer.Start();
         }

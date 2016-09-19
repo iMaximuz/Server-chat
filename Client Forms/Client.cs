@@ -92,7 +92,7 @@ namespace Client_Forms {
             if (isConnected) {
 
                 Packet packet = new Packet( PacketType.Client_LogOut, ID );
-                packet.data.Add( chatName );
+                packet.data.Add( "name" , chatName );
 
                 //TODO: Change it to a Queue
                 connectionSocket.Send( packet.ToBytes() );
