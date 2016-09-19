@@ -12,12 +12,20 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
 using ServerData;
-
+using System.Runtime.InteropServices;
 
 namespace Client_Forms {
 
 
     public partial class ChatForm : Form {
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [DllImportAttribute( "user32.dll" )]
+        public static extern int SendMessage( IntPtr hWnd, int Msg, int wParam, int lParam );
+        [DllImportAttribute( "user32.dll" )]
+        public static extern bool ReleaseCapture();
 
 
         Client client;
@@ -26,7 +34,6 @@ namespace Client_Forms {
         float time = 0;
 
         Dictionary<string, Image> emoticons;
-
 
         public ChatForm() {
             InitializeComponent();
@@ -62,7 +69,7 @@ namespace Client_Forms {
             emoticons.Add( ":)", Properties.Resources.emote_smile );
             emoticons.Add( ":D", Properties.Resources.emote_happy );
             emoticons.Add( ":P", Properties.Resources.emote_P );
-            emoticons.Add( ":@", Properties.Resources.emote_angry );
+            emoticons.Add( ":angry:", Properties.Resources.emote_angry );
             emoticons.Add( ":S", Properties.Resources.emote_badfeeling );
             emoticons.Add( ":laugh:", Properties.Resources.emote_laugh );
             emoticons.Add( ":l", Properties.Resources.emote_pokerface );
@@ -70,11 +77,10 @@ namespace Client_Forms {
             emoticons.Add( ":'(", Properties.Resources.emote_sad );
             emoticons.Add( "D':", Properties.Resources.emote_sad3 );
             emoticons.Add( ";)", Properties.Resources.emote_winkyface );
-         
 
-            //Set backgroundColor to match richtextbox backColor
             List<string> keys = new List<string>( emoticons.Keys );
             foreach(string key in keys) {
+
                 Bitmap emote = new Bitmap( emoticons[key].Width, emoticons[key].Height );
                 Graphics graphics = Graphics.FromImage( emote );
                 graphics.Clear( txtIn.BackColor );
@@ -120,8 +126,14 @@ namespace Client_Forms {
 
         private void btnConnect_Click( object sender, EventArgs e ) {
             if (!client.isConnected) {
-                client.Connect( NetData.localhost, NetData.PORT );
-                btnConnect.Text = "Disconnect";
+                if (!client.attemtingConnection) {
+                    client.Connect( NetData.localhost, NetData.PORT );
+                    btnConnect.Text = "Disconnect";
+                }
+                else {
+                    client.attemtingConnection = false;
+                    btnConnect.Text = "Connect";
+                }
             }
             else {
                 client.Disconnect();
@@ -172,11 +184,6 @@ namespace Client_Forms {
             foreach (string key in emoticons.Keys) {
 
                 while (rtb.Text.Contains( key )) {
-
-                    //Bitmap emote = new Bitmap( emoticons[key].Width, emoticons[key].Height );
-                    //Graphics graphics = Graphics.FromImage( emote );
-                    //graphics.Clear( rtb.BackColor );
-                    //graphics.DrawImage( emoticons[key], new Rectangle(Point.Empty, new Size(emote.Width, emote.Height)));
 
                     int index = txtIn.Text.IndexOf( key );
                     rtb.Select( index, key.Length );
@@ -273,6 +280,51 @@ namespace Client_Forms {
 
         }
 
+        private void pbEmoticons_Click( object sender, EventArgs e ) {
+            lvEmoticons.Visible = !lvEmoticons.Visible;
+            lvEmoticons.Focus();
+        }
+
+        private void lvEmoticons_Leave( object sender, EventArgs e ) {
+            lvEmoticons.Visible = false;
+        }
+
+
+        private void lvEmoticons_SelectedIndexChanged( object sender, EventArgs e ) {
+            if (lvEmoticons.SelectedIndices.Count > 0) {
+                int i = lvEmoticons.SelectedIndices[0];
+                txtOut.AppendText( lvEmoticons.Items[i].ToolTipText + " " );
+                txtOut.Focus();
+            }
+        }
+
+        private void pbClose_Click( object sender, EventArgs e ) {
+            this.Owner.Show();
+            Close();
+        }
+
+        private void pbTitleBar_MouseDown( object sender, MouseEventArgs e ) {
+            if (e.Button == MouseButtons.Left) {
+                ReleaseCapture();
+                SendMessage( Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0 );
+            }
+        }
+
+
+        private void PictureBoxHover(object sender, EventArgs e ) {
+            ((PictureBox)sender).BackColor = ColorTranslator.FromHtml( "#035e7c" ); ;
+        }
+
+        private void PictureBoxLeave(object sender, EventArgs e) {
+
+            ((PictureBox)sender).BackColor = Color.Transparent;
+
+        }
+
+
+        private void lvEmoticons_MouseLeave( object sender, EventArgs e ) {
+            lvEmoticons.Visible = false;
+        }
     }
 }
 

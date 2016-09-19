@@ -53,10 +53,19 @@
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Client.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -122,6 +131,45 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-emoticons.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-emoticons2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-emoticons3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-shark-logo-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-logoff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-menu-green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-menu-pink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-profile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-shark-logo-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-shark-logo-3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-shark-S-green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-shark-S-pink.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

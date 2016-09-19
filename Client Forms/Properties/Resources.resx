@@ -151,4 +151,43 @@
   <data name="emote_winkyface" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\emote_winkyface.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icon_emoticons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-emoticons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_emoticons2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-emoticons2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_emoticons3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-emoticons3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_logoff" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-logoff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_menu_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-menu-green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_menu_pink" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-menu-pink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_profile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-profile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shark_logo_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-shark-logo-1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shark_logo_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-shark-logo-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shark_logo_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-shark-logo-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shark_S_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-shark-S-green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shark_S_pink" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-shark-S-pink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

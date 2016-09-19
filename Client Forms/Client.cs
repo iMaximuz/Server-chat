@@ -15,6 +15,8 @@ namespace Client_Forms {
         public string ID;
 
         public bool isConnected = false;
+        public bool attemtingConnection = false;
+
 
         public Socket connectionSocket;
 
@@ -48,9 +50,13 @@ namespace Client_Forms {
             this.port = port;
             this.hostAddress = new IPEndPoint( hostIP, port );
 
+            AttemptConnection connect = new AttemptConnection( ConnectToServer );
+
             if (!isConnected) {
-                AttemptConnection connect = new AttemptConnection( ConnectToServer );
-                connect.BeginInvoke( null, null );
+                if (!attemtingConnection) {
+                    
+                    connect.BeginInvoke( null, null );
+                }
             }
 
         }
@@ -58,12 +64,16 @@ namespace Client_Forms {
         delegate void AttemptConnection();
         void ConnectToServer() {
             if (!isConnected) {
-
+                attemtingConnection = true;
                 connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
                 // Try to connect to host
                 int connAttempts = 0;
 
                 while (connAttempts < 10) {
+
+                    if (!attemtingConnection) {
+                        break;
+                    }
 
                     try {
 
@@ -85,6 +95,7 @@ namespace Client_Forms {
                     receiveThread = new Thread( ReadThread );
                     receiveThread.Start();
                 }
+                attemtingConnection = false;
             }
         }
 

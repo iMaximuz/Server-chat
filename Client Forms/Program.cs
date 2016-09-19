@@ -13,7 +13,7 @@ namespace Client_Forms {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
-            Application.Run( new ChatForm() );
+            Application.Run( new LoginForm() );
         }
     }
 }
