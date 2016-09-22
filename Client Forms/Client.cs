@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using ServerData;
+using Server_Utilities;
+using System.Diagnostics;
 
 namespace Client_Forms {
-    class Client {
+   public class Client {
 
         string chatName;
         public string ID;
@@ -18,7 +19,7 @@ namespace Client_Forms {
         public bool attemtingConnection = false;
 
 
-        public Socket connectionSocket;
+        Socket connectionSocket;
 
         IPEndPoint hostAddress;
         IPAddress hostIPAddress;
@@ -106,29 +107,46 @@ namespace Client_Forms {
                 packet.data.Add( "name" , chatName );
 
                 //TODO: Change it to a Queue
-                connectionSocket.Send( packet.ToBytes() );
+                SendPacket( packet );
 
                 ShutdownClient();
             }
         }
 
+
+        //TODO: Maybe not have the client info here?
         void ChangeName( string newName ) {
             this.chatName = newName;
         }
 
+        public void SendPacket(Packet p) {
+            
+            connectionSocket.Send( PacketFormater.Format( p ) );
+
+        }
+
         void ReadThread() {
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
-            int recivedData;
+            int readBytes;
 
             try {
                 while (true) {
 
-                    recivedData = connectionSocket.Receive( buffer );
-                    if (recivedData > 0) {
+                    readBytes = connectionSocket.Receive( buffer );
+                    if (readBytes > 0) {
 
-                        Packet packet = new Packet( buffer );
-                        DefaultDispatchPacket( packet );
+                        int packetSize = PacketFormater.GetPacketSize( buffer );
+
+                        if (packetSize == readBytes - sizeof( int )) {
+                            Packet packet = PacketFormater.MakePacket( buffer );
+                            DefaultDispatchPacket( packet );
+                        }
                     }
+                    else {
+                        Debug.Assert( true );
+                        break;
+                    }
+
                 }
             }
             catch (SocketException ex) {

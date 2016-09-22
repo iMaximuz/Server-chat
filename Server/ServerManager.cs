@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
-using ServerData;
+using Server_Utilities;
 
 
 namespace Server {
@@ -32,8 +32,13 @@ namespace Server {
         class Message {
             public Socket socket;
             public Packet packet;
+            public bool toEveryOne;
             public Message() { }
-            public Message(Socket s, Packet p) { socket = s; packet = p; }
+            public Message(Socket s, Packet p, bool toEveryOne = false) {
+                socket = s;
+                packet = p;
+                this.toEveryOne = toEveryOne;
+            }
         }
 
         Queue<Message> messageQueue;
@@ -86,26 +91,33 @@ namespace Server {
         void SendThread() {
 
             try {
-                while ( true ) {
+                while (true) {
                     Message m = new Message();
-                    if ( messageQueue.Count > 0 ) {
+                    if (messageQueue.Count > 0) {
                         m = messageQueue.Dequeue();
-                        //Verificar si el cliente aun sigue connectado
-                        if ( m.socket != null ) {
-                            m.socket.Send( m.packet.ToBytes() );
-                            Thread.Sleep( 10 );
+                        if (!m.toEveryOne) {
+                            //Verificar si el cliente aun sigue connectado
+                            if (m.socket != null) {
+                                m.socket.Send( PacketFormater.Format( m.packet ) );
+                            }
                         }
+                        else {
+                            foreach (ClientData client in clients) {
+                                client.socket.Send( PacketFormater.Format( m.packet ) );
+                            }
+                        }
+                        Thread.Sleep( 10 );
                     }
                     else {
                         Thread.Sleep( 50 );
                     }
                 }
             }
-            catch (ThreadAbortException ex ) {
+            catch (ThreadAbortException ex) {
                 Console.WriteLine( "Send Thread aborted" );
             }
-
         }
+
 
         public void ClientThread( object obj ) {
             ClientData client = (ClientData)obj;
@@ -116,13 +128,20 @@ namespace Server {
             try {
                 while (true) {
 
-                    buffer = new byte[socket.SendBufferSize];
+                    buffer = new byte[socket.ReceiveBufferSize];
                     readBytes = socket.Receive( buffer );
 
                     if (readBytes > 0) {
-                        //Make a packet from serialized array of bytes
-                        Packet packet = new Packet( buffer );
-                        OnReceive( packet );
+
+                        int packetSize = PacketFormater.GetPacketSize( buffer );
+
+                        if( packetSize == readBytes - sizeof( int ) ) {
+                            Packet packet = PacketFormater.MakePacket( buffer );
+                            OnReceive( packet );
+                        }
+
+
+                        
 
                     }
                     else {
@@ -142,7 +161,7 @@ namespace Server {
         }
 
         //SendPacket mandará el packete a la fila para ser enviado posteriormente
-        public void SendPacket(ClientData dest, Packet packet) {
+        public void SendPacket( ClientData dest, Packet packet ) {
             messageQueue.Enqueue( new Message( dest.socket, packet ) );
         }
 
@@ -152,9 +171,7 @@ namespace Server {
 
         //SendPacket mandará el packete a todos los clientes agregandalos a la fila de envios
         public void SendPacketToAll(Packet packet ) {
-            foreach(ClientData client in clients ) {
-                SendPacket( client, packet );
-            }
+            messageQueue.Enqueue( new Message(null, packet, true) );
         }
 
         public void RemoveClient(string id) {

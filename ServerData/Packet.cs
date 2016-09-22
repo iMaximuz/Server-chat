@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Net;
 using System.IO;
 
-namespace ServerData {
+namespace Server_Utilities {
     [Serializable]
     public class Packet {
         public Dictionary<string, object> data;
@@ -43,6 +43,46 @@ namespace ServerData {
             return bytes;
         }
     }
+
+    public class PacketFormater {
+
+        //Returns an array of bytes containing the size of the packet as the first 4 elemts
+        static public byte[] Format(Packet p) {
+
+            byte[] packetBytes = p.ToBytes();
+            byte[] packetSize = BitConverter.GetBytes( packetBytes.Length );
+            byte[] buffer = new byte[packetBytes.Length + packetSize.Length];
+
+            MemoryStream ms = new MemoryStream( buffer );
+
+            ms.Write( packetSize, 0, 4 );
+            ms.Write( packetBytes, 0, packetBytes.Length );
+
+            ms.Close();
+
+            return buffer;
+        }
+
+        //Returns the size of the packet contained in an array of bytes
+        static public int GetPacketSize(byte[] packet) {
+            int size = BitConverter.ToInt32( packet, 0 );
+            return size;
+        }
+
+        static public Packet MakePacket(byte[] packet) {
+            Packet result;
+            int size = GetPacketSize( packet );
+            byte[] buffer = new byte[size];
+
+            Array.Copy( packet, 4, buffer, 0, size );
+
+            result = new Packet( buffer );
+
+            return result;
+        }
+
+    }
+
 
     public enum PacketType {
         Server_Registration,

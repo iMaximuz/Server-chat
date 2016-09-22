@@ -35,7 +35,7 @@ namespace Client_Forms {
 
         private void btnLogIn_Click( object sender, EventArgs e ) {
             this.Hide();
-            ChatForm chat = new ChatForm();
+            MainForm chat = new MainForm();
             chat.Show( this );
         }
 

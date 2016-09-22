@@ -7,7 +7,7 @@ using System.Net;
 
 
 
-namespace ServerData {
+namespace Server_Utilities {
     public static class NetData {
         public static int PORT = 4040;
         public static IPAddress localhost = IPAddress.Parse("127.0.0.1");

@@ -52,9 +52,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServerData\ServerData.csproj">
+    <ProjectReference Include="..\ServerData\Server Utilities.csproj">
       <Project>{bd0b51ac-14bc-4c23-9d0f-1dfed9b69527}</Project>
-      <Name>ServerData</Name>
+      <Name>Server Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

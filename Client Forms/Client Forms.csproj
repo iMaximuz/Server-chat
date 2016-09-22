@@ -58,6 +58,13 @@
     <Compile Include="ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChatUtilities.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Client.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -69,6 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -97,9 +107,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServerData\ServerData.csproj">
+    <ProjectReference Include="..\ServerData\Server Utilities.csproj">
       <Project>{bd0b51ac-14bc-4c23-9d0f-1dfed9b69527}</Project>
-      <Name>ServerData</Name>
+      <Name>Server Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
