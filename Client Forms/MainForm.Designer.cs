@@ -53,18 +53,22 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.cmsRooms = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createRoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pbBuzzer = new System.Windows.Forms.PictureBox();
+            this.pbFile = new System.Windows.Forms.PictureBox();
+            this.pbProfile = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbEmoticons = new System.Windows.Forms.PictureBox();
             this.pbTitleBar = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pbProfile = new System.Windows.Forms.PictureBox();
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTitleBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
             this.SuspendLayout();
             // 
             // cmsUser
@@ -253,6 +257,57 @@
             this.createRoomToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.createRoomToolStripMenuItem.Text = "Create room";
             // 
+            // pbBuzzer
+            // 
+            this.pbBuzzer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbBuzzer.Image = global::Client_Forms.Properties.Resources.icon_buzz;
+            this.pbBuzzer.Location = new System.Drawing.Point(245, 516);
+            this.pbBuzzer.Name = "pbBuzzer";
+            this.pbBuzzer.Size = new System.Drawing.Size(40, 40);
+            this.pbBuzzer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbBuzzer.TabIndex = 15;
+            this.pbBuzzer.TabStop = false;
+            this.pbBuzzer.Click += new System.EventHandler(this.pbBuzzer_Click);
+            this.pbBuzzer.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            this.pbBuzzer.MouseHover += new System.EventHandler(this.PictureBoxHover);
+            // 
+            // pbFile
+            // 
+            this.pbFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbFile.Image = global::Client_Forms.Properties.Resources.icon_paperclip;
+            this.pbFile.Location = new System.Drawing.Point(291, 516);
+            this.pbFile.Name = "pbFile";
+            this.pbFile.Size = new System.Drawing.Size(40, 40);
+            this.pbFile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbFile.TabIndex = 14;
+            this.pbFile.TabStop = false;
+            this.pbFile.Click += new System.EventHandler(this.pbFile_Click);
+            this.pbFile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            this.pbFile.MouseHover += new System.EventHandler(this.PictureBoxHover);
+            // 
+            // pbProfile
+            // 
+            this.pbProfile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbProfile.Image = global::Client_Forms.Properties.Resources.icon_profile;
+            this.pbProfile.Location = new System.Drawing.Point(737, 5);
+            this.pbProfile.Name = "pbProfile";
+            this.pbProfile.Size = new System.Drawing.Size(30, 30);
+            this.pbProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbProfile.TabIndex = 13;
+            this.pbProfile.TabStop = false;
+            this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            this.pbProfile.MouseHover += new System.EventHandler(this.PictureBoxHover);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Client_Forms.Properties.Resources.icon_shark_logo_1;
+            this.pictureBox1.Location = new System.Drawing.Point(8, 4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(60, 37);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 12;
+            this.pictureBox1.TabStop = false;
+            // 
             // pbClose
             // 
             this.pbClose.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -290,35 +345,14 @@
             this.pbTitleBar.TabStop = false;
             this.pbTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbTitleBar_MouseDown);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::Client_Forms.Properties.Resources.icon_shark_logo_1;
-            this.pictureBox1.Location = new System.Drawing.Point(8, 4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(60, 37);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 12;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pbProfile
-            // 
-            this.pbProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbProfile.Image = global::Client_Forms.Properties.Resources.icon_profile;
-            this.pbProfile.Location = new System.Drawing.Point(737, 5);
-            this.pbProfile.Name = "pbProfile";
-            this.pbProfile.Size = new System.Drawing.Size(30, 30);
-            this.pbProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbProfile.TabIndex = 13;
-            this.pbProfile.TabStop = false;
-            this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            this.pbProfile.MouseHover += new System.EventHandler(this.PictureBoxHover);
-            // 
-            // ChatForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(42)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(810, 569);
+            this.Controls.Add(this.pbBuzzer);
+            this.Controls.Add(this.pbFile);
             this.Controls.Add(this.pbProfile);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pbClose);
@@ -332,18 +366,20 @@
             this.Controls.Add(this.txtIn);
             this.Controls.Add(this.pbTitleBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "ChatForm";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Chat Client";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
             this.Load += new System.EventHandler(this.ChatForm_Load);
             this.cmsUser.ResumeLayout(false);
             this.cmsRooms.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTitleBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -369,6 +405,8 @@
         private System.Windows.Forms.PictureBox pbTitleBar;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pbProfile;
+        private System.Windows.Forms.PictureBox pbFile;
+        private System.Windows.Forms.PictureBox pbBuzzer;
     }
 }
 

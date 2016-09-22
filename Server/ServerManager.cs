@@ -7,7 +7,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using Server_Utilities;
-
+using System.IO;
 
 namespace Server {
     class ServerManager {
@@ -123,6 +123,8 @@ namespace Server {
             ClientData client = (ClientData)obj;
             Socket socket = client.socket;
 
+            //socket.ReceiveBufferSize = 200;
+
             byte[] buffer;
             int readBytes;
             try {
@@ -139,9 +141,25 @@ namespace Server {
                             Packet packet = PacketFormater.MakePacket( buffer );
                             OnReceive( packet );
                         }
+                        else {
 
+                            int totalBytes = readBytes;
+                            int fullBufferSize = packetSize + sizeof( int );
+                            byte[] fullPacketBuffer = new byte[fullBufferSize];
+                            MemoryStream ms = new MemoryStream( fullPacketBuffer );
+                            ms.Write( buffer, 0, buffer.Length );
 
-                        
+                            while(totalBytes < fullBufferSize) {
+                                readBytes = socket.Receive( buffer );
+                                totalBytes += readBytes;
+                                ms.Write( buffer, 0, readBytes );
+                            }
+
+                            ms.Close();
+
+                            Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
+                            OnReceive( packet );
+                        }
 
                     }
                     else {

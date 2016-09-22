@@ -20,7 +20,6 @@ namespace Client_Forms {
         Dictionary<string, Image> emoticons;
         Mutex mutex;
 
-
         public ChatUtilities( Form form ) {
             owner = form;
 
@@ -47,31 +46,40 @@ namespace Client_Forms {
 
         }
 
-        delegate void WriteDelegate( RichTextBox output, string text );
-        public void Write( RichTextBox output, string text) {
+        delegate void WriteDelegate( RichTextBox output, string text, Color? color = null );
+        public void Write( RichTextBox output, string text, Color? color = null) {
+
+            Color textColor = color ?? Color.White;
 
             if (!output.InvokeRequired) {
-                output.AppendText( text );
+
+                output.AppendText( text, textColor );
+
                 SetEmoticons( output );
 
             }
             else {
                 WriteDelegate write = new WriteDelegate( Write );
-                owner.Invoke( write, new object[] { output, text } );
+                owner.Invoke( write, new object[] { output, text, textColor } );
             }
 
         }
 
-        delegate void WriteLineDelegate( RichTextBox output, string text );
-        public void WriteLine( RichTextBox output, string text ) {
+        delegate void WriteLineDelegate( RichTextBox output, string text, Color? color = null );
+        public void WriteLine( RichTextBox output, string text, Color? color = null ) {
+
+            Color textColor = color ?? Color.White;
+
             if (!output.InvokeRequired) {
-                output.AppendText( text + '\n' );
+
+                output.AppendText( text + "\n", textColor );
+
                 SetEmoticons( output );
 
             }
             else {
                 WriteLineDelegate writeLine = new WriteLineDelegate( WriteLine );
-                owner.Invoke( writeLine, new object[] { output, text } );
+                owner.Invoke( writeLine, new object[] { output, text, textColor } );
             }
 
         }
@@ -115,4 +123,19 @@ namespace Client_Forms {
 
 
     }
+
+    public static class RichTextBoxExtensions {
+
+        public static void AppendText(this RichTextBox box, string text, Color color){
+
+            box.SelectionStart = box.TextLength;
+            box.SelectionLength = 0;
+            box.SelectionColor = color;
+            box.AppendText( text );
+            box.SelectionColor = box.ForeColor;
+
+        }
+
+    }
+
 }

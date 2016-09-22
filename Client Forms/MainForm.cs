@@ -13,6 +13,7 @@ using System.Threading;
 using System.Diagnostics;
 using Server_Utilities;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace Client_Forms {
 
@@ -49,7 +50,7 @@ namespace Client_Forms {
             client = new Client();
 
             client.OnConnect = () => { chat.WriteLine( txtIn, "Connected to server..." ); };
-            client.OnError = ( s ) => { chat.WriteLine( txtIn, s ); };
+            client.OnError = ( s ) => { chat.WriteLine( txtIn, s, Color.Red ); };
             client.OnConnectionFail = ( s ) => {
                 chat.WriteLine( txtIn, s );
                 EditButtonText( btnConnect, "Connect" );
@@ -202,6 +203,17 @@ namespace Client_Forms {
                         }
                         break;
                     }
+                case PacketType.Chat_File: {
+
+                        string fileName = (string)p.data["fileName"];
+                        byte[] file = (byte[])p.data["file"];
+
+                        File.WriteAllBytes( client.GetDownloadFilePath() + fileName, file );
+
+                        chat.WriteLine( txtIn, fileName + " (" + (float)file.Length / 1024.0 + " Kb) " + "received." );
+
+                        break;
+                    }
             }
 
         }
@@ -270,6 +282,46 @@ namespace Client_Forms {
 
         private void lvEmoticons_MouseLeave( object sender, EventArgs e ) {
             lvEmoticons.Visible = false;
+        }
+
+        private void pbFile_Click( object sender, EventArgs e ) {
+            using (OpenFileDialog ofd = new OpenFileDialog()) {
+
+                ofd.Title = "Send File";
+                ofd.Filter = "All Files (*.*)|*.*";
+                ofd.FilterIndex = 0;
+                ofd.Multiselect = false;
+
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    using (FileStream fs = (FileStream)ofd.OpenFile()) {
+
+                        byte[] buffer = new byte[2 * 1024];
+                        using(MemoryStream ms = new MemoryStream()) {
+                            int readBytes;
+                            while((readBytes = fs.Read(buffer,0,buffer.Length)) > 0) {
+
+                                ms.Write( buffer, 0, readBytes );
+
+                            }
+
+                            byte[] file = ms.ToArray();
+
+                            Packet p = new Packet( PacketType.Chat_File, client.ID );
+                            p.data.Add( "fileName", ofd.SafeFileName);
+                            p.data.Add( "file", file );
+                            client.SendPacket( p );
+
+                            chat.WriteLine(txtIn, "Sending " + ofd.SafeFileName + " (" + (float)file.Length / 1024.0 + " Kb)...", Color.Red);
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private void pbBuzzer_Click( object sender, EventArgs e ) {
+            Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
+            client.SendPacket( p );
         }
     }
 }

@@ -173,29 +173,19 @@ namespace Client_Forms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_buzz {
+            get {
+                object obj = ResourceManager.GetObject("icon_buzz", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icon_emoticons {
             get {
                 object obj = ResourceManager.GetObject("icon_emoticons", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icon_emoticons2 {
-            get {
-                object obj = ResourceManager.GetObject("icon_emoticons2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icon_emoticons3 {
-            get {
-                object obj = ResourceManager.GetObject("icon_emoticons3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -226,6 +216,16 @@ namespace Client_Forms.Properties {
         internal static System.Drawing.Bitmap icon_menu_pink {
             get {
                 object obj = ResourceManager.GetObject("icon_menu_pink", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_paperclip {
+            get {
+                object obj = ResourceManager.GetObject("icon_paperclip", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

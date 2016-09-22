@@ -59,6 +59,7 @@
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ChatUtilities.cs" />
+    <Compile Include="KnownFolders.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +187,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\icon-shark-S-pink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-paperclip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-buzz.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

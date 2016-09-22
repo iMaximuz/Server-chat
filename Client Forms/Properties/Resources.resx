@@ -154,12 +154,6 @@
   <data name="icon_emoticons" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\icon-emoticons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_emoticons2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon-emoticons2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon_emoticons3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon-emoticons3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="icon_logoff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\icon-logoff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -189,5 +183,11 @@
   </data>
   <data name="icon_shark_S_pink" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\icon-shark-S-pink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_paperclip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-paperclip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_buzz" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\icon-buzz.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

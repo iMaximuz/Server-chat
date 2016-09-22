@@ -76,12 +76,12 @@ namespace Server {
         public static void DispatchPacket( Packet p ) {
 
             switch (p.type) {
+                case PacketType.Chat_File:
                 case PacketType.Chat:
                     foreach (ClientData client in server.clients) {
                         if (client.id != p.senderID)
                             server.SendPacket( client, p );
                     }
-
                     break;
                 case PacketType.Client_LogOut: {
 

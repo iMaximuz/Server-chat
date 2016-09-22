@@ -8,12 +8,14 @@ using System.Net.Sockets;
 using System.Threading;
 using Server_Utilities;
 using System.Diagnostics;
+using System.IO;
 
 namespace Client_Forms {
    public class Client {
 
         string chatName;
         public string ID;
+        string filePath = KnownFolders.GetPath( KnownFolder.Downloads );
 
         public bool isConnected = false;
         public bool attemtingConnection = false;
@@ -120,14 +122,19 @@ namespace Client_Forms {
         }
 
         public void SendPacket(Packet p) {
-            
-            connectionSocket.Send( PacketFormater.Format( p ) );
-
+            if (isConnected) {
+                connectionSocket.Send( PacketFormater.Format( p ) );
+            }
+            else {
+                OnError( "Este cliente no esta conectado a un servidor." );
+            }
         }
 
         void ReadThread() {
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
             int readBytes;
+
+            connectionSocket.ReceiveBufferSize = 200;
 
             try {
                 while (true) {
@@ -139,6 +146,25 @@ namespace Client_Forms {
 
                         if (packetSize == readBytes - sizeof( int )) {
                             Packet packet = PacketFormater.MakePacket( buffer );
+                            DefaultDispatchPacket( packet );
+                        }
+                        else {
+
+                            int totalBytes = readBytes;
+                            int fullBufferSize = packetSize + sizeof( int );
+                            byte[] fullPacketBuffer = new byte[fullBufferSize];
+                            MemoryStream ms = new MemoryStream( fullPacketBuffer );
+                            ms.Write( buffer, 0, buffer.Length );
+
+                            while (totalBytes < fullBufferSize) {
+                                readBytes = connectionSocket.Receive( buffer );
+                                totalBytes += readBytes;
+                                ms.Write( buffer, 0, readBytes );
+                            }
+
+                            ms.Close();
+
+                            Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
                             DefaultDispatchPacket( packet );
                         }
                     }
@@ -190,6 +216,11 @@ namespace Client_Forms {
                     break;
             }
 
+        }
+
+
+        public string GetDownloadFilePath() {
+            return filePath + "\\";
         }
 
     }

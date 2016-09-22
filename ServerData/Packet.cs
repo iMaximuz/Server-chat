@@ -46,7 +46,7 @@ namespace Server_Utilities {
 
     public class PacketFormater {
 
-        //Returns an array of bytes containing the size of the packet as the first 4 elemts
+        //Returns an array of bytes containing the size of the packet in the first 4 bytes and the serealized packet after them
         static public byte[] Format(Packet p) {
 
             byte[] packetBytes = p.ToBytes();
@@ -69,6 +69,7 @@ namespace Server_Utilities {
             return size;
         }
 
+        //Returns the packet from Formated array of bytes
         static public Packet MakePacket(byte[] packet) {
             Packet result;
             int size = GetPacketSize( packet );
@@ -92,6 +93,7 @@ namespace Server_Utilities {
         Ping,
         Pong,
         Chat,
-        Chat_Buzzer
+        Chat_Buzzer,
+        Chat_File
     }
 }
