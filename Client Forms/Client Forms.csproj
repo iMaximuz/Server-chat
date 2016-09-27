@@ -58,7 +58,8 @@
     <Compile Include="ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChatUtilities.cs" />
+    <Compile Include="ControlExtencions.cs" />
+    <Compile Include="Emotes.cs" />
     <Compile Include="KnownFolders.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

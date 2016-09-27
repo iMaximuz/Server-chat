@@ -34,9 +34,6 @@ namespace Client_Forms {
         Point windowPosition;
         float elapsedBuzzTime = 0;
 
-        ChatUtilities chat;
-
-
         public MainForm() {
             InitializeComponent();
             pingStopWatch = new Stopwatch();
@@ -44,15 +41,15 @@ namespace Client_Forms {
 
         private void ChatForm_Load( object sender, EventArgs e ) {
 
-            //Load the chat utilities for later use
-            chat = new ChatUtilities( this );
+            //Load the chat Emoticons with the back color from the richtextbox
+            Emotes.LoadEmotes( txtIn.BackColor );
 
             client = new Client();
 
-            client.OnConnect = () => { chat.WriteLine( txtIn, "Connected to server..." ); };
-            client.OnError = ( s ) => { chat.WriteLine( txtIn, s, Color.Red ); };
+            client.OnConnect = () => {  txtIn.WriteLine( this, "Connected to server..." ); };
+            client.OnError = ( s ) => { txtIn.WriteLine( this, s, Color.Red ); };
             client.OnConnectionFail = ( s ) => {
-                chat.WriteLine( txtIn, s );
+                txtIn.WriteLine( this, s );
                 EditButtonText( btnConnect, "Connect" );
             };
 
@@ -60,19 +57,14 @@ namespace Client_Forms {
             client.OnPacketReceived = DispatchPacket;
 
             client.OnServerDisconnect = () => {
-                chat.WriteLine( txtIn, "ERROR 500: An existing connection was forcibly closed by the server " );
+                txtIn.WriteLine( this, "ERROR 500: An existing connection was forcibly closed by the server " );
                 EditButtonText( btnConnect, "Connect" );
             };
 
             client.OnDisconnect = () => {
-                chat.WriteLine( txtIn, "Disconnected from server..." );
+                txtIn.WriteLine( this, "Disconnected from server..." );
                 EditButtonText( btnConnect, "Connect" );
             };
-
-
-            //Set emoticons' back color to be like the richTextBox
-            chat.SetEmoticonsBackColor( txtIn.BackColor );
-
 
         }
 
@@ -94,7 +86,7 @@ namespace Client_Forms {
 
                     //WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
                 }
-                chat.WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
+                txtIn.WriteLine( this, txtName.Text + ": " + txtOut.Text );
             }
             txtOut.Text = "";
             txtOut.Focus();
@@ -179,19 +171,19 @@ namespace Client_Forms {
 
             switch (p.type) {
                 case PacketType.Chat: {
-                        chat.WriteLine( txtIn, p.data["name"] + ": " + p.data["message"] );
+                        txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
 
                         break;
                     }
 
                 case PacketType.Client_LogOut: {
-                        chat.WriteLine( txtIn, "Client disconnected: " + p.data["name"] );
+                        txtIn.WriteLine( this, "Client disconnected: " + p.data["name"] );
 
                         break;
                     }
                 case PacketType.Pong: {
                         pingStopWatch.Stop();
-                        chat.WriteLine( txtIn, "Pong: " + pingStopWatch.ElapsedMilliseconds.ToString() );
+                        txtIn.WriteLine( this, "Pong: " + pingStopWatch.ElapsedMilliseconds.ToString() );
                         break;
                     }
                 case PacketType.Chat_Buzzer: {
@@ -210,7 +202,7 @@ namespace Client_Forms {
 
                         File.WriteAllBytes( client.GetDownloadFilePath() + fileName, file );
 
-                        chat.WriteLine( txtIn, fileName + " (" + (float)file.Length / 1024.0 + " Kb) " + "received." );
+                        txtIn.WriteLine( this, fileName + " (" + (float)file.Length / 1024.0 + " Kb) " + "received." );
 
                         break;
                     }
@@ -245,12 +237,14 @@ namespace Client_Forms {
 
         private void lvEmoticons_Leave( object sender, EventArgs e ) {
             lvEmoticons.Visible = false;
+            txtOut.Focus();
         }
 
 
         private void lvEmoticons_SelectedIndexChanged( object sender, EventArgs e ) {
             if (lvEmoticons.SelectedIndices.Count > 0) {
                 int i = lvEmoticons.SelectedIndices[0];
+                lvEmoticons.Items[i].Selected = false;
                 txtOut.AppendText( lvEmoticons.Items[i].ToolTipText + " " );
                 txtOut.Focus();
             }
@@ -311,7 +305,7 @@ namespace Client_Forms {
                             p.data.Add( "file", file );
                             client.SendPacket( p );
 
-                            chat.WriteLine(txtIn, "Sending " + ofd.SafeFileName + " (" + (float)file.Length / 1024.0 + " Kb)...", Color.Red);
+                            txtIn.WriteLine( this, "Sending " + ofd.SafeFileName + " (" + (float)file.Length / 1024.0 + " Kb)...", Color.Red );
 
                         }
                     }

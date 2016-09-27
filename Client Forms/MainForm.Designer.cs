@@ -178,6 +178,7 @@
             this.lvEmoticons.LabelWrap = false;
             this.lvEmoticons.LargeImageList = this.emoticonImageList;
             this.lvEmoticons.Location = new System.Drawing.Point(200, 415);
+            this.lvEmoticons.MultiSelect = false;
             this.lvEmoticons.Name = "lvEmoticons";
             this.lvEmoticons.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.lvEmoticons.Scrollable = false;

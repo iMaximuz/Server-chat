@@ -21,7 +21,6 @@ namespace Server {
             id = Guid.NewGuid().ToString();
             thread = new Thread( ts );
             thread.Start( this );
-            //TODO: Manejar este mensaje en otra parte?
         }
 
         public void Disconnect() {
