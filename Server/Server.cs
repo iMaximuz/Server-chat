@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
+using Server.DataBase;
 using Server_Utilities;
 
 
@@ -25,6 +26,8 @@ namespace Server {
 
         static ServerManager server;
         static IPEndPoint serverAddress;
+        static ServerDatabase database;
+
 
         static void Main( string[] args ) {
 
@@ -51,12 +54,19 @@ namespace Server {
 
             server.Start();
 
-            while (server.isOnline) {
+            database = new ServerDatabase();
+            database.ReadXml( "Database.xml" );
 
-                string command = Console.ReadLine().ToLower();
+
+            while (server.isOnline) {
+                Console.Write(" > ");
+                string command = Console.ReadLine();
                 DispatchServerCommands( command );
 
             }
+
+            
+
 
             Console.WriteLine( "Server offline..." );
             Console.ReadKey();
@@ -64,10 +74,94 @@ namespace Server {
 
         static void DispatchServerCommands( string command ) {
 
-            switch (command) {
+
+            string[] args = command.Split( ' ' );
+
+            switch (args[0].ToLower()) {
                 case "shutdown":
                     Console.WriteLine( "Server is shuting down" );
                     server.Shutdown();
+                    break;
+                case "add":
+                    if (args[1] != null) {
+                        switch (args[1].ToLower()) {
+                            case "user": {
+                                    ServerDatabase.UserRow userRow = database.User.NewUserRow();
+
+                                    userRow.username = args[2];
+                                    userRow.password = args[3];
+                                    userRow.admin = true;
+                                    userRow.state = 0;
+
+                                    database.User.AddUserRow( userRow );
+                                    database.WriteXml( "Database.xml" );
+
+                                    Console.WriteLine( "User: " + args[2] + " added to database." );
+                                }
+                                break;
+                            case "chatroom": {
+                                    if (!String.IsNullOrEmpty( args[2] )) { 
+                                        if (args[2] == "public") {
+                                            ServerDatabase.ChatRoomRow chatroomRow = database.ChatRoom.NewChatRoomRow();
+                                            chatroomRow.name = args[3];
+                                            database.ChatRoom.AddChatRoomRow(chatroomRow);
+                                            database.WriteXml( "Database.xml" );
+                                            Console.WriteLine( "Public chat room " + args[2] + " added to database." );
+                                        }
+                                        else if(args[2] == "private") {
+                                            ServerDatabase.PrivateChatRoomRow chatroomRow = database.PrivateChatRoom.NewPrivateChatRoomRow();
+                                            chatroomRow.name = args[3];
+                                            database.PrivateChatRoom.AddPrivateChatRoomRow( chatroomRow );
+                                            database.WriteXml( "Database.xml" );
+                                            Console.WriteLine( "Private chat room " + args[2] + " added to database." );
+                                        }
+                                    }
+                                } break;
+                            default:
+                                Console.WriteLine( args[1] + " is not a valid argument for add" );
+                                break;
+                        }//switch 2
+                    }
+                    break;
+                case "list": {
+                        if (args[1] != null) {
+                            switch (args[1].ToLower()) {
+                                case "user": {
+                                        ServerDatabase.UserDataTable userTable = database.User;
+                                        var query = from usuario in userTable
+                                                    select usuario;
+                                        foreach (var element in query) {
+                                            Console.WriteLine( "[" + element.UserID.ToString() + "] " + element.username.ToString() + " " + element.password.ToString() );
+                                        }
+                                    }
+                                    break;
+                                case "chatroom": {
+                                        if (String.IsNullOrEmpty( args[2] )) {
+
+                                        }
+                                        else { 
+                                            if (args[2] == "public") {
+
+                                            }
+                                            else if (args[2] == "private") {
+
+                                            }
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    Console.WriteLine( args[1] + " is not a valid argument for add" );
+                                    break;
+                            }//switch 2
+                        }
+                    } break;
+                case "save":
+
+                    database.WriteXml( "Database.xml" );
+                    Console.WriteLine( "Database saved." );
+                    break;
+                default:
+                    Console.WriteLine( "Unknown command." );
                     break;
             }
 

@@ -44,12 +44,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientData.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="DataBase\ServerDatabase.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServerDatabase.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="ServerManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="DataBase\ServerDatabase.xsc">
+      <DependentUpon>ServerDatabase.xsd</DependentUpon>
+    </None>
+    <None Include="DataBase\ServerDatabase.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ServerDatabase.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataBase\ServerDatabase.xss">
+      <DependentUpon>ServerDatabase.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ServerData\Server Utilities.csproj">
