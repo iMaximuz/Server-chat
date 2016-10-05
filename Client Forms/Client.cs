@@ -87,16 +87,21 @@ namespace Client_Forms {
                     }
                     catch (SocketException ex) {
 
-                        OnError( "Could not connect to host... Attempt " + connAttempts.ToString() );
+                        if(OnError != null)
+                            OnError( "Could not connect to host... Attempt " + connAttempts.ToString() );
 
-                        if (connAttempts == 10)
-                            OnConnectionFail( ex.Message );
+                        if (connAttempts == 10) {
+                            if (OnConnectionFail != null)
+                                OnConnectionFail( ex.Message );
+                        }
                     }
                 }
 
                 if (isConnected) {
                     receiveThread = new Thread( ReadThread );
                     receiveThread.Start();
+                    if(OnConnect != null)
+                        OnConnect();
                 }
                 attemtingConnection = false;
             }

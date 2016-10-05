@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server_Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,6 +25,14 @@ namespace Client_Forms {
         public static extern int SendMessage( IntPtr hWnd, int Msg, int wParam, int lParam );
         [DllImportAttribute( "user32.dll" )]
         public static extern bool ReleaseCapture();
+
+        Client activeConnection;
+
+
+        private void LoginForm_Load( object sender, EventArgs e ) {
+            //activeConnection = new Client();
+            //activeConnection.Connect( NetData.localhost, NetData.PORT );
+        }
 
         public LoginForm() {
             InitializeComponent();
@@ -54,6 +63,20 @@ namespace Client_Forms {
 
             ((PictureBox)sender).BackColor = Color.Transparent;
 
+        }
+
+        private void btnSignIn_Click( object sender, EventArgs e ) {
+            SignInForm signIn = new SignInForm();
+
+            
+
+            signIn.ShowDialog( this );
+        }
+
+        
+        public void CreateChat() {
+            SignInForm signIn = new SignInForm();
+            signIn.Show( this );
         }
     }
 }

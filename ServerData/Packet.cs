@@ -88,6 +88,7 @@ namespace Server_Utilities {
     public enum PacketType {
         Server_Registration,
         Server_Closing,
+        Client_SignIn,
         Client_LogOut,
         Client_LogIn,
         Ping,

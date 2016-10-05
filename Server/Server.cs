@@ -26,7 +26,7 @@ namespace Server {
 
         static ServerManager server;
         static IPEndPoint serverAddress;
-        static ServerDatabase database;
+        
 
 
         static void Main( string[] args ) {
@@ -53,10 +53,6 @@ namespace Server {
             server.OnShutdown = () => { Console.WriteLine( "Server closed..." ); };
 
             server.Start();
-
-            database = new ServerDatabase();
-            database.ReadXml( "Database.xml" );
-
 
             while (server.isOnline) {
                 Console.Write(" > ");
@@ -86,33 +82,26 @@ namespace Server {
                     if (args[1] != null) {
                         switch (args[1].ToLower()) {
                             case "user": {
-                                    ServerDatabase.UserRow userRow = database.User.NewUserRow();
-
-                                    userRow.username = args[2];
-                                    userRow.password = args[3];
-                                    userRow.admin = true;
-                                    userRow.state = 0;
-
-                                    database.User.AddUserRow( userRow );
-                                    database.WriteXml( "Database.xml" );
-
-                                    Console.WriteLine( "User: " + args[2] + " added to database." );
+                                    if (server.CreateUser( args[2], args[3], true, 0 ))
+                                        Console.WriteLine( "User: " + args[2] + " added to database." );
+                                    else
+                                        Console.WriteLine( "Could not create user. Invalid parameters" );
                                 }
                                 break;
                             case "chatroom": {
                                     if (!String.IsNullOrEmpty( args[2] )) { 
                                         if (args[2] == "public") {
-                                            ServerDatabase.ChatRoomRow chatroomRow = database.ChatRoom.NewChatRoomRow();
+                                            ServerDatabase.ChatRoomRow chatroomRow = server.database.ChatRoom.NewChatRoomRow();
                                             chatroomRow.name = args[3];
-                                            database.ChatRoom.AddChatRoomRow(chatroomRow);
-                                            database.WriteXml( "Database.xml" );
+                                            server.database.ChatRoom.AddChatRoomRow(chatroomRow);
+                                            server.database.WriteXml( "Database.xml" );
                                             Console.WriteLine( "Public chat room " + args[2] + " added to database." );
                                         }
                                         else if(args[2] == "private") {
-                                            ServerDatabase.PrivateChatRoomRow chatroomRow = database.PrivateChatRoom.NewPrivateChatRoomRow();
+                                            ServerDatabase.PrivateChatRoomRow chatroomRow = server.database.PrivateChatRoom.NewPrivateChatRoomRow();
                                             chatroomRow.name = args[3];
-                                            database.PrivateChatRoom.AddPrivateChatRoomRow( chatroomRow );
-                                            database.WriteXml( "Database.xml" );
+                                            server.database.PrivateChatRoom.AddPrivateChatRoomRow( chatroomRow );
+                                            server.database.WriteXml( "Database.xml" );
                                             Console.WriteLine( "Private chat room " + args[2] + " added to database." );
                                         }
                                     }
@@ -127,7 +116,7 @@ namespace Server {
                         if (args[1] != null) {
                             switch (args[1].ToLower()) {
                                 case "user": {
-                                        ServerDatabase.UserDataTable userTable = database.User;
+                                        ServerDatabase.UserDataTable userTable = server.database.User;
                                         var query = from usuario in userTable
                                                     select usuario;
                                         foreach (var element in query) {
@@ -157,7 +146,7 @@ namespace Server {
                     } break;
                 case "save":
 
-                    database.WriteXml( "Database.xml" );
+                    server.database.WriteXml( "Database.xml" );
                     Console.WriteLine( "Database saved." );
                     break;
                 default:
@@ -167,7 +156,7 @@ namespace Server {
 
         }
 
-        public static void DispatchPacket( Packet p ) {
+        public static void DispatchPacket( ClientData sender, Packet p ) {
 
             switch (p.type) {
                 case PacketType.Chat_File:
@@ -177,28 +166,39 @@ namespace Server {
                             server.SendPacket( client, p );
                     }
                     break;
+                case PacketType.Client_SignIn: {
+                        string username = (string)p.data["username"];
+                        string password = (string)p.data["password"];
+
+                        Packet confirmation = new Packet( PacketType.Client_SignIn, ServerInfo.ID );
+
+                        if (server.CreateUser( username, password, false, State.Offline )) {
+                            confirmation.data["status"] = true;
+                        }
+                        else {
+                            confirmation.data["status"] = false;
+                        }
+                        server.SendPacket( sender, confirmation );
+                    }
+                    break;
+                case PacketType.Client_LogIn: {
+
+                    }
+                    break;
                 case PacketType.Client_LogOut: {
 
                         Console.WriteLine( "Client petition to disconnect " + p.senderID );
 
-
                         server.RemoveClient( p.senderID );
-                        foreach (ClientData client in server.clients) {
-                            server.SendPacket( client, p );
-                        }
-
+                        server.SendPacketToAll( p );
 
                         break;
                     }
                 case PacketType.Ping: {
 
                         Packet pong = new Packet( PacketType.Pong, ServerInfo.ID );
-
-                        foreach (ClientData client in server.clients) {
-                            if (p.senderID == client.id)
-                                server.SendPacket( client, pong );
-                        }
-
+                        server.SendPacket( sender, pong );
+                        
                         break;
                     }
 

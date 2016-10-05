@@ -22,3 +22,4 @@ D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.Proper
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.csproj.GenerateResource.Cache
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.exe
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.pdb
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.SignInForm.resources

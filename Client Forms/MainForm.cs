@@ -28,6 +28,7 @@ namespace Client_Forms {
         [DllImportAttribute( "user32.dll" )]
         public static extern bool ReleaseCapture();
 
+        LoginForm owner;
 
         public Client client;
         Stopwatch pingStopWatch;
@@ -40,6 +41,8 @@ namespace Client_Forms {
         }
 
         private void ChatForm_Load( object sender, EventArgs e ) {
+
+            owner = (LoginForm)this.Owner;
 
             //Load the chat Emoticons with the back color from the richtextbox
             Emotes.LoadEmotes( txtIn.BackColor );
@@ -65,6 +68,9 @@ namespace Client_Forms {
                 txtIn.WriteLine( this, "Disconnected from server..." );
                 EditButtonText( btnConnect, "Connect" );
             };
+
+            
+
 
         }
 
@@ -316,6 +322,10 @@ namespace Client_Forms {
         private void pbBuzzer_Click( object sender, EventArgs e ) {
             Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
             client.SendPacket( p );
+        }
+
+        private void sendPrivateMessageToolStripMenuItem_Click( object sender, EventArgs e ) {
+            owner.CreateChat();
         }
     }
 }

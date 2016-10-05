@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using Server_Utilities;
 using System.IO;
+using Server.DataBase;
 
 namespace Server {
     class ServerManager {
@@ -25,9 +26,12 @@ namespace Server {
 
         public Action OnStarUp;
         public Action<ClientData> OnClientConnect;
-        public Action<Packet> OnReceive;
+        public Action<ClientData, Packet> OnReceive;
         public Action<ClientData> OnClientDisconnect;
         public Action OnShutdown;
+
+        public ServerDatabase database;
+        static public string dataBasePath = "Database.xml";
 
         class Message {
             public Socket socket;
@@ -60,6 +64,8 @@ namespace Server {
                     listenThread.Start();
                     sendThread = new Thread( SendThread );
                     sendThread.Start();
+                    database = new ServerDatabase();
+                    database.ReadXml( dataBasePath );
                     OnStarUp();
                 }
                 catch (SocketException ex) {
@@ -139,7 +145,7 @@ namespace Server {
 
                         if( packetSize == readBytes - sizeof( int ) ) {
                             Packet packet = PacketFormater.MakePacket( buffer );
-                            OnReceive( packet );
+                            OnReceive( client, packet );
                         }
                         else {
 
@@ -158,7 +164,7 @@ namespace Server {
                             ms.Close();
 
                             Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
-                            OnReceive( packet );
+                            OnReceive( client, packet );
                         }
 
                     }
@@ -206,6 +212,33 @@ namespace Server {
             listenThread.Abort();
             sendThread.Abort();
         }
+
+        public bool CreateUser(string username, string password, bool isAdmin, State state) {
+            
+            ServerDatabase.UserDataTable userTable = database.User;
+
+            var query = from usuario in userTable
+                        where usuario.username == username
+                        select usuario;
+            if (query.Count() > 0)
+                return false;
+
+            if (String.IsNullOrEmpty( username ) || String.IsNullOrEmpty( password ))
+                return false;
+
+            ServerDatabase.UserRow userRow = database.User.NewUserRow();
+
+            userRow.username = username;
+            userRow.password = password;
+            userRow.admin = isAdmin;
+            userRow.state = (int)state;
+
+            database.User.AddUserRow( userRow );
+            database.WriteXml( "Database.xml" );
+            return true;
+        }
+
+
 
     }
 }
