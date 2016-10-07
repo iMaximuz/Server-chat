@@ -26,12 +26,12 @@ namespace Client_Forms {
         [DllImportAttribute( "user32.dll" )]
         public static extern bool ReleaseCapture();
 
-        Client activeConnection;
+        MainForm owner;
 
+        public SignInForm signIn;
 
         private void LoginForm_Load( object sender, EventArgs e ) {
-            //activeConnection = new Client();
-            //activeConnection.Connect( NetData.localhost, NetData.PORT );
+            owner = (MainForm)Owner;
         }
 
         public LoginForm() {
@@ -43,9 +43,22 @@ namespace Client_Forms {
         }
 
         private void btnLogIn_Click( object sender, EventArgs e ) {
-            this.Hide();
-            MainForm chat = new MainForm();
-            chat.Show( this );
+
+            string username = txtUsername.Text;
+            string password = txtPassword.Text;
+
+            if (!String.IsNullOrEmpty( username ) && !String.IsNullOrEmpty( password )) {
+                Packet p = new Packet( PacketType.Client_LogIn, owner.client.ID );
+
+                p.data.Add( "username", username );
+                p.data.Add( "password", password );
+
+                owner.client.SendPacket( p );
+            }
+            else {
+
+            }
+
         }
 
         private void pbTitleBar_MouseDown( object sender, MouseEventArgs e ) {
@@ -66,17 +79,13 @@ namespace Client_Forms {
         }
 
         private void btnSignIn_Click( object sender, EventArgs e ) {
-            SignInForm signIn = new SignInForm();
-
-            
-
-            signIn.ShowDialog( this );
+            signIn = new SignInForm();
+            signIn.ShowDialog( owner );
         }
 
-        
-        public void CreateChat() {
-            SignInForm signIn = new SignInForm();
-            signIn.Show( this );
+        public void Fail() {
+            MessageBox.Show( "Could not log in with those credentials.", "Log In error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
         }
+
     }
 }

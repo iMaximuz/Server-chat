@@ -28,7 +28,8 @@ namespace Client_Forms {
         [DllImportAttribute( "user32.dll" )]
         public static extern bool ReleaseCapture();
 
-        LoginForm owner;
+        LoginForm login;
+        Dictionary<int, PrivateChatForm> chats;
 
         public Client client;
         Stopwatch pingStopWatch;
@@ -40,43 +41,46 @@ namespace Client_Forms {
             pingStopWatch = new Stopwatch();
         }
 
+        delegate void CloseDelegate();
+
         private void ChatForm_Load( object sender, EventArgs e ) {
 
-            owner = (LoginForm)this.Owner;
+            LoadingForm loadingForm = new LoadingForm();
+            CloseDelegate closeLoadingFrm = new CloseDelegate( loadingForm.Close );
 
             //Load the chat Emoticons with the back color from the richtextbox
             Emotes.LoadEmotes( txtIn.BackColor );
 
             client = new Client();
 
-            client.OnConnect = () => {  txtIn.WriteLine( this, "Connected to server..." ); };
+            client.OnConnect = () => {  txtIn.WriteLine( this, "Connected to server..." ); this.Invoke( closeLoadingFrm ); };
             client.OnError = ( s ) => { txtIn.WriteLine( this, s, Color.Red ); };
-            client.OnConnectionFail = ( s ) => {
-                txtIn.WriteLine( this, s );
-                EditButtonText( btnConnect, "Connect" );
-            };
-
+            client.OnConnectionFail = ( s ) => { MessageBox.Show( s, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error ); this.Invoke( closeLoadingFrm ); };
 
             client.OnPacketReceived = DispatchPacket;
-
+       
             client.OnServerDisconnect = () => {
-                txtIn.WriteLine( this, "ERROR 500: An existing connection was forcibly closed by the server " );
-                EditButtonText( btnConnect, "Connect" );
+                txtIn.WriteLine( this, "ERROR 500: An existing connection was forcibly closed by the server, please restart the aplication.", Color.Red);
             };
 
             client.OnDisconnect = () => {
                 txtIn.WriteLine( this, "Disconnected from server..." );
-                EditButtonText( btnConnect, "Connect" );
             };
 
-            
+            client.Connect( NetData.localhost, NetData.PORT );
 
-
+            loadingForm.ShowDialog( this );
+            if (client.isConnected) {
+                login = new LoginForm();
+                login.ShowDialog( this );
+                
+            }
+            else {
+                Application.Exit();
+            }
         }
 
         private void btnSend_Click( object sender, EventArgs e ) {
-
-
             //HAY UN BUG
             if (txtOut.Text != "" && txtOut.Text[0] == '/') {
                 DispatchCommand( txtOut.Text );
@@ -84,7 +88,7 @@ namespace Client_Forms {
             else {
                 if (client.isConnected) {
                     Packet p = new Packet( PacketType.Chat, client.ID );
-                    p.data.Add( "name", txtName.Text );
+                    p.data.Add( "name", client.sesionInfo.username );
                     p.data.Add( "message", txtOut.Text );
                     //Send message to server
                     //TODO: Implement Queue
@@ -92,7 +96,7 @@ namespace Client_Forms {
 
                     //WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
                 }
-                txtIn.WriteLine( this, txtName.Text + ": " + txtOut.Text );
+                txtIn.WriteLine( this, client.sesionInfo.username + ": " + txtOut.Text );
             }
             txtOut.Text = "";
             txtOut.Focus();
@@ -108,23 +112,6 @@ namespace Client_Forms {
             if (e.KeyCode == Keys.Enter && e.Modifiers != Keys.Control) {
                 btnSend_Click( sender, (EventArgs)e );
                 e.Handled = true;
-            }
-        }
-
-        private void btnConnect_Click( object sender, EventArgs e ) {
-            if (!client.isConnected) {
-                if (!client.attemtingConnection) {
-                    client.Connect( NetData.localhost, NetData.PORT );
-                    btnConnect.Text = "Disconnect";
-                }
-                else {
-                    client.attemtingConnection = false;
-                    btnConnect.Text = "Connect";
-                }
-            }
-            else {
-                client.Disconnect();
-                btnConnect.Text = "Connect";
             }
         }
 
@@ -176,6 +163,32 @@ namespace Client_Forms {
         void DispatchPacket( Packet p ) {
 
             switch (p.type) {
+
+                case PacketType.Client_SignIn: {
+                        bool confirmation = (bool)p.data["status"];
+                        if (confirmation) {
+                            login.signIn.Success();
+                        }
+                        else {
+                            login.signIn.Fail();
+                        }
+                    } break;
+                case PacketType.Client_LogIn: {
+
+                        bool confirmation = (bool)p.data["status"];
+                        
+                        if ( confirmation ) {
+                            string username = (string)p.data["username"];
+                            login.Close( this );
+                            lblUsername.ChangeText( this, username );
+                            client.sesionInfo.username = username;
+                        }
+                        else {
+                            login.Fail();
+                        }
+                        break;
+                    }
+
                 case PacketType.Chat: {
                         txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
 
@@ -257,7 +270,8 @@ namespace Client_Forms {
         }
 
         private void pbClose_Click( object sender, EventArgs e ) {
-            this.Owner.Show();
+            client.Disconnect();
+            while (client.isConnected) { Thread.Sleep( 100 ); } // NOTA: Puede ser mala idea hacer esto
             Close();
         }
 
@@ -322,10 +336,6 @@ namespace Client_Forms {
         private void pbBuzzer_Click( object sender, EventArgs e ) {
             Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
             client.SendPacket( p );
-        }
-
-        private void sendPrivateMessageToolStripMenuItem_Click( object sender, EventArgs e ) {
-            owner.CreateChat();
         }
     }
 }

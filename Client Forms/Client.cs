@@ -20,6 +20,7 @@ namespace Client_Forms {
         public bool isConnected = false;
         public bool attemtingConnection = false;
 
+        public ClientState sesionInfo;
 
         Socket connectionSocket;
 
@@ -41,6 +42,7 @@ namespace Client_Forms {
 
         public Client() {
             this.chatName = "Client";
+            sesionInfo = new ClientState();
         }
 
         public Client( string name ) {

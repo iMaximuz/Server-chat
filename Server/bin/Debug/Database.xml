@@ -21,6 +21,13 @@
     <admin>true</admin>
     <state>0</state>
   </User>
+  <User>
+    <UserID>3</UserID>
+    <username>admin</username>
+    <password>admin</password>
+    <admin>true</admin>
+    <state>0</state>
+  </User>
   <ChatRoom>
     <ChatRoomID>0</ChatRoomID>
     <name>Alexandrias</name>

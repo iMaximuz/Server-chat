@@ -23,3 +23,5 @@ D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.csproj
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.exe
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client Forms.pdb
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.SignInForm.resources
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.PrivateChatForm.resources
+D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.LoadingForm.resources

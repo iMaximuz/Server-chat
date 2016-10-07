@@ -45,30 +45,29 @@
             this.txtIn = new System.Windows.Forms.RichTextBox();
             this.btnSend = new System.Windows.Forms.Button();
             this.txtOut = new System.Windows.Forms.RichTextBox();
-            this.btnConnect = new System.Windows.Forms.Button();
             this.buzzTimer = new System.Windows.Forms.Timer(this.components);
             this.lvEmoticons = new System.Windows.Forms.ListView();
             this.emoticonImageList = new System.Windows.Forms.ImageList(this.components);
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.cmsRooms = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createRoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbBuzzer = new System.Windows.Forms.PictureBox();
-            this.pbFile = new System.Windows.Forms.PictureBox();
-            this.pbEmoticons = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pbProfile = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
-            this.txtName = new System.Windows.Forms.TextBox();
+            this.pbBuzzer = new System.Windows.Forms.PictureBox();
+            this.pbFile = new System.Windows.Forms.PictureBox();
+            this.pbEmoticons = new System.Windows.Forms.PictureBox();
+            this.lblUsername = new System.Windows.Forms.Label();
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
             this.SuspendLayout();
             // 
             // cmsUser
@@ -76,14 +75,13 @@
             this.cmsUser.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sendPrivateMessageToolStripMenuItem});
             this.cmsUser.Name = "cmsUser";
-            this.cmsUser.Size = new System.Drawing.Size(153, 48);
+            this.cmsUser.Size = new System.Drawing.Size(137, 26);
             // 
             // sendPrivateMessageToolStripMenuItem
             // 
             this.sendPrivateMessageToolStripMenuItem.Name = "sendPrivateMessageToolStripMenuItem";
-            this.sendPrivateMessageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sendPrivateMessageToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.sendPrivateMessageToolStripMenuItem.Text = "Private chat";
-            this.sendPrivateMessageToolStripMenuItem.Click += new System.EventHandler(this.sendPrivateMessageToolStripMenuItem_Click);
             // 
             // txtIn
             // 
@@ -123,16 +121,6 @@
             this.txtOut.TabIndex = 0;
             this.txtOut.Text = "";
             this.txtOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.chatKeyDown);
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.Location = new System.Drawing.Point(39, 487);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(75, 23);
-            this.btnConnect.TabIndex = 2;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // buzzTimer
             // 
@@ -234,7 +222,7 @@
             this.treeView1.ShowLines = false;
             this.treeView1.ShowPlusMinus = false;
             this.treeView1.ShowRootLines = false;
-            this.treeView1.Size = new System.Drawing.Size(182, 391);
+            this.treeView1.Size = new System.Drawing.Size(182, 494);
             this.treeView1.StateImageList = this.emoticonImageList;
             this.treeView1.TabIndex = 7;
             // 
@@ -251,55 +239,13 @@
             this.createRoomToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.createRoomToolStripMenuItem.Text = "Create room";
             // 
-            // pbBuzzer
-            // 
-            this.pbBuzzer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbBuzzer.Image = global::Client_Forms.Properties.Resources.icon_buzz;
-            this.pbBuzzer.Location = new System.Drawing.Point(245, 516);
-            this.pbBuzzer.Name = "pbBuzzer";
-            this.pbBuzzer.Size = new System.Drawing.Size(40, 40);
-            this.pbBuzzer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbBuzzer.TabIndex = 15;
-            this.pbBuzzer.TabStop = false;
-            this.pbBuzzer.Click += new System.EventHandler(this.pbBuzzer_Click);
-            this.pbBuzzer.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbBuzzer.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            // 
-            // pbFile
-            // 
-            this.pbFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbFile.Image = global::Client_Forms.Properties.Resources.icon_paperclip;
-            this.pbFile.Location = new System.Drawing.Point(291, 516);
-            this.pbFile.Name = "pbFile";
-            this.pbFile.Size = new System.Drawing.Size(40, 40);
-            this.pbFile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbFile.TabIndex = 14;
-            this.pbFile.TabStop = false;
-            this.pbFile.Click += new System.EventHandler(this.pbFile_Click);
-            this.pbFile.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbFile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            // 
-            // pbEmoticons
-            // 
-            this.pbEmoticons.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbEmoticons.Image = global::Client_Forms.Properties.Resources.icon_emoticons;
-            this.pbEmoticons.Location = new System.Drawing.Point(199, 516);
-            this.pbEmoticons.Name = "pbEmoticons";
-            this.pbEmoticons.Size = new System.Drawing.Size(40, 40);
-            this.pbEmoticons.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pbEmoticons.TabIndex = 5;
-            this.pbEmoticons.TabStop = false;
-            this.pbEmoticons.Click += new System.EventHandler(this.pbEmoticons_Click);
-            this.pbEmoticons.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbEmoticons.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.panel1.Controls.Add(this.lblUsername);
             this.panel1.Controls.Add(this.pbProfile);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.pbClose);
-            this.panel1.Controls.Add(this.txtName);
             this.panel1.Location = new System.Drawing.Point(-1, -1);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
@@ -344,13 +290,58 @@
             this.pbClose.MouseEnter += new System.EventHandler(this.PictureBoxHover);
             this.pbClose.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
-            // txtName
+            // pbBuzzer
             // 
-            this.txtName.Location = new System.Drawing.Point(256, 14);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(182, 20);
-            this.txtName.TabIndex = 14;
-            this.txtName.Text = "Usuario";
+            this.pbBuzzer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbBuzzer.Image = global::Client_Forms.Properties.Resources.icon_buzz;
+            this.pbBuzzer.Location = new System.Drawing.Point(245, 516);
+            this.pbBuzzer.Name = "pbBuzzer";
+            this.pbBuzzer.Size = new System.Drawing.Size(40, 40);
+            this.pbBuzzer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbBuzzer.TabIndex = 15;
+            this.pbBuzzer.TabStop = false;
+            this.pbBuzzer.Click += new System.EventHandler(this.pbBuzzer_Click);
+            this.pbBuzzer.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbBuzzer.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            // 
+            // pbFile
+            // 
+            this.pbFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbFile.Image = global::Client_Forms.Properties.Resources.icon_paperclip;
+            this.pbFile.Location = new System.Drawing.Point(291, 516);
+            this.pbFile.Name = "pbFile";
+            this.pbFile.Size = new System.Drawing.Size(40, 40);
+            this.pbFile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbFile.TabIndex = 14;
+            this.pbFile.TabStop = false;
+            this.pbFile.Click += new System.EventHandler(this.pbFile_Click);
+            this.pbFile.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbFile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            // 
+            // pbEmoticons
+            // 
+            this.pbEmoticons.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbEmoticons.Image = global::Client_Forms.Properties.Resources.icon_emoticons;
+            this.pbEmoticons.Location = new System.Drawing.Point(199, 516);
+            this.pbEmoticons.Name = "pbEmoticons";
+            this.pbEmoticons.Size = new System.Drawing.Size(40, 40);
+            this.pbEmoticons.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbEmoticons.TabIndex = 5;
+            this.pbEmoticons.TabStop = false;
+            this.pbEmoticons.Click += new System.EventHandler(this.pbEmoticons_Click);
+            this.pbEmoticons.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbEmoticons.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            // 
+            // lblUsername
+            // 
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Font = new System.Drawing.Font("Museo Sans 500", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(249)))), ((int)(((byte)(183)))));
+            this.lblUsername.Location = new System.Drawing.Point(334, 10);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(100, 23);
+            this.lblUsername.TabIndex = 19;
+            this.lblUsername.Text = "Username";
             // 
             // MainForm
             // 
@@ -363,7 +354,6 @@
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.lvEmoticons);
             this.Controls.Add(this.pbEmoticons);
-            this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.txtOut);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.txtIn);
@@ -376,14 +366,14 @@
             this.Load += new System.EventHandler(this.ChatForm_Load);
             this.cmsUser.ResumeLayout(false);
             this.cmsRooms.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -393,7 +383,6 @@
         private System.Windows.Forms.RichTextBox txtIn;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.RichTextBox txtOut;
-        private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Timer buzzTimer;
         private System.Windows.Forms.PictureBox pbEmoticons;
         private System.Windows.Forms.ListView lvEmoticons;
@@ -409,7 +398,7 @@
         private System.Windows.Forms.PictureBox pbProfile;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pbClose;
-        private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label lblUsername;
     }
 }
 

@@ -12,6 +12,7 @@ using Server_Utilities;
 namespace Server {
     class ClientData {
 
+        public ClientState sesionInfo;
         public Socket socket;
         public Thread thread;
         public string id;
@@ -21,6 +22,7 @@ namespace Server {
             id = Guid.NewGuid().ToString();
             thread = new Thread( ts );
             thread.Start( this );
+            sesionInfo = new ClientState();
         }
 
         public void Disconnect() {

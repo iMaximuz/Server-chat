@@ -31,26 +31,26 @@ namespace Server {
 
         static void Main( string[] args ) {
 
-            Console.WriteLine( "Start on localhost? (Y/N)" );
+            WriteLine( "Start on localhost? (Y/N)" );
             string ans = Console.ReadLine().ToLower();
 
             if (ans[0] != 'y') {
-                Console.WriteLine( "Starting server on " + NetData.GetIP4Address() );
+                WriteLine( "Starting server on " + NetData.GetIP4Address() );
                 serverAddress = new IPEndPoint( IPAddress.Parse( NetData.GetIP4Address() ), NetData.PORT );
             }
             else {
-                Console.WriteLine( "Starting server on " + NetData.localhost );
+                WriteLine( "Starting server on " + NetData.localhost );
                 serverAddress = new IPEndPoint( NetData.localhost, NetData.PORT );
             }
 
             server = new ServerManager( serverAddress );
 
-            server.OnStarUp = () => { Console.WriteLine( "Server started" ); };
+            server.OnStarUp = () => { WriteLine( "Server started" ); };
             //NOTA: Hacer dormir el thread ayuda a enviar los mensajes correctamente
-            server.OnClientConnect = ( client ) => { Console.WriteLine( "Client connected..." ); SendRegistrationPacket( client ); SendWelcomeMessage( client ); };
-            server.OnClientDisconnect = ( client ) => { Console.WriteLine( "Client correclty disconnected: " + client.id ); };
+            server.OnClientConnect = ( client ) => { WriteLine( "Client connected..." ); SendRegistrationPacket( client ); SendWelcomeMessage( client ); };
+            server.OnClientDisconnect = ( client ) => { WriteLine( "Client correclty disconnected: " + client.sesionInfo.username ); };
             server.OnReceive = DispatchPacket;
-            server.OnShutdown = () => { Console.WriteLine( "Server closed..." ); };
+            server.OnShutdown = () => { WriteLine( "Server closed..." ); };
 
             server.Start();
 
@@ -64,7 +64,7 @@ namespace Server {
             
 
 
-            Console.WriteLine( "Server offline..." );
+            WriteLine( "Server offline..." );
             Console.ReadKey();
         }
 
@@ -75,17 +75,17 @@ namespace Server {
 
             switch (args[0].ToLower()) {
                 case "shutdown":
-                    Console.WriteLine( "Server is shuting down" );
+                    WriteLine( "Server is shuting down" );
                     server.Shutdown();
                     break;
                 case "add":
-                    if (args[1] != null) {
+                    if (args.Length > 1 && args[1] != null) {
                         switch (args[1].ToLower()) {
                             case "user": {
                                     if (server.CreateUser( args[2], args[3], true, 0 ))
-                                        Console.WriteLine( "User: " + args[2] + " added to database." );
+                                        WriteLine( "User: " + args[2] + " added to database." );
                                     else
-                                        Console.WriteLine( "Could not create user. Invalid parameters" );
+                                        WriteLine( "Could not create user. Invalid parameters" );
                                 }
                                 break;
                             case "chatroom": {
@@ -95,19 +95,19 @@ namespace Server {
                                             chatroomRow.name = args[3];
                                             server.database.ChatRoom.AddChatRoomRow(chatroomRow);
                                             server.database.WriteXml( "Database.xml" );
-                                            Console.WriteLine( "Public chat room " + args[2] + " added to database." );
+                                            WriteLine( "Public chat room " + args[2] + " added to database." );
                                         }
                                         else if(args[2] == "private") {
                                             ServerDatabase.PrivateChatRoomRow chatroomRow = server.database.PrivateChatRoom.NewPrivateChatRoomRow();
                                             chatroomRow.name = args[3];
                                             server.database.PrivateChatRoom.AddPrivateChatRoomRow( chatroomRow );
                                             server.database.WriteXml( "Database.xml" );
-                                            Console.WriteLine( "Private chat room " + args[2] + " added to database." );
+                                            WriteLine( "Private chat room " + args[2] + " added to database." );
                                         }
                                     }
                                 } break;
                             default:
-                                Console.WriteLine( args[1] + " is not a valid argument for add" );
+                                WriteLine( args[1] + " is not a valid argument for add" );
                                 break;
                         }//switch 2
                     }
@@ -120,7 +120,7 @@ namespace Server {
                                         var query = from usuario in userTable
                                                     select usuario;
                                         foreach (var element in query) {
-                                            Console.WriteLine( "[" + element.UserID.ToString() + "] " + element.username.ToString() + " " + element.password.ToString() );
+                                            WriteLine( "[" + element.UserID.ToString() + "] " + element.username.ToString() + " " + element.password.ToString() );
                                         }
                                     }
                                     break;
@@ -139,7 +139,7 @@ namespace Server {
                                     }
                                     break;
                                 default:
-                                    Console.WriteLine( args[1] + " is not a valid argument for add" );
+                                    WriteLine( args[1] + " is not a valid argument for add" );
                                     break;
                             }//switch 2
                         }
@@ -147,10 +147,10 @@ namespace Server {
                 case "save":
 
                     server.database.WriteXml( "Database.xml" );
-                    Console.WriteLine( "Database saved." );
+                    WriteLine( "Database saved." );
                     break;
                 default:
-                    Console.WriteLine( "Unknown command." );
+                    WriteLine( "Unknown command." );
                     break;
             }
 
@@ -173,21 +173,43 @@ namespace Server {
                         Packet confirmation = new Packet( PacketType.Client_SignIn, ServerInfo.ID );
 
                         if (server.CreateUser( username, password, false, State.Offline )) {
-                            confirmation.data["status"] = true;
+                            confirmation.data.Add( "status", true );
                         }
                         else {
-                            confirmation.data["status"] = false;
+                            confirmation.data.Add( "status", false );
                         }
                         server.SendPacket( sender, confirmation );
                     }
                     break;
                 case PacketType.Client_LogIn: {
+                        string username = (string)p.data["username"];
+                        string password = (string)p.data["password"];
+
+                        Packet confirmation = new Packet( PacketType.Client_LogIn, ServerInfo.ID );
+
+                        ServerDatabase.UserDataTable userTable = server.database.User;
+
+                        var query = from usuario in userTable
+                                    where usuario.username == username && usuario.password == password
+                                    select usuario;
+                        if (query.Count() > 0) {
+                            confirmation.data.Add( "status", true );
+                            confirmation.data.Add( "username", username );
+                            sender.sesionInfo.username = username;
+                            sender.sesionInfo.state = State.Online;
+                            WriteLine(username + " logged in.");
+                        }
+                        else {
+                            confirmation.data.Add( "status", false );
+                        }
+
+                        server.SendPacket( sender, confirmation );
 
                     }
                     break;
                 case PacketType.Client_LogOut: {
 
-                        Console.WriteLine( "Client petition to disconnect " + p.senderID );
+                        WriteLine( "Client petition to disconnect " + p.senderID );
 
                         server.RemoveClient( p.senderID );
                         server.SendPacketToAll( p );
@@ -211,7 +233,7 @@ namespace Server {
                     }
 
                 default:
-                    Console.WriteLine( "ERROR: Unhandled packet type" );
+                    WriteLine( "ERROR: Unhandled packet type" );
                     break;
             }
 
@@ -228,6 +250,18 @@ namespace Server {
         public static void SendRegistrationPacket( ClientData client ) {
             Packet p = new Packet( PacketType.Server_Registration, client.id );
             server.SendPacket( client, p );
+        }
+
+        static void WriteLine(string text ) {
+            ClearCurrentConsoleLine();
+            string time = DateTime.Now.ToString("hh:mm:ss");
+            Console.WriteLine( "[" + time + "]: " + text );
+        }
+        public static void ClearCurrentConsoleLine() {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition( 0, Console.CursorTop );
+            Console.Write( new string( ' ', Console.WindowWidth ) );
+            Console.SetCursorPosition( 0, currentLineCursor );
         }
 
     }

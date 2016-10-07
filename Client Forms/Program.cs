@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace Client_Forms {
     static class Program {
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -13,7 +14,7 @@ namespace Client_Forms {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
-            Application.Run( new LoginForm() );
+            Application.Run( new MainForm() );
         }
     }
 }

@@ -57,6 +57,31 @@ namespace Client_Forms {
 
         }
 
+        delegate void ChangeTextDelegate( Label label, Form invoker, string text );
+        public static void ChangeText( this Label label, Form invoker, string text ) {
+
+            if (!label.InvokeRequired) {
+                label.Text = text;
+            }
+            else {
+                ChangeTextDelegate changeText = new ChangeTextDelegate( ChangeText );
+                invoker.Invoke( changeText, new object[] { label, invoker, text } );
+            }
+
+        }
+
+        delegate void CloseDelegate( Form form, Form invoker );
+        public static void Close(this Form form, Form invoker ) {
+            if (!form.InvokeRequired) {
+                form.Close();
+            }
+            else {
+                CloseDelegate close = new CloseDelegate( Close );
+                invoker.Invoke( close, new object[] { form, invoker } );
+            }
+        }
+
+
         static void SetEmoticons( this RichTextBox rtb ) {
             if (Emotes.isInitialized) {
                 Emotes.mutex.WaitOne();
