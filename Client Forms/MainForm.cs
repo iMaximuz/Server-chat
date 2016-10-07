@@ -289,7 +289,7 @@ namespace Client_Forms {
                 case PacketType.Video_Confirmation:
                 case PacketType.Chat_File:
                 case PacketType.Chat_Buzzer_Private:
-                case PacketType.Chat_Private:{
+                case PacketType.Chat_Private: {
                         if (client.isLoggedIn) {
                             string key = (string)p.data["partner"];
                             if (chats.ContainsKey( key )) {

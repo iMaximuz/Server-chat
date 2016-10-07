@@ -131,10 +131,7 @@ namespace Client_Forms {
 
         public void SendPacket(Packet p) {
             if (isConnected) {
-
                 messageQueue.Enqueue(p);
-
-                connectionSocket.Send(PacketFormater.Format(p));
             }
             else {
                 OnError("ERROR: This client is not connect to a server.");

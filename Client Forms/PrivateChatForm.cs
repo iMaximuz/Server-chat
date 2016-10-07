@@ -40,7 +40,7 @@ namespace Client_Forms {
             InitializeComponent();
             this.partner = partner;
             chatId = Guid.NewGuid().ToString();
-            Camera.Detect();
+            
         }
 
         private void PrivateChatForm_Load( object sender, EventArgs e ) {
@@ -241,24 +241,29 @@ namespace Client_Forms {
             //Start camera
             //If camera is in no use, we can send a webcam request
             if (client.hasCamera) {
-                if (!Camera.IsRunning) {
-                    StartWebcam();
-                    //Packet packet = new Packet( PacketType.WebCamRequest );
-                    //packet.tag["chatID"] = chatID;
-                    //packet.tag["sender"] = ClientSession.username;
-                    //packet.tag["channels"] = Microphone.Channels;
-                    //ClientSession.Connection.SendPacket( packet );
-                    //Camera.OwnerChat = chatID;
-                    //Camera.Start();
-                    //Camera.OnNewFrameCallback(SendCameraPacket);
-                    ////start audio record
-                    //Microphone.OnAudioInCallback(SendAudioStream);
-                    //Microphone.StartRecording();
+                if (Camera.Detect()) {
+                    if (!Camera.IsRunning) {
+                        StartWebcam();
+                        //Packet packet = new Packet( PacketType.WebCamRequest );
+                        //packet.tag["chatID"] = chatID;
+                        //packet.tag["sender"] = ClientSession.username;
+                        //packet.tag["channels"] = Microphone.Channels;
+                        //ClientSession.Connection.SendPacket( packet );
+                        //Camera.OwnerChat = chatID;
+                        //Camera.Start();
+                        //Camera.OnNewFrameCallback(SendCameraPacket);
+                        ////start audio record
+                        //Microphone.OnAudioInCallback(SendAudioStream);
+                        //Microphone.StartRecording();
 
+                    }
+                    else {
+                        //Camera is in use;
+                        MessageBox.Show( "La camara se encuentra en uso por otro chat", "Camara en uso", MessageBoxButtons.OK );
+                    }
                 }
                 else {
-                    //Camera is in use;
-                    MessageBox.Show( "La camara se encuentra en uso por otro chat", "Camara en uso", MessageBoxButtons.OK );
+                    MessageBox.Show( "No webcam was found on your machine", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
                 }
             }
             txtIn.Focus();
