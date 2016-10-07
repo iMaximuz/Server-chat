@@ -97,11 +97,11 @@ namespace Client_Forms {
                     //WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
                 }
                 txtIn.WriteLine( this, client.sesionInfo.username + ": " + txtOut.Text );
+                if (!client.isConnected)
+                    txtIn.WriteLine( this, "ERROR: Your message could not be sent.", Color.Red);
             }
             txtOut.Text = "";
             txtOut.Focus();
-
-           
 
         }
 
@@ -182,6 +182,7 @@ namespace Client_Forms {
                             login.Close( this );
                             lblUsername.ChangeText( this, username );
                             client.sesionInfo.username = username;
+                            client.sesionInfo.state = State.Online;
                         }
                         else {
                             login.Fail();
@@ -299,37 +300,42 @@ namespace Client_Forms {
         }
 
         private void pbFile_Click( object sender, EventArgs e ) {
-            using (OpenFileDialog ofd = new OpenFileDialog()) {
+            if (client.isConnected) {
+                using (OpenFileDialog ofd = new OpenFileDialog()) {
 
-                ofd.Title = "Send File";
-                ofd.Filter = "All Files (*.*)|*.*";
-                ofd.FilterIndex = 0;
-                ofd.Multiselect = false;
+                    ofd.Title = "Send File";
+                    ofd.Filter = "All Files (*.*)|*.*";
+                    ofd.FilterIndex = 0;
+                    ofd.Multiselect = false;
 
-                if (ofd.ShowDialog() == DialogResult.OK) {
-                    using (FileStream fs = (FileStream)ofd.OpenFile()) {
+                    if (ofd.ShowDialog() == DialogResult.OK) {
+                        using (FileStream fs = (FileStream)ofd.OpenFile()) {
 
-                        byte[] buffer = new byte[2 * 1024];
-                        using(MemoryStream ms = new MemoryStream()) {
-                            int readBytes;
-                            while((readBytes = fs.Read(buffer,0,buffer.Length)) > 0) {
+                            byte[] buffer = new byte[2 * 1024];
+                            using (MemoryStream ms = new MemoryStream()) {
+                                int readBytes;
+                                while ((readBytes = fs.Read( buffer, 0, buffer.Length )) > 0) {
 
-                                ms.Write( buffer, 0, readBytes );
+                                    ms.Write( buffer, 0, readBytes );
 
+                                }
+
+                                byte[] file = ms.ToArray();
+
+                                Packet p = new Packet( PacketType.Chat_File, client.ID );
+                                p.data.Add( "fileName", ofd.SafeFileName );
+                                p.data.Add( "file", file );
+                                client.SendPacket( p );
+
+
+                                txtIn.WriteLine( this, "Sending " + ofd.SafeFileName + " (" + (int)(file.Length / 1024.0) + " Kb)...", Color.Red );
                             }
-
-                            byte[] file = ms.ToArray();
-
-                            Packet p = new Packet( PacketType.Chat_File, client.ID );
-                            p.data.Add( "fileName", ofd.SafeFileName);
-                            p.data.Add( "file", file );
-                            client.SendPacket( p );
-
-                            txtIn.WriteLine( this, "Sending " + ofd.SafeFileName + " (" + (float)file.Length / 1024.0 + " Kb)...", Color.Red );
-
                         }
                     }
                 }
+            }
+            else {
+                txtIn.WriteLine( this, "ERROR: This client is not connected to a server.", Color.Red);
             }
         }
 

@@ -56,9 +56,21 @@ namespace Client_Forms {
                 owner.client.SendPacket( p );
             }
             else {
-
+                MessageBox.Show( "Fields cannot be empty", "Sign In error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
             }
 
+        }
+
+        delegate void FailDelegate();
+        public void Fail() {
+            if (!this.InvokeRequired) {
+                MessageBox.Show( "Incorrect Username or Password", "Log In error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+
+            }
+            else {
+                FailDelegate fail = new FailDelegate( Fail );
+                this.Invoke( fail );
+            }
         }
 
         private void pbTitleBar_MouseDown( object sender, MouseEventArgs e ) {
@@ -83,9 +95,7 @@ namespace Client_Forms {
             signIn.ShowDialog( owner );
         }
 
-        public void Fail() {
-            MessageBox.Show( "Could not log in with those credentials.", "Log In error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
-        }
+
 
     }
 }

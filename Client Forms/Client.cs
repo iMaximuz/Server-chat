@@ -133,7 +133,7 @@ namespace Client_Forms {
                 connectionSocket.Send( PacketFormater.Format( p ) );
             }
             else {
-                OnError( "Este cliente no esta conectado a un servidor." );
+                OnError( "ERROR: This client is not connect to a server." );
             }
         }
 

@@ -53,14 +53,21 @@ namespace Client_Forms {
                 }
             }
             else {
-                MessageBox.Show( "Please", "Sign In error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show( "Fields cannot be empty", "Sign In error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
             }
 
         }
 
+        delegate void SuccessDelegate();
         public void Success() {
-            MessageBox.Show( "Your account has been created! \n Please Log in.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information );
-            this.Close( owner );
+            if (!this.InvokeRequired) {
+                MessageBox.Show( "Your account has been created! \n Please Log in.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information );
+                this.Close( owner );
+            }
+            else {
+                SuccessDelegate success = new SuccessDelegate(Success);
+                this.Invoke( success );
+            }
         }
 
         public void Fail() {

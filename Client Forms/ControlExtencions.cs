@@ -103,7 +103,7 @@ namespace Client_Forms {
 
                 }
                 Clipboard.SetDataObject( currentClipboard );
-                rtb.ReadOnly = false;
+                rtb.ReadOnly = true;
                 Emotes.mutex.ReleaseMutex();
             }
 
