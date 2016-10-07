@@ -1,0 +1,4 @@
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\ServerData\bin\Debug\ServerData.dll
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\ServerData\bin\Debug\ServerData.pdb
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\ServerData\obj\Debug\ServerData.dll
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\ServerData\obj\Debug\ServerData.pdb

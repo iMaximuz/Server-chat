@@ -1,0 +1,14 @@
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\bin\Debug\Client_WPF.exe.config
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\bin\Debug\Client_WPF.exe
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\bin\Debug\Client_WPF.pdb
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client WPF.csprojResolveAssemblyReference.cache
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\MainWindow.g.cs
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\App.g.cs
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF_MarkupCompile.cache
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF_MarkupCompile.lref
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\MainWindow.baml
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.g.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.Properties.Resources.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client WPF.csproj.GenerateResource.Cache
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.exe
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.pdb

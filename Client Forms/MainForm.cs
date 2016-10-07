@@ -39,6 +39,8 @@ namespace Client_Forms {
         Point windowPosition;
         float elapsedBuzzTime = 0;
 
+        
+
         public MainForm() {
             InitializeComponent();
             pingStopWatch = new Stopwatch();
@@ -283,7 +285,8 @@ namespace Client_Forms {
                         }
                         break;
                     }
-                case PacketType.Chat_Video:
+                case PacketType.Video:
+                case PacketType.Video_Confirmation:
                 case PacketType.Chat_File:
                 case PacketType.Chat_Buzzer_Private:
                 case PacketType.Chat_Private:{
