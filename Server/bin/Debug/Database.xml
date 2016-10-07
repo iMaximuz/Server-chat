@@ -33,4 +33,8 @@
     <ChatRoomID>2</ChatRoomID>
     <name>Elidachos</name>
   </ChatRoom>
+  <ChatRoom>
+    <ChatRoomID>3</ChatRoomID>
+    <name>Ubisoft</name>
+  </ChatRoom>
 </ServerDatabase>

@@ -101,7 +101,10 @@ namespace Server_Utilities {
         ChatRoom_Join,
         ChatRoom_Leave,
         Chat,
+        Chat_Private,
         Chat_Buzzer,
-        Chat_File
+        Chat_Buzzer_Private,
+        Chat_File,
+        Chat_Video
     }
 }

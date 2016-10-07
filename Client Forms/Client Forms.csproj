@@ -33,6 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge">
+      <HintPath>AForge.NET Framework\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video">
+      <HintPath>AForge.NET Framework\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow">
+      <HintPath>AForge.NET Framework\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio">
+      <HintPath>NAudio\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -53,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlExtencions.cs" />
+    <Compile Include="Devices.cs" />
     <Compile Include="Emotes.cs" />
     <Compile Include="InputDialog.cs">
       <SubType>Form</SubType>

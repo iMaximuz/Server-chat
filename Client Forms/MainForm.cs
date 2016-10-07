@@ -29,7 +29,7 @@ namespace Client_Forms {
         public static extern bool ReleaseCapture();
 
         LoginForm login;
-        Dictionary<int, PrivateChatForm> chats;
+        Dictionary<string, PrivateChatForm> chats;
 
         List<ClientState> loggedUsers;
         List<ChatRoom> chatRooms;
@@ -52,6 +52,7 @@ namespace Client_Forms {
             CloseDelegate closeLoadingFrm = new CloseDelegate( loadingForm.Close );
 
             loggedUsers = new List<ClientState>();
+            chats = new Dictionary<string, PrivateChatForm>();
 
             //Load the chat Emoticons with the back color from the richtextbox
             Emotes.LoadEmotes( txtIn.BackColor );
@@ -230,6 +231,10 @@ namespace Client_Forms {
                             TreeNode[] node = tvRooms.Nodes.Find( user.username, true );
                             SetImageIndex( node[0], (int)user.state );
 
+                            if (chats.ContainsKey( user.username )) {
+                                chats[user.username].UpdateStateSafe();
+                            }
+
                         }
                     }
                     break;
@@ -254,9 +259,8 @@ namespace Client_Forms {
                     }
                     break;
                 case PacketType.Chat: {
-                        if (client.isLoggedIn) {
+                        if (client.isLoggedIn) { 
                             txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
-
                         }
                         break;
                     }
@@ -269,7 +273,7 @@ namespace Client_Forms {
                         if (client.isLoggedIn) {
                             if (!buzzTimer.Enabled) {
 
-                                txtIn.WriteLine( this, "(:S) Buzzzz! - " + p.data["username"], Color.Yellow );
+                                txtIn.WriteLine( this, ":S Buzzzz! - " + p.data["username"], Color.Yellow );
 
                                 StartTimerDelegate ST = new StartTimerDelegate( StartTimer );
                                 this.Invoke( ST );
@@ -279,17 +283,33 @@ namespace Client_Forms {
                         }
                         break;
                     }
-                case PacketType.Chat_File: {
+                case PacketType.Chat_Video:
+                case PacketType.Chat_File:
+                case PacketType.Chat_Buzzer_Private:
+                case PacketType.Chat_Private:{
                         if (client.isLoggedIn) {
-                            string fileName = (string)p.data["fileName"];
-                            byte[] file = (byte[])p.data["file"];
-
-                            File.WriteAllBytes( client.GetDownloadFilePath() + fileName, file );
-
-                            txtIn.WriteLine( this, fileName + " (" + (float)file.Length / 1024.0 + " Kb) " + "received." );
+                            string key = (string)p.data["partner"];
+                            if (chats.ContainsKey( key )) {
+                                if (!chats[key].IsDisposed) {
+                                    chats[key].DispatchPacket( p );
+                                }
+                                else {
+                                    ClientState user = loggedUsers.Find( x => x.username == key );
+                                    chats[key] = new PrivateChatForm( ref user );
+                                    chats[key].ShowSafe( this );
+                                    chats[key].DispatchPacket( p );
+                                }
+                            }
+                            else {
+                                ClientState user = loggedUsers.Find( x => x.username == key );
+                                chats.Add( key, new PrivateChatForm( ref user ) );
+                                chats[key].ShowSafe( this );
+                                chats[key].DispatchPacket( p );
+                            }
                         }
-                        break;
                     }
+                    break;
+
             }
 
         }
@@ -384,46 +404,6 @@ namespace Client_Forms {
             lvEmoticons.Visible = false;
         }
 
-        private void pbFile_Click( object sender, EventArgs e ) {
-            if (client.isConnected) {
-                using (OpenFileDialog ofd = new OpenFileDialog()) {
-
-                    ofd.Title = "Send File";
-                    ofd.Filter = "All Files (*.*)|*.*";
-                    ofd.FilterIndex = 0;
-                    ofd.Multiselect = false;
-
-                    if (ofd.ShowDialog() == DialogResult.OK) {
-                        using (FileStream fs = (FileStream)ofd.OpenFile()) {
-
-                            byte[] buffer = new byte[2 * 1024];
-                            using (MemoryStream ms = new MemoryStream()) {
-                                int readBytes;
-                                while ((readBytes = fs.Read( buffer, 0, buffer.Length )) > 0) {
-
-                                    ms.Write( buffer, 0, readBytes );
-
-                                }
-
-                                byte[] file = ms.ToArray();
-
-                                Packet p = new Packet( PacketType.Chat_File, client.ID );
-                                p.data.Add( "fileName", ofd.SafeFileName );
-                                p.data.Add( "file", file );
-                                client.SendPacket( p );
-
-
-                                txtIn.WriteLine( this, "Sending " + ofd.SafeFileName + " (" + (int)(file.Length / 1024.0) + " Kb)...", Color.Red );
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                txtIn.WriteLine( this, "ERROR: This client is not connected to a server.", Color.Red);
-            }
-        }
-
         private void pbBuzzer_Click( object sender, EventArgs e ) {
             if (client.isConnected) {
                 Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
@@ -465,7 +445,17 @@ namespace Client_Forms {
 
         private void sendPrivateMessageToolStripMenuItem_Click( object sender, EventArgs e ) {
 
+            string partner = tvRooms.SelectedNode.Name;
 
+            ClientState user = loggedUsers.Find( x => x.username == partner );
+
+            if (!chats.ContainsKey( partner )) {
+                chats.Add( partner, new PrivateChatForm( ref user ) );
+                chats[partner].Show( this );
+            }
+            else if (chats[partner].IsDisposed) {
+                chats[partner] = new PrivateChatForm( ref user );
+            }
 
 
         }

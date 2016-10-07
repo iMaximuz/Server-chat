@@ -60,7 +60,6 @@
             this.cmsRoom = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmsRoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbBuzzer = new System.Windows.Forms.PictureBox();
-            this.pbFile = new System.Windows.Forms.PictureBox();
             this.pbEmoticons = new System.Windows.Forms.PictureBox();
             this.lvStatus = new System.Windows.Forms.ListView();
             this.cmsUser.SuspendLayout();
@@ -72,7 +71,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             this.cmsRoom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
             this.SuspendLayout();
             // 
@@ -349,20 +347,6 @@
             this.pbBuzzer.MouseEnter += new System.EventHandler(this.PictureBoxHover);
             this.pbBuzzer.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
-            // pbFile
-            // 
-            this.pbFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbFile.Image = global::Client_Forms.Properties.Resources.icon_paperclip;
-            this.pbFile.Location = new System.Drawing.Point(387, 517);
-            this.pbFile.Name = "pbFile";
-            this.pbFile.Size = new System.Drawing.Size(40, 40);
-            this.pbFile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbFile.TabIndex = 14;
-            this.pbFile.TabStop = false;
-            this.pbFile.Click += new System.EventHandler(this.pbFile_Click);
-            this.pbFile.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbFile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            // 
             // pbEmoticons
             // 
             this.pbEmoticons.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -414,7 +398,6 @@
             this.ClientSize = new System.Drawing.Size(810, 569);
             this.Controls.Add(this.lvStatus);
             this.Controls.Add(this.pbBuzzer);
-            this.Controls.Add(this.pbFile);
             this.Controls.Add(this.tvRooms);
             this.Controls.Add(this.lvEmoticons);
             this.Controls.Add(this.pbEmoticons);
@@ -438,7 +421,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             this.cmsRoom.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
             this.ResumeLayout(false);
 
@@ -458,7 +440,6 @@
         private System.Windows.Forms.ToolStripMenuItem sendPrivateMessageToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip cmsRooms;
         private System.Windows.Forms.ToolStripMenuItem createRoomToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pbFile;
         private System.Windows.Forms.PictureBox pbBuzzer;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pbProfile;

@@ -19,6 +19,8 @@ namespace Client_Forms {
         public bool isConnected = false;
         public bool attemtingConnection = false;
         public bool isLoggedIn = false;
+        public bool hasCamera = true;
+
 
         public ClientState sesionInfo;
 
@@ -224,4 +226,9 @@ namespace Client_Forms {
         }
 
     }
+
+
+
+
+
 }

@@ -81,7 +81,23 @@ namespace Client_Forms {
             }
         }
 
+        delegate void ShowDelegate( Form form, Form parent );
+        public static void ShowSafe(this Form form, Form parent ){
 
+            if (!form.InvokeRequired) {
+                ShowDelegate show = new ShowDelegate( ShowForm );
+                parent.Invoke( show, new object[] { form, parent } );
+            }
+            else {
+                ShowDelegate show = new ShowDelegate( ShowSafe );
+                parent.Invoke( show, new object[] { form, parent } );
+            }
+
+        }
+
+        static void ShowForm(Form form, Form parent) {
+            form.Show( parent );
+        }
 
         static void SetEmoticons( this RichTextBox rtb ) {
             if (Emotes.isInitialized) {
