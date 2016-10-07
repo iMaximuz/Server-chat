@@ -232,19 +232,7 @@ namespace Client_Forms {
             Dispose();
         }
 
-
-        public void StartWebcam() {
-            if (!Camera.IsRunning) {
-                Camera.OwnerChat = chatId;
-                Camera.Start();
-                Camera.OnNewFrameCallback( SendCameraPacket );
-                //start audio record
-                //Microphone.OnAudioInCallback( SendAudioStream );
-                //Microphone.StartRecording();
-            }
-        }
-
-        private void list_Options_SelectedIndexChanged( object sender, EventArgs e ) {
+        private void pbVideo_Click( object sender, EventArgs e ) {
             //Start camera
             //If camera is in no use, we can send a webcam request
             if (client.hasCamera) {
@@ -269,6 +257,17 @@ namespace Client_Forms {
                 }
             }
             txtIn.Focus();
+        }
+
+        public void StartWebcam() {
+            if (!Camera.IsRunning) {
+                Camera.OwnerChat = chatId;
+                Camera.Start();
+                Camera.OnNewFrameCallback( SendCameraPacket );
+                //start audio record
+                //Microphone.OnAudioInCallback( SendAudioStream );
+                //Microphone.StartRecording();
+            }
         }
 
         //public void SendAudioStream( byte[] bytes ) {
@@ -342,5 +341,7 @@ namespace Client_Forms {
         public void UpdateState() {
             pbStatus.Image = statusImageList.Images[(int)partner.state];
         }
+
+
     }
 }

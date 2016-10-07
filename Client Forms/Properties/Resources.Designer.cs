@@ -193,6 +193,16 @@ namespace Client_Forms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_game {
+            get {
+                object obj = ResourceManager.GetObject("icon_game", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icon_logoff {
             get {
                 object obj = ResourceManager.GetObject("icon_logoff", resourceCulture);
@@ -296,6 +306,16 @@ namespace Client_Forms.Properties {
         internal static System.Drawing.Bitmap icon_shark_S_pink {
             get {
                 object obj = ResourceManager.GetObject("icon_shark_S_pink", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_video {
+            get {
+                object obj = ResourceManager.GetObject("icon_video", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
