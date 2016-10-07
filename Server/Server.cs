@@ -158,27 +158,6 @@ namespace Server {
         public static void DispatchPacket( ClientData sender, Packet p ) {
 
             switch (p.type) {
-                case PacketType.Chat_File: {
-                        string username = (string)p.data["partner"];
-                        p.data["partner"] = sender.sesionInfo.username;
-                        ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
-                        server.SendPacket( client, p );
-                    }
-                    break;
-                case PacketType.Chat:
-                    foreach (ClientData client in server.clients) {
-                        if (client.id != p.senderID && client.sesionInfo.chatroomID == (int)p.data["chatroomid"])
-                            server.SendPacket( client, p );
-                    }
-                    break;
-                case PacketType.Chat_Private: {
-                        string username = (string)p.data["partner"];
-                        p.data["partner"] = sender.sesionInfo.username;
-                        ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
-                        server.SendPacket( client, p );
-                    }
-                    break;
-
                 case PacketType.Client_SignIn: {
                         string username = (string)p.data["username"];
                         string password = (string)p.data["password"];
@@ -297,7 +276,20 @@ namespace Server {
                         }
                         break;
                     }
-                case PacketType.Chat_Buzzer_Private: {
+                
+                case PacketType.Chat:
+                    foreach (ClientData client in server.clients)
+                    {
+                        if (client.id != p.senderID && client.sesionInfo.chatroomID == (int)p.data["chatroomid"])
+                            server.SendPacket(client, p);
+                    }
+                    break;
+                case PacketType.Video:
+                case PacketType.Video_Confirmation:
+                case PacketType.Chat_File:
+                case PacketType.Chat_Buzzer_Private:
+                case PacketType.Chat_Private:
+                    {
                         string username = (string)p.data["partner"];
                         p.data["partner"] = sender.sesionInfo.username;
                         ClientData client = server.clients.Find( x => x.sesionInfo.username == username );

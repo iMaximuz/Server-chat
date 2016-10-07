@@ -40,13 +40,14 @@ namespace Client_Forms {
             InitializeComponent();
             this.partner = partner;
             chatId = Guid.NewGuid().ToString();
+            Camera.Detect();
         }
 
         private void PrivateChatForm_Load( object sender, EventArgs e ) {
             owner = (MainForm)Owner;
             client = owner.client;
             lblUsername.Text = partner.username;
-            pbStatus.Image = statusImageList.Images[(int)partner.state + 1];
+            pbStatus.Image = statusImageList.Images[(int)partner.state];
         }
 
         private void txtIn_TextChanged( object sender, EventArgs e ) {
@@ -133,10 +134,14 @@ namespace Client_Forms {
                         }
                     }
                     break;
-                case PacketType.Chat_Video: {
+                case PacketType.Video: {
                         ReceiveCameraPacket( p );
                     }
                     break;
+                case PacketType.Video_Confirmation:
+                    {
+                        Camera.CanSend = true;
+                    }break;
                 default:
                     txtIn.WriteLine( this, "ERROR: Packet type not supported", Color.Red);
                     break;
@@ -293,10 +298,11 @@ namespace Client_Forms {
             using (Bitmap img = new Bitmap( bitmap, pbWebCamIn.Size )) {
                 if (Camera.CanSend) {
                     //pictureBoxCam.Image = img;
-                    Packet packet = new Packet( PacketType.Chat_Video, client.ID);
+                    Packet packet = new Packet( PacketType.Video, client.ID);
                     packet.data["bitmap"] = img;
                     packet.data["partner"] = partner.username;
                     //packet.tag["user"] = Header.Text
+                    client.SendPacket(packet);
                     Camera.CanSend = false;
                 }
             }
@@ -305,6 +311,9 @@ namespace Client_Forms {
 
         public void ReceiveCameraPacket( Packet packet ) {
             pbWebCamIn.Image = (Bitmap)packet.data["bitmap"];
+            Packet confirmation = new Packet(PacketType.Video_Confirmation, client.ID);
+            confirmation.data["partner"] = partner.username;
+            client.SendPacket(confirmation);
         }
 
         private void pbEmoticons_Click( object sender, EventArgs e ) {

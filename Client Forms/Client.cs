@@ -11,10 +11,10 @@ using System.Diagnostics;
 using System.IO;
 
 namespace Client_Forms {
-   public class Client {
+    public class Client {
 
         public string ID;
-        string filePath = KnownFolders.GetPath( KnownFolder.Downloads );
+        string filePath = KnownFolders.GetPath(KnownFolder.Downloads);
 
         public bool isConnected = false;
         public bool attemtingConnection = false;
@@ -31,6 +31,7 @@ namespace Client_Forms {
         int port;
 
         Thread receiveThread;
+        Thread sendThread;
 
         public Action OnConnect;
         public Action<string> OnError;
@@ -41,27 +42,30 @@ namespace Client_Forms {
         public Action OnServerDisconnect;
         public Action OnDisconnect;
 
+        Queue<Packet> messageQueue;
 
         public Client() {
             sesionInfo = new ClientState("N/A");
         }
 
-        public Client( string username ) {
-            sesionInfo = new ClientState( username );
+        public Client(string username) {
+            sesionInfo = new ClientState(username);
         }
 
-        public void Connect( IPAddress hostIP, int port ) {
+        public void Connect(IPAddress hostIP, int port) {
+
+            messageQueue = new Queue<Packet>();
 
             this.hostIPAddress = hostIP;
             this.port = port;
-            this.hostAddress = new IPEndPoint( hostIP, port );
+            this.hostAddress = new IPEndPoint(hostIP, port);
 
-            AttemptConnection connect = new AttemptConnection( ConnectToServer );
+            AttemptConnection connect = new AttemptConnection(ConnectToServer);
 
             if (!isConnected) {
                 if (!attemtingConnection) {
-                    
-                    connect.BeginInvoke( null, null );
+
+                    connect.BeginInvoke(null, null);
                 }
             }
 
@@ -71,7 +75,7 @@ namespace Client_Forms {
         void ConnectToServer() {
             if (!isConnected) {
                 attemtingConnection = true;
-                connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+                connectionSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 // Try to connect to host
                 int connAttempts = 0;
 
@@ -84,26 +88,28 @@ namespace Client_Forms {
                     try {
 
                         connAttempts++;
-                        connectionSocket.Connect( hostAddress );
+                        connectionSocket.Connect(hostAddress);
                         isConnected = true;
                         break;
                     }
                     catch (SocketException ex) {
 
-                        if(OnError != null)
-                            OnError( "Could not connect to host... Attempt " + connAttempts.ToString() );
+                        if (OnError != null)
+                            OnError("Could not connect to host... Attempt " + connAttempts.ToString());
 
                         if (connAttempts == 10) {
                             if (OnConnectionFail != null)
-                                OnConnectionFail( ex.Message );
+                                OnConnectionFail(ex.Message);
                         }
                     }
                 }
 
                 if (isConnected) {
-                    receiveThread = new Thread( ReadThread );
+                    receiveThread = new Thread(ReadThread);
                     receiveThread.Start();
-                    if(OnConnect != null)
+                    sendThread = new Thread(SendThread);
+                    sendThread.Start();
+                    if (OnConnect != null)
                         OnConnect();
                 }
                 attemtingConnection = false;
@@ -113,11 +119,11 @@ namespace Client_Forms {
         public void Disconnect() {
             if (isConnected) {
 
-                Packet packet = new Packet( PacketType.Client_LogOut, ID );
-                packet.data.Add( "username" , sesionInfo.username );
+                Packet packet = new Packet(PacketType.Client_LogOut, ID);
+                packet.data.Add("username", sesionInfo.username);
 
                 //TODO: Change it to a Queue
-                SendPacket( packet );
+                SendPacket(packet);
 
                 ShutdownClient();
             }
@@ -125,13 +131,36 @@ namespace Client_Forms {
 
         public void SendPacket(Packet p) {
             if (isConnected) {
-                connectionSocket.Send( PacketFormater.Format( p ) );
+
+                messageQueue.Enqueue(p);
+
+                connectionSocket.Send(PacketFormater.Format(p));
             }
             else {
-                OnError( "ERROR: This client is not connect to a server." );
+                OnError("ERROR: This client is not connect to a server.");
             }
         }
 
+        void SendThread()
+        {
+            try
+            {
+
+                while (true)
+                {
+                    if(messageQueue.Count > 0)
+                    {
+                        connectionSocket.Send(PacketFormater.Format(messageQueue.Dequeue()));
+                        Thread.Sleep(12);
+                    }
+                    else { Thread.Sleep(50); }
+                }
+            }
+            catch (ThreadAbortException ex)
+            {
+
+            }
+        }
         void ReadThread() {
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
             int readBytes;
@@ -141,37 +170,37 @@ namespace Client_Forms {
             try {
                 while (true) {
 
-                    readBytes = connectionSocket.Receive( buffer );
+                    readBytes = connectionSocket.Receive(buffer);
                     if (readBytes > 0) {
 
-                        int packetSize = PacketFormater.GetPacketSize( buffer );
+                        int packetSize = PacketFormater.GetPacketSize(buffer);
 
-                        if (packetSize == readBytes - sizeof( int )) {
-                            Packet packet = PacketFormater.MakePacket( buffer );
-                            DefaultDispatchPacket( packet );
+                        if (packetSize == readBytes - sizeof(int)) {
+                            Packet packet = PacketFormater.MakePacket(buffer);
+                            DefaultDispatchPacket(packet);
                         }
                         else {
 
                             int totalBytes = readBytes;
-                            int fullBufferSize = packetSize + sizeof( int );
+                            int fullBufferSize = packetSize + sizeof(int);
                             byte[] fullPacketBuffer = new byte[fullBufferSize];
-                            MemoryStream ms = new MemoryStream( fullPacketBuffer );
-                            ms.Write( buffer, 0, buffer.Length );
+                            MemoryStream ms = new MemoryStream(fullPacketBuffer);
+                            ms.Write(buffer, 0, buffer.Length);
 
                             while (totalBytes < fullBufferSize) {
-                                readBytes = connectionSocket.Receive( buffer );
+                                readBytes = connectionSocket.Receive(buffer);
                                 totalBytes += readBytes;
-                                ms.Write( buffer, 0, readBytes );
+                                ms.Write(buffer, 0, readBytes);
                             }
 
                             ms.Close();
 
-                            Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
-                            DefaultDispatchPacket( packet );
+                            Packet packet = PacketFormater.MakePacket(fullPacketBuffer);
+                            DefaultDispatchPacket(packet);
                         }
                     }
                     else {
-                        Debug.Assert( true );
+                        Debug.Assert(true);
                         break;
                     }
 
@@ -191,12 +220,13 @@ namespace Client_Forms {
 
         void ShutdownClient() {
             isConnected = false;
-            connectionSocket.Shutdown( SocketShutdown.Both );
+            connectionSocket.Shutdown(SocketShutdown.Both);
             connectionSocket.Close();
+            sendThread.Abort();
             OnDisconnect();
         }
 
-        void DefaultDispatchPacket( Packet p ) {
+        void DefaultDispatchPacket(Packet p) {
 
             switch (p.type) {
                 case PacketType.Server_Registration: {
@@ -214,7 +244,7 @@ namespace Client_Forms {
                         break;
                     }
                 default:
-                    OnPacketReceived( p );
+                    OnPacketReceived(p);
                     break;
             }
 

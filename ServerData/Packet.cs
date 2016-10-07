@@ -105,6 +105,7 @@ namespace Server_Utilities {
         Chat_Buzzer,
         Chat_Buzzer_Private,
         Chat_File,
-        Chat_Video
+        Video,
+        Video_Confirmation
     }
 }

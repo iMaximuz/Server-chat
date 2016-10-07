@@ -6,3 +6,11 @@ D:\Proyectos\Repositorios\Server-chat\Server\bin\Debug\Server.pdb
 D:\Proyectos\Repositorios\Server-chat\Server\bin\Debug\ServerData.dll
 D:\Proyectos\Repositorios\Server-chat\Server\bin\Debug\ServerData.pdb
 D:\Proyectos\Repositorios\Server-chat\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\obj\Debug\Server.pdb
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\bin\Debug\Server.exe.config
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\bin\Debug\Server.exe
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\bin\Debug\Server.pdb
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\bin\Debug\ServerData.dll
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\bin\Debug\ServerData.pdb
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Server\obj\Debug\Server.exe
