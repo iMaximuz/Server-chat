@@ -186,10 +186,12 @@ namespace Client_Forms {
                             string username = (string)p.data["username"];
                             chatRooms = (List<ChatRoom>)p.data["chatrooms"];
                             login.Close( this );
-                            lblUsername.ChangeText( this, username );
+                            
                             client.sesionInfo.username = username;
                             client.sesionInfo.state = State.Online;
                             client.sesionInfo.chatroomID = 0;
+
+                            lblUsername.ChangeText( this, username );
 
                             LoadChatRooms();
 
@@ -211,6 +213,7 @@ namespace Client_Forms {
                         string name = (string)p.data["name"];
 
                         ChatRoom room = new ChatRoom( id, name );
+                        AddChatRoom( room );
 
                     } break;
                 case PacketType.Chat: {
@@ -368,40 +371,56 @@ namespace Client_Forms {
             if(input.ShowDialog(this) == DialogResult.OK) {
 
                 string name = input.GetValue();
+                bool valid = true;
+                foreach(ChatRoom room in chatRooms) {
+                    if(room.name == name) {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid) {
+                    Packet p = new Packet( PacketType.ChatRoom_Create, client.ID );
+                    p.data.Add( "name", name );
+                    client.SendPacket( p );
+                }
+                else {
+                    MessageBox.Show( "That chat room already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
 
-                Packet p = new Packet( PacketType.ChatRoom_Create, client.ID );
-                p.data.Add("name", name);
-                client.SendPacket( p );
+                }
             }
 
 
         }
 
-        delegate void AddChatRoomDelegate();
-        private void AddChatRoom() {
+        delegate void AddChatRoomDelegate( ChatRoom room );
+        private void AddChatRoom(ChatRoom room) {
 
             if (!tvRooms.InvokeRequired) {
+                chatRooms.Add( room );
+                TreeNode node = new TreeNode( room.name );
+                tvRooms.Nodes.Add( node );
 
             }
             else {
                 AddChatRoomDelegate add = new AddChatRoomDelegate( AddChatRoom );
-                this.Invoke( add );
+                this.Invoke( add, new object[] { room } );
             }
 
         }
 
-        delegate void RemoveChatRoomDelegate();
-        private void RemoveChatRoom() {
+        //delegate void RemoveChatRoomDelegate();
+        //private void RemoveChatRoom(ChatRoom room) {
 
-            if (!tvRooms.InvokeRequired) {
+        //    if (!tvRooms.InvokeRequired) {
 
-            }
-            else {
-                RemoveChatRoomDelegate remove = new RemoveChatRoomDelegate( RemoveChatRoom );
-                this.Invoke( remove );
-            }
+        //        chatRooms.Remove( room );
+        //    }
+        //    else {
+        //        RemoveChatRoomDelegate remove = new RemoveChatRoomDelegate( RemoveChatRoom );
+        //        this.Invoke( remove );
+        //    }
 
-        }
+        //}
 
         delegate void LoadChatRoomsDelegate();
         private void LoadChatRooms() {
@@ -421,6 +440,8 @@ namespace Client_Forms {
             }
 
         }
+
+
 
     }
 }

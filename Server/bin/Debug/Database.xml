@@ -25,4 +25,12 @@
     <ChatRoomID>0</ChatRoomID>
     <name>LosChidos</name>
   </ChatRoom>
+  <ChatRoom>
+    <ChatRoomID>1</ChatRoomID>
+    <name>Los poderosos</name>
+  </ChatRoom>
+  <ChatRoom>
+    <ChatRoomID>2</ChatRoomID>
+    <name>Elidachos</name>
+  </ChatRoom>
 </ServerDatabase>

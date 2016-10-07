@@ -24,17 +24,17 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("", 10);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("", 9);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("", 8);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("", 7);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("", 6);
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("", 5);
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("", 4);
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("", 3);
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("", 2);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("", 1);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("", 0);
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("", 10);
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("", 9);
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("", 8);
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("", 7);
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("", 6);
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("", 5);
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("", 4);
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("", 3);
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("", 2);
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("", 1);
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("", 0);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.cmsUser = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sendPrivateMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,21 +49,21 @@
             this.createRoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblUsername = new System.Windows.Forms.Label();
-            this.pbProfile = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbBuzzer = new System.Windows.Forms.PictureBox();
             this.pbFile = new System.Windows.Forms.PictureBox();
             this.pbEmoticons = new System.Windows.Forms.PictureBox();
+            this.pbProfile = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbClose = new System.Windows.Forms.PictureBox();
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             this.SuspendLayout();
             // 
             // cmsUser
@@ -128,30 +128,30 @@
             this.lvEmoticons.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvEmoticons.Alignment = System.Windows.Forms.ListViewAlignment.Left;
             this.lvEmoticons.GridLines = true;
-            listViewItem1.StateImageIndex = 0;
-            listViewItem1.ToolTipText = ";)";
-            listViewItem2.ToolTipText = ":)";
-            listViewItem3.ToolTipText = "D\':";
-            listViewItem4.ToolTipText = ":(";
-            listViewItem5.ToolTipText = ":\'(";
-            listViewItem6.ToolTipText = ":l";
-            listViewItem7.ToolTipText = ":P";
-            listViewItem8.ToolTipText = ":laugh:";
-            listViewItem9.ToolTipText = ":D";
-            listViewItem10.ToolTipText = ":S";
-            listViewItem11.ToolTipText = ":angry:";
+            listViewItem12.StateImageIndex = 0;
+            listViewItem12.ToolTipText = ";)";
+            listViewItem13.ToolTipText = ":)";
+            listViewItem14.ToolTipText = "D\':";
+            listViewItem15.ToolTipText = ":(";
+            listViewItem16.ToolTipText = ":\'(";
+            listViewItem17.ToolTipText = ":l";
+            listViewItem18.ToolTipText = ":P";
+            listViewItem19.ToolTipText = ":laugh:";
+            listViewItem20.ToolTipText = ":D";
+            listViewItem21.ToolTipText = ":S";
+            listViewItem22.ToolTipText = ":angry:";
             this.lvEmoticons.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11});
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16,
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22});
             this.lvEmoticons.LabelWrap = false;
             this.lvEmoticons.LargeImageList = this.emoticonImageList;
             this.lvEmoticons.Location = new System.Drawing.Point(200, 415);
@@ -244,48 +244,11 @@
             this.lblUsername.AutoSize = true;
             this.lblUsername.Font = new System.Drawing.Font("Museo Sans 500", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(249)))), ((int)(((byte)(183)))));
-            this.lblUsername.Location = new System.Drawing.Point(334, 10);
+            this.lblUsername.Location = new System.Drawing.Point(328, 13);
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(100, 23);
             this.lblUsername.TabIndex = 19;
             this.lblUsername.Text = "Username";
-            // 
-            // pbProfile
-            // 
-            this.pbProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbProfile.Image = global::Client_Forms.Properties.Resources.icon_profile;
-            this.pbProfile.Location = new System.Drawing.Point(733, 9);
-            this.pbProfile.Name = "pbProfile";
-            this.pbProfile.Size = new System.Drawing.Size(30, 30);
-            this.pbProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbProfile.TabIndex = 17;
-            this.pbProfile.TabStop = false;
-            this.pbProfile.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::Client_Forms.Properties.Resources.icon_shark_logo_1;
-            this.pictureBox1.Location = new System.Drawing.Point(8, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(60, 37);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 16;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pbClose
-            // 
-            this.pbClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbClose.Image = global::Client_Forms.Properties.Resources.icon_logoff;
-            this.pbClose.Location = new System.Drawing.Point(772, 8);
-            this.pbClose.Name = "pbClose";
-            this.pbClose.Size = new System.Drawing.Size(30, 30);
-            this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbClose.TabIndex = 15;
-            this.pbClose.TabStop = false;
-            this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
-            this.pbClose.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbClose.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
             // pbBuzzer
             // 
@@ -329,6 +292,43 @@
             this.pbEmoticons.MouseEnter += new System.EventHandler(this.PictureBoxHover);
             this.pbEmoticons.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
+            // pbProfile
+            // 
+            this.pbProfile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbProfile.Image = global::Client_Forms.Properties.Resources.icon_profile;
+            this.pbProfile.Location = new System.Drawing.Point(733, 9);
+            this.pbProfile.Name = "pbProfile";
+            this.pbProfile.Size = new System.Drawing.Size(30, 30);
+            this.pbProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbProfile.TabIndex = 17;
+            this.pbProfile.TabStop = false;
+            this.pbProfile.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Client_Forms.Properties.Resources.icon_shark_logo_1;
+            this.pictureBox1.Location = new System.Drawing.Point(8, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(60, 37);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 16;
+            this.pictureBox1.TabStop = false;
+            // 
+            // pbClose
+            // 
+            this.pbClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbClose.Image = global::Client_Forms.Properties.Resources.icon_logoff;
+            this.pbClose.Location = new System.Drawing.Point(772, 8);
+            this.pbClose.Name = "pbClose";
+            this.pbClose.Size = new System.Drawing.Size(30, 30);
+            this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbClose.TabIndex = 15;
+            this.pbClose.TabStop = false;
+            this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
+            this.pbClose.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbClose.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -354,12 +354,12 @@
             this.cmsRooms.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             this.ResumeLayout(false);
 
         }

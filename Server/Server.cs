@@ -192,13 +192,20 @@ namespace Server {
                                     where usuario.username == username && usuario.password == password
                                     select usuario;
                         if (query.Count() > 0) {
-                            confirmation.data.Add( "status", true );
-                            confirmation.data.Add( "username", username );
-                            confirmation.data.Add( "chatrooms", server.chatRooms );
+
                             sender.sesionInfo.username = username;
                             sender.sesionInfo.state = State.Online;
                             sender.sesionInfo.chatroomID = 0;
-                            
+
+                            List<ClientState> users = new List<ClientState>();
+                            foreach (ClientData client in server.clients)
+                                users.Add( client.sesionInfo );
+
+                            confirmation.data.Add( "status", true );
+                            confirmation.data.Add( "username", username );
+                            confirmation.data.Add( "chatrooms", server.chatRooms );
+                            confirmation.data.Add( "users", users );
+
                             Packet notification = new Packet( PacketType.User_LogIn, ServerInfo.ID );
                             notification.data.Add( "username", username );
                             server.SendPacketToAll( sender, notification );
@@ -222,6 +229,22 @@ namespace Server {
 
                         break;
                     }
+                case PacketType.ChatRoom_Create: {
+
+                        string name = (string)p.data["name"];
+
+                        if (server.CreateRoom( name )) {
+
+                            int id = server.chatRooms.Last().id;
+
+                            Packet confirmation = new Packet( PacketType.ChatRoom_Create, ServerInfo.ID );
+                            confirmation.data.Add( "id", id );
+                            confirmation.data.Add( "name", name );
+                            server.SendPacketToAll( confirmation );
+
+                        }
+
+                    } break;
                 case PacketType.Ping: {
 
                         Packet pong = new Packet( PacketType.Pong, ServerInfo.ID );
