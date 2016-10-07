@@ -20,5 +20,9 @@ namespace Server_Utilities {
         public int chatroomID;
         public string username;
 
+        public ClientState(string username) {
+            this.username = username;
+        }
+
     }
 }

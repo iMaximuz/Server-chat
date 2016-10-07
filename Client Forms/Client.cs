@@ -13,12 +13,12 @@ using System.IO;
 namespace Client_Forms {
    public class Client {
 
-        string chatName;
         public string ID;
         string filePath = KnownFolders.GetPath( KnownFolder.Downloads );
 
         public bool isConnected = false;
         public bool attemtingConnection = false;
+        public bool isLoggedIn = false;
 
         public ClientState sesionInfo;
 
@@ -41,12 +41,11 @@ namespace Client_Forms {
 
 
         public Client() {
-            this.chatName = "Client";
-            sesionInfo = new ClientState();
+            sesionInfo = new ClientState("N/A");
         }
 
-        public Client( string name ) {
-            this.chatName = name;
+        public Client( string username ) {
+            sesionInfo = new ClientState( username );
         }
 
         public void Connect( IPAddress hostIP, int port ) {
@@ -113,19 +112,13 @@ namespace Client_Forms {
             if (isConnected) {
 
                 Packet packet = new Packet( PacketType.Client_LogOut, ID );
-                packet.data.Add( "name" , chatName );
+                packet.data.Add( "username" , sesionInfo.username );
 
                 //TODO: Change it to a Queue
                 SendPacket( packet );
 
                 ShutdownClient();
             }
-        }
-
-
-        //TODO: Maybe not have the client info here?
-        void ChangeName( string newName ) {
-            this.chatName = newName;
         }
 
         public void SendPacket(Packet p) {

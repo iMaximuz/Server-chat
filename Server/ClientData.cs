@@ -22,7 +22,7 @@ namespace Server {
             id = Guid.NewGuid().ToString();
             thread = new Thread( ts );
             thread.Start( this );
-            sesionInfo = new ClientState();
+            sesionInfo = new ClientState("N/A");
         }
 
         public void Disconnect() {

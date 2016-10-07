@@ -93,6 +93,7 @@ namespace Server_Utilities {
         Client_LogIn,
         User_LogIn,
         User_LogOut,
+        User_Status_Change,
         Ping,
         Pong,
         ChatRoom_Create,

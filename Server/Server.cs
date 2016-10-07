@@ -161,7 +161,7 @@ namespace Server {
                 case PacketType.Chat_File:
                 case PacketType.Chat:
                     foreach (ClientData client in server.clients) {
-                        if (client.id != p.senderID)
+                        if (client.id != p.senderID && client.sesionInfo.chatroomID == (int)p.data["chatroomid"])
                             server.SendPacket( client, p );
                     }
                     break;
@@ -198,16 +198,20 @@ namespace Server {
                             sender.sesionInfo.chatroomID = 0;
 
                             List<ClientState> users = new List<ClientState>();
-                            foreach (ClientData client in server.clients)
-                                users.Add( client.sesionInfo );
+                            foreach (ClientData client in server.clients) {
+                                if(client.sesionInfo.username != "N/A")
+                                    users.Add( client.sesionInfo );
+                            }
 
                             confirmation.data.Add( "status", true );
+
                             confirmation.data.Add( "username", username );
                             confirmation.data.Add( "chatrooms", server.chatRooms );
                             confirmation.data.Add( "users", users );
 
                             Packet notification = new Packet( PacketType.User_LogIn, ServerInfo.ID );
-                            notification.data.Add( "username", username );
+                            notification.data.Add( "user", sender.sesionInfo );
+
                             server.SendPacketToAll( sender, notification );
 
                             WriteLine( username + " logged in." );
@@ -222,13 +226,19 @@ namespace Server {
                     break;
                 case PacketType.Client_LogOut: {
 
-                        WriteLine( "Client petition to disconnect " + p.senderID );
+                        WriteLine( "Client petition to disconnect " + p.data["username"]);
 
                         server.RemoveClient( p.senderID );
                         server.SendPacketToAll( p );
 
                         break;
                     }
+                case PacketType.User_Status_Change: {
+                        ClientState user = (ClientState)p.data["user"];
+                        sender.sesionInfo.state = user.state;
+                        server.SendPacketToAll( p );
+                    }
+                    break;
                 case PacketType.ChatRoom_Create: {
 
                         string name = (string)p.data["name"];
@@ -245,6 +255,19 @@ namespace Server {
                         }
 
                     } break;
+                case PacketType.ChatRoom_Join: {
+
+                        ChatRoom room = (ChatRoom)p.data["room"];
+
+                        sender.sesionInfo.chatroomID = room.id;
+
+                        Packet notification = new Packet( PacketType.ChatRoom_Join, ServerInfo.ID );
+                        notification.data.Add( "user", sender.sesionInfo );
+                        notification.data.Add( "room", room );
+
+                        server.SendPacketToAll( notification );
+                    }
+                    break;
                 case PacketType.Ping: {
 
                         Packet pong = new Packet( PacketType.Pong, ServerInfo.ID );
@@ -255,7 +278,7 @@ namespace Server {
 
                 case PacketType.Chat_Buzzer: {
                         foreach (ClientData client in server.clients) {
-                            if (client.id != p.senderID)
+                            if (client.id != p.senderID && client.sesionInfo.chatroomID == (int)p.data["chatroomid"])
                                 server.SendPacket( client, p );
                         }
                         break;

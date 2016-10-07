@@ -82,6 +82,7 @@ namespace Client_Forms {
         }
 
 
+
         static void SetEmoticons( this RichTextBox rtb ) {
             if (Emotes.isInitialized) {
                 Emotes.mutex.WaitOne();

@@ -93,13 +93,13 @@ namespace Client_Forms {
             else {
                 if (client.isConnected) {
                     Packet p = new Packet( PacketType.Chat, client.ID );
+                    p.data.Add( "chatroomid", client.sesionInfo.chatroomID );
                     p.data.Add( "name", client.sesionInfo.username );
                     p.data.Add( "message", txtOut.Text );
                     //Send message to server
                     //TODO: Implement Queue
                     client.SendPacket( p );
 
-                    //WriteLine( txtIn, txtName.Text + ": " + txtOut.Text );
                 }
                 txtIn.WriteLine( this, client.sesionInfo.username + ": " + txtOut.Text );
                 if (!client.isConnected)
@@ -120,7 +120,6 @@ namespace Client_Forms {
             }
         }
 
-        //TODO: Pasar esto a una clase donde pueda reutilizarlo
 
         delegate void EditButtonDelegate( Button btn, string text );
         void EditButtonText( Button btn, string text ) {
@@ -185,6 +184,8 @@ namespace Client_Forms {
                         if ( confirmation ) {
                             string username = (string)p.data["username"];
                             chatRooms = (List<ChatRoom>)p.data["chatrooms"];
+                            loggedUsers = (List<ClientState>)p.data["users"];
+
                             login.Close( this );
                             
                             client.sesionInfo.username = username;
@@ -193,8 +194,10 @@ namespace Client_Forms {
 
                             lblUsername.ChangeText( this, username );
 
-                            LoadChatRooms();
+                            client.isLoggedIn = true;
 
+                            LoadChatRooms();
+                            LoadUsers();
                         }
                         else {
                             login.Fail();
@@ -202,23 +205,59 @@ namespace Client_Forms {
                         break;
                     }
                 case PacketType.User_LogIn: {
-                        txtIn.WriteLine( this, "Client disconnected: " + p.data["username"], Color.Green );
+                        if (client.isLoggedIn) {
+                            ClientState user = (ClientState)p.data["user"];
+                            ChatRoom chatRoom = chatRooms[0];
+                            loggedUsers.Add( user );
+                            JoinRoom( user, chatRoom );
+                        }
                     } break;
                 case PacketType.User_LogOut: {
-                        txtIn.WriteLine( this, "Client disconnected: " + p.data["name"] );
+                        if (client.isLoggedIn) {
+                            ClientState user = (ClientState)p.data["user"];
+                            loggedUsers.Remove( user );
+
+                            txtIn.WriteLine( this, p.data["username"] + " disconnected." );
+                        }
                         break;
                     }
-                case PacketType.ChatRoom_Create: {
-                        int id = (int)p.data["id"];
-                        string name = (string)p.data["name"];
+                case PacketType.User_Status_Change: {
+                        if (client.isLoggedIn) {
+                            ClientState user = (ClientState)p.data["user"];
+                            ClientState userToChange = loggedUsers.Find( x => x.username == user.username );
+                            userToChange.state = user.state;
 
-                        ChatRoom room = new ChatRoom( id, name );
-                        AddChatRoom( room );
+                            TreeNode[] node = tvRooms.Nodes.Find( user.username, true );
+                            SetImageIndex( node[0], (int)user.state );
+
+                        }
+                    }
+                    break;
+                case PacketType.ChatRoom_Create: {
+                        if (client.isLoggedIn) {
+                            int id = (int)p.data["id"];
+                            string name = (string)p.data["name"];
+
+                            ChatRoom room = new ChatRoom( id, name );
+                            AddChatRoom( room );
+
+                        }
 
                     } break;
-                case PacketType.Chat: {
-                        txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
+                case PacketType.ChatRoom_Join: {
+                        if (client.isLoggedIn) {
+                            ChatRoom newRoom = (ChatRoom)p.data["room"];
+                            ClientState changedUser = (ClientState)p.data["user"];
 
+                            JoinRoom( changedUser, newRoom );
+                        }
+                    }
+                    break;
+                case PacketType.Chat: {
+                        if (client.isLoggedIn) {
+                            txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
+
+                        }
                         break;
                     }
                 case PacketType.Pong: {
@@ -227,23 +266,28 @@ namespace Client_Forms {
                         break;
                     }
                 case PacketType.Chat_Buzzer: {
-                        if (!buzzTimer.Enabled) {
-                            StartTimerDelegate ST = new StartTimerDelegate( StartTimer );
-                            this.Invoke( ST );
-                            elapsedBuzzTime = 0;
-                            windowPosition = this.Location;
+                        if (client.isLoggedIn) {
+                            if (!buzzTimer.Enabled) {
+
+                                txtIn.WriteLine( this, "(:S) Buzzzz! - " + p.data["username"], Color.Yellow );
+
+                                StartTimerDelegate ST = new StartTimerDelegate( StartTimer );
+                                this.Invoke( ST );
+                                elapsedBuzzTime = 0;
+                                windowPosition = this.Location;
+                            }
                         }
                         break;
                     }
                 case PacketType.Chat_File: {
+                        if (client.isLoggedIn) {
+                            string fileName = (string)p.data["fileName"];
+                            byte[] file = (byte[])p.data["file"];
 
-                        string fileName = (string)p.data["fileName"];
-                        byte[] file = (byte[])p.data["file"];
+                            File.WriteAllBytes( client.GetDownloadFilePath() + fileName, file );
 
-                        File.WriteAllBytes( client.GetDownloadFilePath() + fileName, file );
-
-                        txtIn.WriteLine( this, fileName + " (" + (float)file.Length / 1024.0 + " Kb) " + "received." );
-
+                            txtIn.WriteLine( this, fileName + " (" + (float)file.Length / 1024.0 + " Kb) " + "received." );
+                        }
                         break;
                     }
             }
@@ -274,18 +318,39 @@ namespace Client_Forms {
             lvEmoticons.Visible = !lvEmoticons.Visible;
             lvEmoticons.Focus();
         }
-
         private void lvEmoticons_Leave( object sender, EventArgs e ) {
             lvEmoticons.Visible = false;
             txtOut.Focus();
         }
-
+        private void pbStatus_Click( object sender, EventArgs e ) {
+            lvStatus.Visible = !lvEmoticons.Visible;
+            lvStatus.Focus();
+        }
+        private void lvStatus_Leave( object sender, EventArgs e ) {
+            lvStatus.Visible = false;
+            txtOut.Focus();
+        }
 
         private void lvEmoticons_SelectedIndexChanged( object sender, EventArgs e ) {
             if (lvEmoticons.SelectedIndices.Count > 0) {
                 int i = lvEmoticons.SelectedIndices[0];
                 lvEmoticons.Items[i].Selected = false;
                 txtOut.AppendText( lvEmoticons.Items[i].ToolTipText + " " );
+                txtOut.Focus();
+            }
+        }
+
+        private void lvStatus_SelectedIndexChanged( object sender, EventArgs e ) {
+            if (lvStatus.SelectedIndices.Count > 0) {
+                int i = lvStatus.SelectedIndices[0]; 
+                if (i != (int)client.sesionInfo.state) {
+                    lvStatus.Items[i].Selected = false;
+                    pbStatus.Image = statusImageList.Images[i + 1]; //NOTA: Esto es mientras no tenemos el modo desconectado
+                    client.sesionInfo.state = (State)(i + 1);
+                    Packet p = new Packet( PacketType.User_Status_Change, client.ID );
+                    p.data.Add( "user", client.sesionInfo );
+                    client.SendPacket( p );
+                }
                 txtOut.Focus();
             }
         }
@@ -360,8 +425,13 @@ namespace Client_Forms {
         }
 
         private void pbBuzzer_Click( object sender, EventArgs e ) {
-            Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
-            client.SendPacket( p );
+            if (client.isConnected) {
+                Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
+                p.data.Add( "chatroomid", client.sesionInfo.chatroomID );
+                p.data.Add( "username", client.sesionInfo.username );
+                client.SendPacket( p );
+                txtIn.WriteLine( this, " - Buzz! sent - ", Color.Yellow );
+            }
         }
 
         private void createRoomToolStripMenuItem_Click( object sender, EventArgs e ) {
@@ -378,6 +448,7 @@ namespace Client_Forms {
                         break;
                     }
                 }
+
                 if (valid) {
                     Packet p = new Packet( PacketType.ChatRoom_Create, client.ID );
                     p.data.Add( "name", name );
@@ -392,12 +463,35 @@ namespace Client_Forms {
 
         }
 
+        private void sendPrivateMessageToolStripMenuItem_Click( object sender, EventArgs e ) {
+
+
+
+
+        }
+
+        private void cmsRoomToolStripMenuItem_Click( object sender, EventArgs e ) {
+            string roomName =  tvRooms.SelectedNode.Name;
+            ChatRoom newRoom = chatRooms.Find( x => x.name == roomName );
+            if (newRoom != null) {
+                if (client.sesionInfo.chatroomID != newRoom.id) {
+                    client.sesionInfo.chatroomID = newRoom.id;
+
+                    Packet p = new Packet( PacketType.ChatRoom_Join, client.ID );
+                    p.data.Add( "room", newRoom );
+                    client.SendPacket( p );
+                }
+            }
+        }
+
+
+
         delegate void AddChatRoomDelegate( ChatRoom room );
         private void AddChatRoom(ChatRoom room) {
 
             if (!tvRooms.InvokeRequired) {
                 chatRooms.Add( room );
-                TreeNode node = new TreeNode( room.name );
+                TreeNode node = NewRoomNode( room.name );
                 tvRooms.Nodes.Add( node );
 
             }
@@ -429,10 +523,11 @@ namespace Client_Forms {
             if (!tvRooms.InvokeRequired) {
                 foreach (ChatRoom cr in chatRooms) {
 
-                    TreeNode room = new TreeNode( cr.name );
+                    TreeNode room = NewRoomNode( cr.name );
                     tvRooms.Nodes.Add( room );
 
                 }
+                
             }
             else {
                 LoadChatRoomsDelegate load = new LoadChatRoomsDelegate( LoadChatRooms );
@@ -441,7 +536,100 @@ namespace Client_Forms {
 
         }
 
+        delegate void LoadUsersDelegate();
+        private void LoadUsers() {
 
+            if (!tvRooms.InvokeRequired) {
+                foreach (ClientState user in loggedUsers) {
+                    ChatRoom room = chatRooms.Find( x => x.id == user.chatroomID );
+                    TreeNode node = NewUserNode( user );
+
+                    TreeNode[] roomNodes = tvRooms.Nodes.Find( room.name, false );
+                    roomNodes[0].Nodes.Add( node );
+                }
+                tvRooms.ExpandAll();
+            }
+            else {
+                LoadUsersDelegate load = new LoadUsersDelegate( LoadUsers );
+                this.Invoke( load );
+            }
+
+        }
+
+        delegate void JoinRoomDelegate(ClientState user, ChatRoom destionation);
+        private void JoinRoom(ClientState user, ChatRoom destination) {
+
+            if (!tvRooms.InvokeRequired) {
+
+                ClientState oldUser = loggedUsers.Find( x => x.username == user.username );
+                LeaveRoom( oldUser );
+
+                TreeNode newNode = NewUserNode( user ); 
+                TreeNode[] roomNode = tvRooms.Nodes.Find( destination.name, false );
+                roomNode[0].Nodes.Add( newNode );
+                if(!roomNode[0].IsExpanded)
+                    roomNode[0].Expand();
+
+                oldUser.chatroomID = user.chatroomID;
+
+            }
+            else {
+                JoinRoomDelegate join = new JoinRoomDelegate(JoinRoom);
+                this.Invoke( join, new object[] { user, destination } );
+            }
+        }
+
+        delegate void LeaveRoomDelegate( ClientState user );
+        private void LeaveRoom( ClientState user ) {
+
+            if (!tvRooms.InvokeRequired) {
+
+                ChatRoom sourceRoom = chatRooms.Find( x => x.id == user.chatroomID );
+
+                TreeNode[] roomNode = tvRooms.Nodes.Find( sourceRoom.name, false );
+                TreeNode[] userNode = roomNode[0].Nodes.Find( user.username, false );
+                if (userNode.Count() > 0)
+                    roomNode[0].Nodes.Remove( userNode[0] );
+            }
+            else {
+                LeaveRoomDelegate leave = new LeaveRoomDelegate( LeaveRoom );
+                this.Invoke( leave, new object[] { user } );
+            }
+
+        }
+
+        delegate void SetImageIndexDelegate( TreeNode node, int index );
+        private void SetImageIndex( TreeNode node, int index ) {
+
+            if (!tvRooms.InvokeRequired) {
+                node.ImageIndex = index;
+            }
+            else {
+                SetImageIndexDelegate set = new SetImageIndexDelegate( SetImageIndex );
+                this.Invoke( set, new object[] { node, index } );
+            }
+        }
+
+
+        private TreeNode NewRoomNode(string name) {
+            TreeNode node = new TreeNode( name );
+            node.Name = name;
+            node.ContextMenuStrip = cmsRoom;
+            return node;
+        }
+
+        private TreeNode NewUserNode( ClientState user ) {
+            TreeNode node = new TreeNode( user.username );
+            node.Name = user.username;
+            node.ContextMenuStrip = cmsUser;
+            node.ImageIndex = (int)user.state;
+            return node;
+        }
+
+
+        private void tvRooms_NodeMouseClick( object sender, TreeNodeMouseClickEventArgs e ) {
+            tvRooms.SelectedNode = e.Node;
+        }
 
     }
 }

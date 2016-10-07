@@ -222,6 +222,18 @@
   <ItemGroup>
     <None Include="res\icon-buzz.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\status-offline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\status-online.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\status-away.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\status-busy.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

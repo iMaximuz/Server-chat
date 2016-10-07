@@ -23,17 +23,19 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("", 10);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("", 9);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("", 8);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("", 7);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("", 6);
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("", 5);
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("", 4);
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("", 3);
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("", 2);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("", 1);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("", 0);
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("", 10);
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("", 9);
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("", 8);
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("", 7);
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("", 6);
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("", 5);
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("", 4);
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("", 3);
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("", 2);
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("", 1);
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("", 0);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrivateChatForm));
             this.pbBuzzer = new System.Windows.Forms.PictureBox();
             this.pbFile = new System.Windows.Forms.PictureBox();
             this.lvEmoticons = new System.Windows.Forms.ListView();
@@ -42,17 +44,16 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.txtIn = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pbProfile = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
-            this.txtName = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.buzzTimer = new System.Windows.Forms.Timer(this.components);
+            this.emoticonImageList = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -86,31 +87,32 @@
             this.lvEmoticons.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvEmoticons.Alignment = System.Windows.Forms.ListViewAlignment.Left;
             this.lvEmoticons.GridLines = true;
-            listViewItem1.StateImageIndex = 0;
-            listViewItem1.ToolTipText = ";)";
-            listViewItem2.ToolTipText = ":)";
-            listViewItem3.ToolTipText = "D\':";
-            listViewItem4.ToolTipText = ":(";
-            listViewItem5.ToolTipText = ":\'(";
-            listViewItem6.ToolTipText = ":l";
-            listViewItem7.ToolTipText = ":P";
-            listViewItem8.ToolTipText = ":laugh:";
-            listViewItem9.ToolTipText = ":D";
-            listViewItem10.ToolTipText = ":S";
-            listViewItem11.ToolTipText = ":angry:";
+            listViewItem12.StateImageIndex = 0;
+            listViewItem12.ToolTipText = ";)";
+            listViewItem13.ToolTipText = ":)";
+            listViewItem14.ToolTipText = "D\':";
+            listViewItem15.ToolTipText = ":(";
+            listViewItem16.ToolTipText = ":\'(";
+            listViewItem17.ToolTipText = ":l";
+            listViewItem18.ToolTipText = ":P";
+            listViewItem19.ToolTipText = ":laugh:";
+            listViewItem20.ToolTipText = ":D";
+            listViewItem21.ToolTipText = ":S";
+            listViewItem22.ToolTipText = ":angry:";
             this.lvEmoticons.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11});
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16,
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22});
             this.lvEmoticons.LabelWrap = false;
+            this.lvEmoticons.LargeImageList = this.emoticonImageList;
             this.lvEmoticons.Location = new System.Drawing.Point(9, 432);
             this.lvEmoticons.MultiSelect = false;
             this.lvEmoticons.Name = "lvEmoticons";
@@ -176,26 +178,13 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
-            this.panel1.Controls.Add(this.pbProfile);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.pbClose);
-            this.panel1.Controls.Add(this.txtName);
             this.panel1.Location = new System.Drawing.Point(-1, -1);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(813, 48);
             this.panel1.TabIndex = 26;
-            // 
-            // pbProfile
-            // 
-            this.pbProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbProfile.Image = global::Client_Forms.Properties.Resources.icon_profile;
-            this.pbProfile.Location = new System.Drawing.Point(733, 9);
-            this.pbProfile.Name = "pbProfile";
-            this.pbProfile.Size = new System.Drawing.Size(30, 30);
-            this.pbProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbProfile.TabIndex = 17;
-            this.pbProfile.TabStop = false;
             // 
             // pictureBox1
             // 
@@ -218,14 +207,6 @@
             this.pbClose.TabIndex = 15;
             this.pbClose.TabStop = false;
             // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(256, 14);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(182, 20);
-            this.txtName.TabIndex = 14;
-            this.txtName.Text = "Usuario";
-            // 
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(17)))), ((int)(((byte)(26)))));
@@ -243,6 +224,26 @@
             this.pictureBox3.Size = new System.Drawing.Size(260, 223);
             this.pictureBox3.TabIndex = 28;
             this.pictureBox3.TabStop = false;
+            // 
+            // buzzTimer
+            // 
+            this.buzzTimer.Interval = 10;
+            // 
+            // emoticonImageList
+            // 
+            this.emoticonImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("emoticonImageList.ImageStream")));
+            this.emoticonImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.emoticonImageList.Images.SetKeyName(0, "emote_angry.png");
+            this.emoticonImageList.Images.SetKeyName(1, "emote_badfeeling.png");
+            this.emoticonImageList.Images.SetKeyName(2, "emote_happy.png");
+            this.emoticonImageList.Images.SetKeyName(3, "emote_laugh.png");
+            this.emoticonImageList.Images.SetKeyName(4, "emote_P.png");
+            this.emoticonImageList.Images.SetKeyName(5, "emote_pokerface.png");
+            this.emoticonImageList.Images.SetKeyName(6, "emote_sad.png");
+            this.emoticonImageList.Images.SetKeyName(7, "emote_sad2.png");
+            this.emoticonImageList.Images.SetKeyName(8, "emote_sad3.png");
+            this.emoticonImageList.Images.SetKeyName(9, "emote_smile.png");
+            this.emoticonImageList.Images.SetKeyName(10, "emote_winkyface.png");
             // 
             // PrivateChatForm
             // 
@@ -264,12 +265,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "PrivateChatForm";
             this.Text = "PrivateChatForm";
+            this.Load += new System.EventHandler(this.PrivateChatForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -288,11 +288,11 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.RichTextBox txtIn;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox pbProfile;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pbClose;
-        private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.ImageList emoticonImageList;
+        private System.Windows.Forms.Timer buzzTimer;
     }
 }
