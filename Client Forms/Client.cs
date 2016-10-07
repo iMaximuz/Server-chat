@@ -44,6 +44,8 @@ namespace Client_Forms {
 
         Queue<Packet> messageQueue;
 
+        Mutex queueMutex;
+
         public Client() {
             sesionInfo = new ClientState("N/A");
         }
@@ -55,6 +57,7 @@ namespace Client_Forms {
         public void Connect(IPAddress hostIP, int port) {
 
             messageQueue = new Queue<Packet>();
+            queueMutex = new Mutex();
 
             this.hostIPAddress = hostIP;
             this.port = port;
@@ -107,8 +110,8 @@ namespace Client_Forms {
                 if (isConnected) {
                     receiveThread = new Thread(ReadThread);
                     receiveThread.Start();
-                    sendThread = new Thread(SendThread);
-                    sendThread.Start();
+                    //sendThread = new Thread(SendThread);
+                    //sendThread.Start();
                     if (OnConnect != null)
                         OnConnect();
                 }
@@ -131,33 +134,39 @@ namespace Client_Forms {
 
         public void SendPacket(Packet p) {
             if (isConnected) {
-                messageQueue.Enqueue(p);
+                queueMutex.WaitOne();
+                //messageQueue.Enqueue(p);
+                connectionSocket.Send(PacketFormater.Format(p));
+                queueMutex.ReleaseMutex();
             }
             else {
                 OnError("ERROR: This client is not connect to a server.");
             }
         }
 
-        void SendThread()
-        {
-            try
-            {
+        //void SendThread()
+        //{
+        //    try
+        //    {
 
-                while (true)
-                {
-                    if(messageQueue.Count > 0)
-                    {
-                        connectionSocket.Send(PacketFormater.Format(messageQueue.Dequeue()));
-                        Thread.Sleep(12);
-                    }
-                    else { Thread.Sleep(50); }
-                }
-            }
-            catch (ThreadAbortException ex)
-            {
+        //        while (true)
+        //        {
+        //            if(messageQueue.Count > 0)
+        //            {
+        //                queueMutex.WaitOne();
+        //                Packet p = messageQueue.Dequeue();
+        //                queueMutex.ReleaseMutex();
+        //                connectionSocket.Send(PacketFormater.Format(p)); ;
+        //                Thread.Sleep(12);
+        //            }
+        //            else { Thread.Sleep(50); }
+        //        }
+        //    }
+        //    catch (ThreadAbortException ex)
+        //    {
 
-            }
-        }
+        //    }
+        //}
         void ReadThread() {
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
             int readBytes;
@@ -219,7 +228,6 @@ namespace Client_Forms {
             isConnected = false;
             connectionSocket.Shutdown(SocketShutdown.Both);
             connectionSocket.Close();
-            sendThread.Abort();
             OnDisconnect();
         }
 

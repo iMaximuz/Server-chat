@@ -458,6 +458,7 @@ namespace Client_Forms {
             }
             else if (chats[partner].IsDisposed) {
                 chats[partner] = new PrivateChatForm( ref user );
+                chats[partner].Show(this);
             }
 
 
