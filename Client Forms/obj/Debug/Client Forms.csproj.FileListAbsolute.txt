@@ -25,3 +25,14 @@ D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.SignIn
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.PrivateChatForm.resources
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.LoadingForm.resources
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.InputDialog.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\bin\Debug\Client Forms.exe.config
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client Forms.exe
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client Forms.pdb
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client Forms.csprojResolveAssemblyReference.cache
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client_Forms.InputDialog.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client_Forms.MainForm.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client_Forms.LoginForm.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client_Forms.PrivateChatForm.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client_Forms.Properties.Resources.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client_Forms.SignInForm.resources
+C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client Forms\obj\Debug\Client Forms.csproj.GenerateResource.Cache
