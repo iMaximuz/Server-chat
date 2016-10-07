@@ -16,6 +16,7 @@ namespace Server {
         //TODO: Manejo de errores
 
         public List<ClientData> clients;
+        public List<ChatRoom> chatRooms;
         public bool isOnline = false;
 
         Socket listenSocket;
@@ -50,13 +51,14 @@ namespace Server {
         public ServerManager( IPEndPoint serverAddress ) {
             this.address = serverAddress;
             messageQueue = new Queue<Message>();
+            
         }
 
         public void Start() {
             if (!isOnline) {
                 listenSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
                 clients = new List<ClientData>();
-
+                chatRooms = new List<ChatRoom>();
                 try {
                     listenSocket.Bind( address );
                     isOnline = true;
@@ -67,6 +69,16 @@ namespace Server {
                     database = new ServerDatabase();
                     database.ReadXml( dataBasePath );
                     OnStarUp();
+
+                    ServerDatabase.ChatRoomDataTable chatRoomTable = database.ChatRoom;
+                    var query = from chatRoom in chatRoomTable
+                                select chatRoom;
+                    if (query.Count() > 0) {
+                        foreach (ServerDatabase.ChatRoomRow chatRoom in query) {
+                            ChatRoom room = new ChatRoom( chatRoom.ChatRoomID, chatRoom.name );
+                            chatRooms.Add( room );
+                        }
+                    }
                 }
                 catch (SocketException ex) {
                     Console.WriteLine( "ERROR: Server could not start. \n\t" + ex.Message );
@@ -198,6 +210,14 @@ namespace Server {
             messageQueue.Enqueue( new Message(null, packet, true) );
         }
 
+        public void SendPacketToAll( ClientData exclude, Packet packet ) {
+            foreach (ClientData c in clients) {
+                if(c.id != exclude.id) {
+                    messageQueue.Enqueue( new Message( c.socket, packet ) );
+                }
+            }
+        }
+
         public void RemoveClient(string id) {
             clients.RemoveAll( x => x.id == id );
         }
@@ -234,11 +254,31 @@ namespace Server {
             userRow.state = (int)state;
 
             database.User.AddUserRow( userRow );
-            database.WriteXml( "Database.xml" );
+            database.WriteXml( dataBasePath );
             return true;
         }
 
+        public bool CreateRoom(string name) {
+            ServerDatabase.ChatRoomDataTable chatRoomTable = database.ChatRoom;
 
+            var query = from chatRoom in chatRoomTable
+                        where chatRoom.name == name
+                        select chatRoom;
+            if (query.Count() > 0)
+                return false;
+
+            if (String.IsNullOrEmpty( name ))
+                return false;
+
+
+            ServerDatabase.ChatRoomRow chatRoomRow = database.ChatRoom.NewChatRoomRow();
+
+            chatRoomRow.name = name;
+            database.ChatRoom.AddChatRoomRow( chatRoomRow );
+            database.WriteXml( dataBasePath );
+            chatRooms.Add( new ChatRoom( chatRoomRow.ChatRoomID, chatRoomRow.name ) );
+            return true;
+        }
 
     }
 }

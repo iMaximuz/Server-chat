@@ -89,20 +89,19 @@ namespace Server {
                                 }
                                 break;
                             case "chatroom": {
-                                    if (!String.IsNullOrEmpty( args[2] )) { 
+                                    if (!String.IsNullOrEmpty( args[2] )) {
                                         if (args[2] == "public") {
-                                            ServerDatabase.ChatRoomRow chatroomRow = server.database.ChatRoom.NewChatRoomRow();
-                                            chatroomRow.name = args[3];
-                                            server.database.ChatRoom.AddChatRoomRow(chatroomRow);
-                                            server.database.WriteXml( "Database.xml" );
-                                            WriteLine( "Public chat room " + args[2] + " added to database." );
+                                            if (server.CreateRoom( args[3] ))
+                                                WriteLine( "Public chat room [" + args[3] + "] added to database." );
+                                            else
+                                                WriteLine( "Could not create chat room. Invalid parameters" );
                                         }
-                                        else if(args[2] == "private") {
+                                        else if (args[2] == "private") {
                                             ServerDatabase.PrivateChatRoomRow chatroomRow = server.database.PrivateChatRoom.NewPrivateChatRoomRow();
                                             chatroomRow.name = args[3];
                                             server.database.PrivateChatRoom.AddPrivateChatRoomRow( chatroomRow );
                                             server.database.WriteXml( "Database.xml" );
-                                            WriteLine( "Private chat room " + args[2] + " added to database." );
+                                            WriteLine( "Private chat room " + args[3] + " added to database." );
                                         }
                                     }
                                 } break;
@@ -195,9 +194,16 @@ namespace Server {
                         if (query.Count() > 0) {
                             confirmation.data.Add( "status", true );
                             confirmation.data.Add( "username", username );
+                            confirmation.data.Add( "chatrooms", server.chatRooms );
                             sender.sesionInfo.username = username;
                             sender.sesionInfo.state = State.Online;
-                            WriteLine(username + " logged in.");
+                            sender.sesionInfo.chatroomID = 0;
+                            
+                            Packet notification = new Packet( PacketType.User_LogIn, ServerInfo.ID );
+                            notification.data.Add( "username", username );
+                            server.SendPacketToAll( sender, notification );
+
+                            WriteLine( username + " logged in." );
                         }
                         else {
                             confirmation.data.Add( "status", false );

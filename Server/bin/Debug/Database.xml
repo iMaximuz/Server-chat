@@ -14,4 +14,15 @@
     <admin>false</admin>
     <state>0</state>
   </User>
+  <User>
+    <UserID>2</UserID>
+    <username>Elidachi</username>
+    <password>123</password>
+    <admin>false</admin>
+    <state>0</state>
+  </User>
+  <ChatRoom>
+    <ChatRoomID>0</ChatRoomID>
+    <name>LosChidos</name>
+  </ChatRoom>
 </ServerDatabase>

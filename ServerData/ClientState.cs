@@ -13,9 +13,11 @@ namespace Server_Utilities {
         Away,
     }
 
+    [Serializable]
     public class ClientState {
 
         public State state = State.Offline;
+        public int chatroomID;
         public string username;
 
     }

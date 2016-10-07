@@ -31,6 +31,9 @@ namespace Client_Forms {
         LoginForm login;
         Dictionary<int, PrivateChatForm> chats;
 
+        List<ClientState> loggedUsers;
+        List<ChatRoom> chatRooms;
+
         public Client client;
         Stopwatch pingStopWatch;
         Point windowPosition;
@@ -47,6 +50,8 @@ namespace Client_Forms {
 
             LoadingForm loadingForm = new LoadingForm();
             CloseDelegate closeLoadingFrm = new CloseDelegate( loadingForm.Close );
+
+            loggedUsers = new List<ClientState>();
 
             //Load the chat Emoticons with the back color from the richtextbox
             Emotes.LoadEmotes( txtIn.BackColor );
@@ -179,25 +184,37 @@ namespace Client_Forms {
                         
                         if ( confirmation ) {
                             string username = (string)p.data["username"];
+                            chatRooms = (List<ChatRoom>)p.data["chatrooms"];
                             login.Close( this );
                             lblUsername.ChangeText( this, username );
                             client.sesionInfo.username = username;
                             client.sesionInfo.state = State.Online;
+                            client.sesionInfo.chatroomID = 0;
+
+                            LoadChatRooms();
+
                         }
                         else {
                             login.Fail();
                         }
                         break;
                     }
-
-                case PacketType.Chat: {
-                        txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
-
+                case PacketType.User_LogIn: {
+                        txtIn.WriteLine( this, "Client disconnected: " + p.data["username"], Color.Green );
+                    } break;
+                case PacketType.User_LogOut: {
+                        txtIn.WriteLine( this, "Client disconnected: " + p.data["name"] );
                         break;
                     }
+                case PacketType.ChatRoom_Create: {
+                        int id = (int)p.data["id"];
+                        string name = (string)p.data["name"];
 
-                case PacketType.Client_LogOut: {
-                        txtIn.WriteLine( this, "Client disconnected: " + p.data["name"] );
+                        ChatRoom room = new ChatRoom( id, name );
+
+                    } break;
+                case PacketType.Chat: {
+                        txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
 
                         break;
                     }
@@ -343,6 +360,68 @@ namespace Client_Forms {
             Packet p = new Packet( PacketType.Chat_Buzzer, client.ID );
             client.SendPacket( p );
         }
+
+        private void createRoomToolStripMenuItem_Click( object sender, EventArgs e ) {
+
+            InputDialog input = new InputDialog();
+
+            if(input.ShowDialog(this) == DialogResult.OK) {
+
+                string name = input.GetValue();
+
+                Packet p = new Packet( PacketType.ChatRoom_Create, client.ID );
+                p.data.Add("name", name);
+                client.SendPacket( p );
+            }
+
+
+        }
+
+        delegate void AddChatRoomDelegate();
+        private void AddChatRoom() {
+
+            if (!tvRooms.InvokeRequired) {
+
+            }
+            else {
+                AddChatRoomDelegate add = new AddChatRoomDelegate( AddChatRoom );
+                this.Invoke( add );
+            }
+
+        }
+
+        delegate void RemoveChatRoomDelegate();
+        private void RemoveChatRoom() {
+
+            if (!tvRooms.InvokeRequired) {
+
+            }
+            else {
+                RemoveChatRoomDelegate remove = new RemoveChatRoomDelegate( RemoveChatRoom );
+                this.Invoke( remove );
+            }
+
+        }
+
+        delegate void LoadChatRoomsDelegate();
+        private void LoadChatRooms() {
+
+
+            if (!tvRooms.InvokeRequired) {
+                foreach (ChatRoom cr in chatRooms) {
+
+                    TreeNode room = new TreeNode( cr.name );
+                    tvRooms.Nodes.Add( room );
+
+                }
+            }
+            else {
+                LoadChatRoomsDelegate load = new LoadChatRoomsDelegate( LoadChatRooms );
+                this.Invoke( load );
+            }
+
+        }
+
     }
 }
 

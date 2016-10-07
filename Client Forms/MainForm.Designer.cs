@@ -36,10 +36,6 @@
             System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("", 1);
             System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("", 0);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Usuario 1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Room 01", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Room 02");
             this.cmsUser = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sendPrivateMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txtIn = new System.Windows.Forms.RichTextBox();
@@ -48,17 +44,17 @@
             this.buzzTimer = new System.Windows.Forms.Timer(this.components);
             this.lvEmoticons = new System.Windows.Forms.ListView();
             this.emoticonImageList = new System.Windows.Forms.ImageList(this.components);
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.tvRooms = new System.Windows.Forms.TreeView();
             this.cmsRooms = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createRoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblUsername = new System.Windows.Forms.Label();
             this.pbProfile = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbBuzzer = new System.Windows.Forms.PictureBox();
             this.pbFile = new System.Windows.Forms.PictureBox();
             this.pbEmoticons = new System.Windows.Forms.PictureBox();
-            this.lblUsername = new System.Windows.Forms.Label();
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -193,38 +189,27 @@
             this.emoticonImageList.Images.SetKeyName(9, "emote_smile.png");
             this.emoticonImageList.Images.SetKeyName(10, "emote_winkyface.png");
             // 
-            // treeView1
+            // tvRooms
             // 
-            this.treeView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(17)))), ((int)(((byte)(26)))));
-            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.treeView1.ContextMenuStrip = this.cmsRooms;
-            this.treeView1.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.treeView1.ForeColor = System.Drawing.Color.White;
-            this.treeView1.ImageIndex = 0;
-            this.treeView1.ImageList = this.emoticonImageList;
-            this.treeView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.treeView1.ItemHeight = 25;
-            this.treeView1.Location = new System.Drawing.Point(12, 62);
-            this.treeView1.Name = "treeView1";
-            treeNode1.ContextMenuStrip = this.cmsUser;
-            treeNode1.Name = "Node2";
-            treeNode1.StateImageIndex = 1;
-            treeNode1.Text = "Usuario 1";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "Room 01";
-            treeNode3.Name = "Node1";
-            treeNode3.Text = "Room 02";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode3});
-            this.treeView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.ShowLines = false;
-            this.treeView1.ShowPlusMinus = false;
-            this.treeView1.ShowRootLines = false;
-            this.treeView1.Size = new System.Drawing.Size(182, 494);
-            this.treeView1.StateImageList = this.emoticonImageList;
-            this.treeView1.TabIndex = 7;
+            this.tvRooms.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(17)))), ((int)(((byte)(26)))));
+            this.tvRooms.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tvRooms.ContextMenuStrip = this.cmsRooms;
+            this.tvRooms.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tvRooms.ForeColor = System.Drawing.Color.White;
+            this.tvRooms.ImageIndex = 0;
+            this.tvRooms.ImageList = this.emoticonImageList;
+            this.tvRooms.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tvRooms.ItemHeight = 25;
+            this.tvRooms.Location = new System.Drawing.Point(12, 62);
+            this.tvRooms.Name = "tvRooms";
+            this.tvRooms.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tvRooms.SelectedImageIndex = 0;
+            this.tvRooms.ShowLines = false;
+            this.tvRooms.ShowPlusMinus = false;
+            this.tvRooms.ShowRootLines = false;
+            this.tvRooms.Size = new System.Drawing.Size(182, 494);
+            this.tvRooms.StateImageList = this.emoticonImageList;
+            this.tvRooms.TabIndex = 7;
             // 
             // cmsRooms
             // 
@@ -238,6 +223,7 @@
             this.createRoomToolStripMenuItem.Name = "createRoomToolStripMenuItem";
             this.createRoomToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.createRoomToolStripMenuItem.Text = "Create room";
+            this.createRoomToolStripMenuItem.Click += new System.EventHandler(this.createRoomToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -252,6 +238,17 @@
             this.panel1.Size = new System.Drawing.Size(813, 48);
             this.panel1.TabIndex = 16;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbTitleBar_MouseDown);
+            // 
+            // lblUsername
+            // 
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Font = new System.Drawing.Font("Museo Sans 500", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(249)))), ((int)(((byte)(183)))));
+            this.lblUsername.Location = new System.Drawing.Point(334, 10);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(100, 23);
+            this.lblUsername.TabIndex = 19;
+            this.lblUsername.Text = "Username";
             // 
             // pbProfile
             // 
@@ -332,17 +329,6 @@
             this.pbEmoticons.MouseEnter += new System.EventHandler(this.PictureBoxHover);
             this.pbEmoticons.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
-            // lblUsername
-            // 
-            this.lblUsername.AutoSize = true;
-            this.lblUsername.Font = new System.Drawing.Font("Museo Sans 500", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(249)))), ((int)(((byte)(183)))));
-            this.lblUsername.Location = new System.Drawing.Point(334, 10);
-            this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(100, 23);
-            this.lblUsername.TabIndex = 19;
-            this.lblUsername.Text = "Username";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -351,7 +337,7 @@
             this.ClientSize = new System.Drawing.Size(810, 569);
             this.Controls.Add(this.pbBuzzer);
             this.Controls.Add(this.pbFile);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.tvRooms);
             this.Controls.Add(this.lvEmoticons);
             this.Controls.Add(this.pbEmoticons);
             this.Controls.Add(this.txtOut);
@@ -387,7 +373,7 @@
         private System.Windows.Forms.PictureBox pbEmoticons;
         private System.Windows.Forms.ListView lvEmoticons;
         private System.Windows.Forms.ImageList emoticonImageList;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView tvRooms;
         private System.Windows.Forms.ContextMenuStrip cmsUser;
         private System.Windows.Forms.ToolStripMenuItem sendPrivateMessageToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip cmsRooms;
