@@ -42,7 +42,10 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.txtIn = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pbStatus = new System.Windows.Forms.PictureBox();
             this.lblUsername = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbClose = new System.Windows.Forms.PictureBox();
             this.buzzTimer = new System.Windows.Forms.Timer(this.components);
             this.statusImageList = new System.Windows.Forms.ImageList(this.components);
             this.pbWebCamOut = new System.Windows.Forms.PictureBox();
@@ -50,20 +53,17 @@
             this.pbBuzzer = new System.Windows.Forms.PictureBox();
             this.pbFile = new System.Windows.Forms.PictureBox();
             this.pbEmoticons = new System.Windows.Forms.PictureBox();
-            this.pbStatus = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbVideo = new System.Windows.Forms.PictureBox();
             this.pbGame = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamIn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGame)).BeginInit();
             this.SuspendLayout();
@@ -183,16 +183,51 @@
             this.panel1.TabIndex = 26;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbTitleBar_MouseDown);
             // 
+            // pbStatus
+            // 
+            this.pbStatus.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pbStatus.Image = global::Client_Forms.Properties.Resources.status_online;
+            this.pbStatus.Location = new System.Drawing.Point(311, 17);
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(15, 15);
+            this.pbStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus.TabIndex = 21;
+            this.pbStatus.TabStop = false;
+            // 
             // lblUsername
             // 
             this.lblUsername.AutoSize = true;
             this.lblUsername.Font = new System.Drawing.Font("Museo Sans 500", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(249)))), ((int)(((byte)(183)))));
+            this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(111)))), ((int)(((byte)(147)))));
             this.lblUsername.Location = new System.Drawing.Point(328, 13);
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(100, 23);
             this.lblUsername.TabIndex = 20;
             this.lblUsername.Text = "Username";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Client_Forms.Properties.Resources.icon_shark_logo_1;
+            this.pictureBox1.Location = new System.Drawing.Point(8, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(60, 37);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 16;
+            this.pictureBox1.TabStop = false;
+            // 
+            // pbClose
+            // 
+            this.pbClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbClose.Image = global::Client_Forms.Properties.Resources.icon_logoff;
+            this.pbClose.Location = new System.Drawing.Point(772, 8);
+            this.pbClose.Name = "pbClose";
+            this.pbClose.Size = new System.Drawing.Size(30, 30);
+            this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbClose.TabIndex = 15;
+            this.pbClose.TabStop = false;
+            this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
+            this.pbClose.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbClose.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
             // buzzTimer
             // 
@@ -268,41 +303,6 @@
             this.pbEmoticons.MouseEnter += new System.EventHandler(this.PictureBoxHover);
             this.pbEmoticons.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
-            // pbStatus
-            // 
-            this.pbStatus.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pbStatus.Image = global::Client_Forms.Properties.Resources.status_online;
-            this.pbStatus.Location = new System.Drawing.Point(311, 17);
-            this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(15, 15);
-            this.pbStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus.TabIndex = 21;
-            this.pbStatus.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::Client_Forms.Properties.Resources.icon_shark_logo_1;
-            this.pictureBox1.Location = new System.Drawing.Point(8, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(60, 37);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 16;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pbClose
-            // 
-            this.pbClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbClose.Image = global::Client_Forms.Properties.Resources.icon_logoff;
-            this.pbClose.Location = new System.Drawing.Point(772, 8);
-            this.pbClose.Name = "pbClose";
-            this.pbClose.Size = new System.Drawing.Size(30, 30);
-            this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbClose.TabIndex = 15;
-            this.pbClose.TabStop = false;
-            this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
-            this.pbClose.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbClose.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
-            // 
             // pbVideo
             // 
             this.pbVideo.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -355,14 +355,14 @@
             this.Load += new System.EventHandler(this.PrivateChatForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamIn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBuzzer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEmoticons)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbVideo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGame)).EndInit();
             this.ResumeLayout(false);

@@ -75,7 +75,7 @@ namespace Client_Forms {
                 txtIn.WriteLine( this, "Disconnected from server..." );
             };
 
-            client.Connect( NetData.localhost, NetData.PORT );
+            client.Connect( NetData.remotehost, NetData.PORT );
 
             loadingForm.ShowDialog( this );
             if (client.isConnected) {
