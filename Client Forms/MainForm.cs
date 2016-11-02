@@ -196,12 +196,14 @@ namespace Client_Forms {
                         bool confirmation = (bool)p.data["status"];
                         
                         if ( confirmation ) {
+                            int userID = (int)p.data["id"];
                             string username = (string)p.data["username"];
                             chatRooms = (List<ChatRoom>)p.data["chatrooms"];
                             loggedUsers = (List<ClientState>)p.data["users"];
 
                             login.Close( this );
-                            
+
+                            client.sesionInfo.userID = userID;
                             client.sesionInfo.username = username;
                             client.sesionInfo.state = State.Online;
                             client.sesionInfo.chatroomID = 0;
@@ -230,6 +232,7 @@ namespace Client_Forms {
                         if (client.isLoggedIn) {
                             ClientState user = (ClientState)p.data["user"];
                             loggedUsers.Remove( user );
+                            LeaveRoom( user );
 
                             txtIn.WriteLine( this, p.data["username"] + " disconnected." );
                         }
@@ -306,7 +309,8 @@ namespace Client_Forms {
                 case PacketType.Video_Confirmation:
                 case PacketType.Chat_File:
                 case PacketType.Chat_Buzzer_Private:
-                case PacketType.Chat_Private: {
+                case PacketType.Chat_Private:
+                case PacketType.Load_Private_Chat: {
                         if (client.isLoggedIn) {
                             string key = (string)p.data["partner"];
                             if (chats.ContainsKey( key )) {

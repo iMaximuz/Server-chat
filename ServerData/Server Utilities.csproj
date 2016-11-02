@@ -45,6 +45,7 @@
     <Compile Include="Encryption.cs" />
     <Compile Include="NetData.cs" />
     <Compile Include="Packet.cs" />
+    <Compile Include="PrivateMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

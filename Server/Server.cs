@@ -186,6 +186,9 @@ namespace Server {
                                     select usuario;
                         if (query.Count() > 0) {
 
+                            int id = query.ElementAt( 0 ).UserID;
+
+                            sender.sesionInfo.userID = id;
                             sender.sesionInfo.username = username;
                             sender.sesionInfo.state = State.Online;
                             sender.sesionInfo.chatroomID = 0;
@@ -198,6 +201,7 @@ namespace Server {
 
                             confirmation.data.Add( "status", true );
 
+                            confirmation.data.Add( "id", id );
                             confirmation.data.Add( "username", username );
                             confirmation.data.Add( "chatrooms", server.chatRooms );
                             confirmation.data.Add( "users", users );
@@ -221,7 +225,13 @@ namespace Server {
 
                         WriteLine( "Client petition to disconnect " + p.data["username"]);
 
+                        ClientState disconnectedUser = server.clients.Find( x => x.id == p.senderID ).sesionInfo;
+
                         server.RemoveClient( p.senderID );
+
+                        p.type = PacketType.User_LogOut;
+                        p.data.Add( "user", disconnectedUser );
+
                         server.SendPacketToAll( p );
 
                         break;
@@ -290,10 +300,40 @@ namespace Server {
                 case PacketType.Chat_Buzzer_Private:
                 case PacketType.Chat_Private:
                     {
+                        string senderName = (string)p.data["name"];
+                        string receiverName = (string)p.data["partner"];
+                        string message = (string)p.data["message"];
+                        bool encrypted = (bool)p.data["encrypted"];
+
+                        server.CreatePM( senderName, receiverName, message, encrypted );
+
                         string username = (string)p.data["partner"];
                         p.data["partner"] = sender.sesionInfo.username;
                         ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
                         server.SendPacket( client, p );
+                    }
+                    break;
+                case PacketType.Load_Private_Chat: {
+
+                        List<PrivateMessage> pms;
+
+                        string senderName = (string)p.data["name"];
+                        string receiverName = (string)p.data["partner"];
+
+                        pms = server.GetPMs( senderName, receiverName );
+                        if (pms != null) {
+                            int count = pms.Count();
+
+                            p.data.Add( "count", count );
+                            p.data.Add( "messages", pms );
+                        }
+                        else {
+                            p.data.Add( "count", 0 );
+                            p.data.Add( "messages", 0 );
+                        }
+
+                        server.SendPacket( sender, p );
+
                     }
                     break;
                 default:

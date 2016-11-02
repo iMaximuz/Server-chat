@@ -40,7 +40,7 @@ namespace Client_Forms {
             InitializeComponent();
             this.partner = partner;
             chatId = Guid.NewGuid().ToString();
-            
+
         }
 
         private void PrivateChatForm_Load( object sender, EventArgs e ) {
@@ -48,6 +48,13 @@ namespace Client_Forms {
             client = owner.client;
             lblUsername.Text = partner.username;
             pbStatus.Image = statusImageList.Images[(int)partner.state];
+
+            Packet p = new Packet( PacketType.Load_Private_Chat, client.ID );
+            p.data.Add( "name", client.sesionInfo.username );
+            p.data.Add( "partner", partner.username );
+
+            client.SendPacket( p );
+
         }
 
         private void txtIn_TextChanged( object sender, EventArgs e ) {
@@ -119,6 +126,31 @@ namespace Client_Forms {
         public void DispatchPacket(Packet p) {
 
             switch (p.type) {
+                case PacketType.Load_Private_Chat: {
+
+                        int count = (int)p.data["count"];
+                        if(count > 0) {
+                            List<PrivateMessage> pms = (List<PrivateMessage>)p.data["messages"];
+
+                            foreach( PrivateMessage pm in pms) {
+                                string message = pm.message;
+                                string name = "";
+
+                                if (pm.senderID == client.sesionInfo.userID) 
+                                    name = client.sesionInfo.username;
+                                else 
+                                    name = partner.username;
+
+                                if (pm.encrypted) 
+                                    message = Encryption.EncryptString( message, name );
+
+                                txtIn.WriteLine( this, name + ": " + message );
+                            }
+
+                        }
+
+                    }
+                    break;
                 case PacketType.Chat_Private: {
                         bool encrypted = (bool)p.data["encrypted"];
                         string message = (string)p.data["message"];

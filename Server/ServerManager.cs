@@ -198,11 +198,15 @@ namespace Server {
 
         //SendPacket mandará el packete a la fila para ser enviado posteriormente
         public void SendPacket( ClientData dest, Packet packet ) {
-            messageQueue.Enqueue( new Message( dest.socket, packet ) );
+            if (dest != null) {
+                messageQueue.Enqueue( new Message( dest.socket, packet ) );
+            }
         }
 
         public void SendPacket( Socket dest, Packet packet ) {
-            messageQueue.Enqueue( new Message( dest, packet ) );
+            if (dest != null) {
+                messageQueue.Enqueue( new Message( dest, packet ) );
+            }
         }
 
         //SendPacket mandará el packete a todos los clientes agregandalos a la fila de envios
@@ -278,6 +282,84 @@ namespace Server {
             database.WriteXml( dataBasePath );
             chatRooms.Add( new ChatRoom( chatRoomRow.ChatRoomID, chatRoomRow.name ) );
             return true;
+        }
+
+        public bool CreatePM(string senderName, string receiverName, string message, bool encrypted) {
+            ServerDatabase.PMDataTable pmTable = database.PM;
+            ServerDatabase.UserDataTable userTable = database.User;
+
+
+            if (String.IsNullOrEmpty( senderName ) || String.IsNullOrEmpty( receiverName ))
+                return false;
+
+
+            var senderIDQuery = from usuario in userTable
+                        where usuario.username == senderName
+                        select usuario;
+
+            if (senderIDQuery.Count() <= 0)
+                return false;
+
+            var receiverIDQuery = from usuario in userTable
+                                where usuario.username == receiverName
+                                select usuario;
+
+            if (senderIDQuery.Count() <= 0)
+                return false;
+
+            int senderID = senderIDQuery.ElementAt( 0 ).UserID;
+            int receiverID = receiverIDQuery.ElementAt( 0 ).UserID;
+
+            ServerDatabase.PMRow pmRow = database.PM.NewPMRow();
+            pmRow.SenderID = senderID;
+            pmRow.ReceiverID = receiverID;
+            pmRow.message = message;
+            pmRow.encrypted = encrypted;
+            pmRow.date = System.DateTime.Now;
+            database.PM.AddPMRow( pmRow );
+            database.WriteXml( dataBasePath );
+            return true;
+        }
+
+        public List<PrivateMessage> GetPMs(string senderName, string receiverName) {
+
+            ServerDatabase.PMDataTable pmTable = database.PM;
+            ServerDatabase.UserDataTable userTable = database.User;
+
+            if (String.IsNullOrEmpty( senderName ) || String.IsNullOrEmpty( receiverName ))
+                return null;
+
+
+            var senderIDQuery = from usuario in userTable
+                                where usuario.username == senderName
+                                select usuario;
+
+            if (senderIDQuery.Count() <= 0)
+                return null;
+
+            var receiverIDQuery = from usuario in userTable
+                                  where usuario.username == receiverName
+                                  select usuario;
+
+            if (senderIDQuery.Count() <= 0)
+                return null;
+
+            int senderID = senderIDQuery.ElementAt( 0 ).UserID;
+            int receiverID = receiverIDQuery.ElementAt( 0 ).UserID;
+
+            var query = from privateMessage in pmTable
+                        where   (privateMessage.SenderID == senderID && privateMessage.ReceiverID == receiverID) || 
+                                (privateMessage.SenderID == receiverID && privateMessage.ReceiverID == senderID)
+                        select privateMessage;
+
+            List<PrivateMessage> result = new List<PrivateMessage>();
+
+            for(int i = 0; i < query.Count(); i++) {
+                result.Add( new PrivateMessage(query.ElementAt(i).SenderID, query.ElementAt( i ).ReceiverID , query.ElementAt( i ).message , query.ElementAt( i ).encrypted , query.ElementAt( i ).date) );
+            }
+
+            return result;
+
         }
 
     }

@@ -17,6 +17,7 @@ namespace Server_Utilities {
     public class ClientState {
 
         public State state = State.Offline;
+        public int userID;
         public int chatroomID;
         public string username;
 

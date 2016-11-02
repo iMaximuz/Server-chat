@@ -36,7 +36,7 @@ namespace Server.DataBase {
         
         private User_PrivateChatRoomDataTable tableUser_PrivateChatRoom;
         
-        private PrivateMessage1DataTable tablePrivateMessage1;
+        private PMDataTable tablePM;
         
         private global::System.Data.DataRelation relationUser_PublicMessage;
         
@@ -49,6 +49,10 @@ namespace Server.DataBase {
         private global::System.Data.DataRelation relationUser_User_PrivateChatRoom;
         
         private global::System.Data.DataRelation relationPrivateChatRoom_User_PrivateChatRoom;
+        
+        private global::System.Data.DataRelation relationUser_PM;
+        
+        private global::System.Data.DataRelation relationUser_PM1;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -96,8 +100,8 @@ namespace Server.DataBase {
                 if ((ds.Tables["User_PrivateChatRoom"] != null)) {
                     base.Tables.Add(new User_PrivateChatRoomDataTable(ds.Tables["User_PrivateChatRoom"]));
                 }
-                if ((ds.Tables["PrivateMessage1"] != null)) {
-                    base.Tables.Add(new PrivateMessage1DataTable(ds.Tables["PrivateMessage1"]));
+                if ((ds.Tables["PM"] != null)) {
+                    base.Tables.Add(new PMDataTable(ds.Tables["PM"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -181,9 +185,9 @@ namespace Server.DataBase {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public PrivateMessage1DataTable PrivateMessage1 {
+        public PMDataTable PM {
             get {
-                return this.tablePrivateMessage1;
+                return this.tablePM;
             }
         }
         
@@ -272,8 +276,8 @@ namespace Server.DataBase {
                 if ((ds.Tables["User_PrivateChatRoom"] != null)) {
                     base.Tables.Add(new User_PrivateChatRoomDataTable(ds.Tables["User_PrivateChatRoom"]));
                 }
-                if ((ds.Tables["PrivateMessage1"] != null)) {
-                    base.Tables.Add(new PrivateMessage1DataTable(ds.Tables["PrivateMessage1"]));
+                if ((ds.Tables["PM"] != null)) {
+                    base.Tables.Add(new PMDataTable(ds.Tables["PM"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -344,10 +348,10 @@ namespace Server.DataBase {
                     this.tableUser_PrivateChatRoom.InitVars();
                 }
             }
-            this.tablePrivateMessage1 = ((PrivateMessage1DataTable)(base.Tables["PrivateMessage1"]));
+            this.tablePM = ((PMDataTable)(base.Tables["PM"]));
             if ((initTable == true)) {
-                if ((this.tablePrivateMessage1 != null)) {
-                    this.tablePrivateMessage1.InitVars();
+                if ((this.tablePM != null)) {
+                    this.tablePM.InitVars();
                 }
             }
             this.relationUser_PublicMessage = this.Relations["User_PublicMessage"];
@@ -356,6 +360,8 @@ namespace Server.DataBase {
             this.relationChatRoom_PublicMessage = this.Relations["ChatRoom_PublicMessage"];
             this.relationUser_User_PrivateChatRoom = this.Relations["User_User_PrivateChatRoom"];
             this.relationPrivateChatRoom_User_PrivateChatRoom = this.Relations["PrivateChatRoom_User_PrivateChatRoom"];
+            this.relationUser_PM = this.Relations["User_PM"];
+            this.relationUser_PM1 = this.Relations["User_PM1"];
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -378,8 +384,8 @@ namespace Server.DataBase {
             base.Tables.Add(this.tablePrivateChatRoom);
             this.tableUser_PrivateChatRoom = new User_PrivateChatRoomDataTable();
             base.Tables.Add(this.tableUser_PrivateChatRoom);
-            this.tablePrivateMessage1 = new PrivateMessage1DataTable();
-            base.Tables.Add(this.tablePrivateMessage1);
+            this.tablePM = new PMDataTable();
+            base.Tables.Add(this.tablePM);
             this.relationUser_PublicMessage = new global::System.Data.DataRelation("User_PublicMessage", new global::System.Data.DataColumn[] {
                         this.tableUser.UserIDColumn}, new global::System.Data.DataColumn[] {
                         this.tablePublicMessage.UserIDColumn}, false);
@@ -404,6 +410,14 @@ namespace Server.DataBase {
                         this.tablePrivateChatRoom.PrivateChatRoomIDColumn}, new global::System.Data.DataColumn[] {
                         this.tableUser_PrivateChatRoom.PrivateChatRoomIDColumn}, false);
             this.Relations.Add(this.relationPrivateChatRoom_User_PrivateChatRoom);
+            this.relationUser_PM = new global::System.Data.DataRelation("User_PM", new global::System.Data.DataColumn[] {
+                        this.tableUser.UserIDColumn}, new global::System.Data.DataColumn[] {
+                        this.tablePM.SenderIDColumn}, false);
+            this.Relations.Add(this.relationUser_PM);
+            this.relationUser_PM1 = new global::System.Data.DataRelation("User_PM1", new global::System.Data.DataColumn[] {
+                        this.tableUser.UserIDColumn}, new global::System.Data.DataColumn[] {
+                        this.tablePM.ReceiverIDColumn}, false);
+            this.Relations.Add(this.relationUser_PM1);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -444,7 +458,7 @@ namespace Server.DataBase {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializePrivateMessage1() {
+        private bool ShouldSerializePM() {
             return false;
         }
         
@@ -522,7 +536,7 @@ namespace Server.DataBase {
         public delegate void User_PrivateChatRoomRowChangeEventHandler(object sender, User_PrivateChatRoomRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void PrivateMessage1RowChangeEventHandler(object sender, PrivateMessage1RowChangeEvent e);
+        public delegate void PMRowChangeEventHandler(object sender, PMRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -2296,11 +2310,11 @@ namespace Server.DataBase {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class PrivateMessage1DataTable : global::System.Data.TypedTableBase<PrivateMessage1Row> {
+        public partial class PMDataTable : global::System.Data.TypedTableBase<PMRow> {
             
-            private global::System.Data.DataColumn columnUserID;
+            private global::System.Data.DataColumn columnSenderID;
             
-            private global::System.Data.DataColumn columnPrivateChatRoomID;
+            private global::System.Data.DataColumn columnReceiverID;
             
             private global::System.Data.DataColumn columnmessage;
             
@@ -2310,8 +2324,8 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PrivateMessage1DataTable() {
-                this.TableName = "PrivateMessage1";
+            public PMDataTable() {
+                this.TableName = "PM";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -2319,7 +2333,7 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal PrivateMessage1DataTable(global::System.Data.DataTable table) {
+            internal PMDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -2336,24 +2350,24 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected PrivateMessage1DataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected PMDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn UserIDColumn {
+            public global::System.Data.DataColumn SenderIDColumn {
                 get {
-                    return this.columnUserID;
+                    return this.columnSenderID;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn PrivateChatRoomIDColumn {
+            public global::System.Data.DataColumn ReceiverIDColumn {
                 get {
-                    return this.columnPrivateChatRoomID;
+                    return this.columnReceiverID;
                 }
             }
             
@@ -2392,49 +2406,55 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PrivateMessage1Row this[int index] {
+            public PMRow this[int index] {
                 get {
-                    return ((PrivateMessage1Row)(this.Rows[index]));
+                    return ((PMRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event PrivateMessage1RowChangeEventHandler PrivateMessage1RowChanging;
+            public event PMRowChangeEventHandler PMRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event PrivateMessage1RowChangeEventHandler PrivateMessage1RowChanged;
+            public event PMRowChangeEventHandler PMRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event PrivateMessage1RowChangeEventHandler PrivateMessage1RowDeleting;
+            public event PMRowChangeEventHandler PMRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event PrivateMessage1RowChangeEventHandler PrivateMessage1RowDeleted;
+            public event PMRowChangeEventHandler PMRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddPrivateMessage1Row(PrivateMessage1Row row) {
+            public void AddPMRow(PMRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PrivateMessage1Row AddPrivateMessage1Row(int UserID, int PrivateChatRoomID, string message, bool encrypted, System.DateTime date) {
-                PrivateMessage1Row rowPrivateMessage1Row = ((PrivateMessage1Row)(this.NewRow()));
+            public PMRow AddPMRow(UserRow parentUserRowByUser_PM, UserRow parentUserRowByUser_PM1, string message, bool encrypted, System.DateTime date) {
+                PMRow rowPMRow = ((PMRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        UserID,
-                        PrivateChatRoomID,
+                        null,
+                        null,
                         message,
                         encrypted,
                         date};
-                rowPrivateMessage1Row.ItemArray = columnValuesArray;
-                this.Rows.Add(rowPrivateMessage1Row);
-                return rowPrivateMessage1Row;
+                if ((parentUserRowByUser_PM != null)) {
+                    columnValuesArray[0] = parentUserRowByUser_PM[0];
+                }
+                if ((parentUserRowByUser_PM1 != null)) {
+                    columnValuesArray[1] = parentUserRowByUser_PM1[0];
+                }
+                rowPMRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowPMRow);
+                return rowPMRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                PrivateMessage1DataTable cln = ((PrivateMessage1DataTable)(base.Clone()));
+                PMDataTable cln = ((PMDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -2442,14 +2462,14 @@ namespace Server.DataBase {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new PrivateMessage1DataTable();
+                return new PMDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnUserID = base.Columns["UserID"];
-                this.columnPrivateChatRoomID = base.Columns["PrivateChatRoomID"];
+                this.columnSenderID = base.Columns["SenderID"];
+                this.columnReceiverID = base.Columns["ReceiverID"];
                 this.columnmessage = base.Columns["message"];
                 this.columnencrypted = base.Columns["encrypted"];
                 this.columndate = base.Columns["date"];
@@ -2458,49 +2478,45 @@ namespace Server.DataBase {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnUserID = new global::System.Data.DataColumn("UserID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnUserID);
-                this.columnPrivateChatRoomID = new global::System.Data.DataColumn("PrivateChatRoomID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnPrivateChatRoomID);
+                this.columnSenderID = new global::System.Data.DataColumn("SenderID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSenderID);
+                this.columnReceiverID = new global::System.Data.DataColumn("ReceiverID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceiverID);
                 this.columnmessage = new global::System.Data.DataColumn("message", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnmessage);
                 this.columnencrypted = new global::System.Data.DataColumn("encrypted", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnencrypted);
                 this.columndate = new global::System.Data.DataColumn("date", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columndate);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PrivateMessageKey1", new global::System.Data.DataColumn[] {
-                                this.columnUserID}, false));
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PrivateMessageKey2", new global::System.Data.DataColumn[] {
-                                this.columnPrivateChatRoomID}, false));
-                this.columnUserID.AllowDBNull = false;
-                this.columnUserID.Unique = true;
-                this.columnPrivateChatRoomID.Unique = true;
+                this.columnSenderID.AllowDBNull = false;
+                this.columnSenderID.Caption = "UserID";
+                this.columnReceiverID.Caption = "PrivateChatRoomID";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PrivateMessage1Row NewPrivateMessage1Row() {
-                return ((PrivateMessage1Row)(this.NewRow()));
+            public PMRow NewPMRow() {
+                return ((PMRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new PrivateMessage1Row(builder);
+                return new PMRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(PrivateMessage1Row);
+                return typeof(PMRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.PrivateMessage1RowChanged != null)) {
-                    this.PrivateMessage1RowChanged(this, new PrivateMessage1RowChangeEvent(((PrivateMessage1Row)(e.Row)), e.Action));
+                if ((this.PMRowChanged != null)) {
+                    this.PMRowChanged(this, new PMRowChangeEvent(((PMRow)(e.Row)), e.Action));
                 }
             }
             
@@ -2508,8 +2524,8 @@ namespace Server.DataBase {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.PrivateMessage1RowChanging != null)) {
-                    this.PrivateMessage1RowChanging(this, new PrivateMessage1RowChangeEvent(((PrivateMessage1Row)(e.Row)), e.Action));
+                if ((this.PMRowChanging != null)) {
+                    this.PMRowChanging(this, new PMRowChangeEvent(((PMRow)(e.Row)), e.Action));
                 }
             }
             
@@ -2517,8 +2533,8 @@ namespace Server.DataBase {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.PrivateMessage1RowDeleted != null)) {
-                    this.PrivateMessage1RowDeleted(this, new PrivateMessage1RowChangeEvent(((PrivateMessage1Row)(e.Row)), e.Action));
+                if ((this.PMRowDeleted != null)) {
+                    this.PMRowDeleted(this, new PMRowChangeEvent(((PMRow)(e.Row)), e.Action));
                 }
             }
             
@@ -2526,14 +2542,14 @@ namespace Server.DataBase {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.PrivateMessage1RowDeleting != null)) {
-                    this.PrivateMessage1RowDeleting(this, new PrivateMessage1RowChangeEvent(((PrivateMessage1Row)(e.Row)), e.Action));
+                if ((this.PMRowDeleting != null)) {
+                    this.PMRowDeleting(this, new PMRowChangeEvent(((PMRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemovePrivateMessage1Row(PrivateMessage1Row row) {
+            public void RemovePMRow(PMRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -2560,7 +2576,7 @@ namespace Server.DataBase {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "PrivateMessage1DataTable";
+                attribute2.FixedValue = "PMDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -2768,6 +2784,28 @@ namespace Server.DataBase {
                 }
                 else {
                     return ((User_PrivateChatRoomRow[])(base.GetChildRows(this.Table.ChildRelations["User_User_PrivateChatRoom"])));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PMRow[] GetPMRowsByUser_PM() {
+                if ((this.Table.ChildRelations["User_PM"] == null)) {
+                    return new PMRow[0];
+                }
+                else {
+                    return ((PMRow[])(base.GetChildRows(this.Table.ChildRelations["User_PM"])));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PMRow[] GetPMRowsByUser_PM1() {
+                if ((this.Table.ChildRelations["User_PM1"] == null)) {
+                    return new PMRow[0];
+                }
+                else {
+                    return ((PMRow[])(base.GetChildRows(this.Table.ChildRelations["User_PM1"])));
                 }
             }
         }
@@ -3313,41 +3351,41 @@ namespace Server.DataBase {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class PrivateMessage1Row : global::System.Data.DataRow {
+        public partial class PMRow : global::System.Data.DataRow {
             
-            private PrivateMessage1DataTable tablePrivateMessage1;
+            private PMDataTable tablePM;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal PrivateMessage1Row(global::System.Data.DataRowBuilder rb) : 
+            internal PMRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tablePrivateMessage1 = ((PrivateMessage1DataTable)(this.Table));
+                this.tablePM = ((PMDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int UserID {
+            public int SenderID {
                 get {
-                    return ((int)(this[this.tablePrivateMessage1.UserIDColumn]));
+                    return ((int)(this[this.tablePM.SenderIDColumn]));
                 }
                 set {
-                    this[this.tablePrivateMessage1.UserIDColumn] = value;
+                    this[this.tablePM.SenderIDColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int PrivateChatRoomID {
+            public int ReceiverID {
                 get {
                     try {
-                        return ((int)(this[this.tablePrivateMessage1.PrivateChatRoomIDColumn]));
+                        return ((int)(this[this.tablePM.ReceiverIDColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'PrivateChatRoomID\' in table \'PrivateMessage1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceiverID\' in table \'PM\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePrivateMessage1.PrivateChatRoomIDColumn] = value;
+                    this[this.tablePM.ReceiverIDColumn] = value;
                 }
             }
             
@@ -3356,14 +3394,14 @@ namespace Server.DataBase {
             public string message {
                 get {
                     try {
-                        return ((string)(this[this.tablePrivateMessage1.messageColumn]));
+                        return ((string)(this[this.tablePM.messageColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'message\' in table \'PrivateMessage1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'message\' in table \'PM\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePrivateMessage1.messageColumn] = value;
+                    this[this.tablePM.messageColumn] = value;
                 }
             }
             
@@ -3372,14 +3410,14 @@ namespace Server.DataBase {
             public bool encrypted {
                 get {
                     try {
-                        return ((bool)(this[this.tablePrivateMessage1.encryptedColumn]));
+                        return ((bool)(this[this.tablePM.encryptedColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'encrypted\' in table \'PrivateMessage1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'encrypted\' in table \'PM\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePrivateMessage1.encryptedColumn] = value;
+                    this[this.tablePM.encryptedColumn] = value;
                 }
             }
             
@@ -3388,63 +3426,85 @@ namespace Server.DataBase {
             public System.DateTime date {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tablePrivateMessage1.dateColumn]));
+                        return ((global::System.DateTime)(this[this.tablePM.dateColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'date\' in table \'PrivateMessage1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'date\' in table \'PM\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePrivateMessage1.dateColumn] = value;
+                    this[this.tablePM.dateColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsPrivateChatRoomIDNull() {
-                return this.IsNull(this.tablePrivateMessage1.PrivateChatRoomIDColumn);
+            public UserRow UserRowByUser_PM {
+                get {
+                    return ((UserRow)(this.GetParentRow(this.Table.ParentRelations["User_PM"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["User_PM"]);
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetPrivateChatRoomIDNull() {
-                this[this.tablePrivateMessage1.PrivateChatRoomIDColumn] = global::System.Convert.DBNull;
+            public UserRow UserRowByUser_PM1 {
+                get {
+                    return ((UserRow)(this.GetParentRow(this.Table.ParentRelations["User_PM1"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["User_PM1"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsReceiverIDNull() {
+                return this.IsNull(this.tablePM.ReceiverIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetReceiverIDNull() {
+                this[this.tablePM.ReceiverIDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsmessageNull() {
-                return this.IsNull(this.tablePrivateMessage1.messageColumn);
+                return this.IsNull(this.tablePM.messageColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetmessageNull() {
-                this[this.tablePrivateMessage1.messageColumn] = global::System.Convert.DBNull;
+                this[this.tablePM.messageColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsencryptedNull() {
-                return this.IsNull(this.tablePrivateMessage1.encryptedColumn);
+                return this.IsNull(this.tablePM.encryptedColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetencryptedNull() {
-                this[this.tablePrivateMessage1.encryptedColumn] = global::System.Convert.DBNull;
+                this[this.tablePM.encryptedColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsdateNull() {
-                return this.IsNull(this.tablePrivateMessage1.dateColumn);
+                return this.IsNull(this.tablePM.dateColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetdateNull() {
-                this[this.tablePrivateMessage1.dateColumn] = global::System.Convert.DBNull;
+                this[this.tablePM.dateColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -3656,22 +3716,22 @@ namespace Server.DataBase {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class PrivateMessage1RowChangeEvent : global::System.EventArgs {
+        public class PMRowChangeEvent : global::System.EventArgs {
             
-            private PrivateMessage1Row eventRow;
+            private PMRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PrivateMessage1RowChangeEvent(PrivateMessage1Row row, global::System.Data.DataRowAction action) {
+            public PMRowChangeEvent(PMRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PrivateMessage1Row Row {
+            public PMRow Row {
                 get {
                     return this.eventRow;
                 }
