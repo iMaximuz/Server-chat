@@ -66,7 +66,17 @@ namespace Client_Forms {
                     Packet p = new Packet( PacketType.Chat_Private, owner.client.ID );
                     p.data.Add( "partner", partner.username );
                     p.data.Add( "name", client.sesionInfo.username );
-                    p.data.Add( "message", txtOut.Text );
+
+                    bool encrypting = Properties.Settings.Default.EncryptMessages;
+                    p.data.Add( "encrypted", encrypting );
+                    if (encrypting) {
+                        string encryptedMessage = Encryption.EncryptString( txtOut.Text, client.sesionInfo.username );
+                        p.data.Add( "message", encryptedMessage );
+                    }
+                    else {
+                        p.data.Add( "message", txtOut.Text );
+                    }
+
                     client.SendPacket( p );
                 }
                 txtIn.WriteLine( this, client.sesionInfo.username + ": " + txtOut.Text );
@@ -110,7 +120,13 @@ namespace Client_Forms {
 
             switch (p.type) {
                 case PacketType.Chat_Private: {
-                        txtIn.WriteLine(this, p.data["name"] + ": " + p.data["message"] );
+                        bool encrypted = (bool)p.data["encrypted"];
+                        string message = (string)p.data["message"];
+                        string name = (string)p.data["name"];
+                        if (encrypted) {
+                            message = Encryption.EncryptString( message, name );
+                        }
+                        txtIn.WriteLine( this, name + ": " + message );
                     }
                     break;
                 case PacketType.Chat_File: {

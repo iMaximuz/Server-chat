@@ -67,6 +67,18 @@
     <Compile Include="ControlExtencions.cs" />
     <Compile Include="Devices.cs" />
     <Compile Include="Emotes.cs" />
+    <Compile Include="MailDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MailDialog.Designer.cs">
+      <DependentUpon>MailDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog.Designer.cs">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="InputDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +119,12 @@
     <Compile Include="SignInForm.Designer.cs">
       <DependentUpon>SignInForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="MailDialog.resx">
+      <DependentUpon>MailDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog.resx">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InputDialog.resx">
       <DependentUpon>InputDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -252,6 +270,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\icon-game.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\icon-mail.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

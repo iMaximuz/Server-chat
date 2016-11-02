@@ -28,6 +28,10 @@ namespace Client_Forms {
         [DllImportAttribute( "user32.dll" )]
         public static extern bool ReleaseCapture();
 
+        IPAddress connectionAddress = NetData.localhost;
+        int PORT = NetData.PORT;
+
+
         LoginForm login;
         Dictionary<string, PrivateChatForm> chats;
 
@@ -38,7 +42,6 @@ namespace Client_Forms {
         Stopwatch pingStopWatch;
         Point windowPosition;
         float elapsedBuzzTime = 0;
-
         
 
         public MainForm() {
@@ -75,7 +78,7 @@ namespace Client_Forms {
                 txtIn.WriteLine( this, "Disconnected from server..." );
             };
 
-            client.Connect( NetData.remotehost, NetData.PORT );
+            client.Connect( connectionAddress, PORT );
 
             loadingForm.ShowDialog( this );
             if (client.isConnected) {
@@ -98,7 +101,15 @@ namespace Client_Forms {
                     Packet p = new Packet( PacketType.Chat, client.ID );
                     p.data.Add( "chatroomid", client.sesionInfo.chatroomID );
                     p.data.Add( "name", client.sesionInfo.username );
-                    p.data.Add( "message", txtOut.Text );
+                    bool encrypting = Properties.Settings.Default.EncryptMessages;
+                    p.data.Add( "encrypted", encrypting );
+                    if (encrypting) {
+                        string encryptedMessage = Encryption.EncryptString( txtOut.Text, client.sesionInfo.username );
+                        p.data.Add( "message", encryptedMessage );
+                    }
+                    else {
+                        p.data.Add( "message", txtOut.Text );
+                    }
                     //Send message to server
                     //TODO: Implement Queue
                     client.SendPacket( p );
@@ -261,8 +272,14 @@ namespace Client_Forms {
                     }
                     break;
                 case PacketType.Chat: {
-                        if (client.isLoggedIn) { 
-                            txtIn.WriteLine( this, p.data["name"] + ": " + p.data["message"] );
+                        if (client.isLoggedIn) {
+                            bool encrypted = (bool)p.data["encrypted"];
+                            string message = (string)p.data["message"];
+                            string name = (string)p.data["name"];
+                            if (encrypted) {
+                                message = Encryption.EncryptString( message, name );
+                            }
+                            txtIn.WriteLine( this, name + ": " + message );
                         }
                         break;
                     }
@@ -625,6 +642,15 @@ namespace Client_Forms {
             tvRooms.SelectedNode = e.Node;
         }
 
+        private void pbSettings_Click( object sender, EventArgs e ) {
+            SettingsDialog settings = new SettingsDialog();
+            settings.ShowDialog( this );
+        }
+
+        private void pbMail_Click( object sender, EventArgs e ) {
+            MailDialog mail = new MailDialog();
+            mail.ShowDialog( this );
+        }
     }
 }
 

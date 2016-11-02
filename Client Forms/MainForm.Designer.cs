@@ -24,21 +24,21 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("", 10);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("", 9);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("", 8);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("", 7);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("", 6);
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("", 5);
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("", 4);
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("", 3);
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("", 2);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("", 1);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("", 0);
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("", 10);
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("", 9);
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("", 8);
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("", 7);
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("", 6);
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("", 5);
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("", 4);
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("", 3);
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("", 2);
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("", 1);
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("", 0);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Online", 1);
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("Away", 2);
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("Busy", 3);
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Online", 1);
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Away", 2);
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Busy", 3);
             this.cmsUser = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sendPrivateMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txtIn = new System.Windows.Forms.RichTextBox();
@@ -52,9 +52,10 @@
             this.createRoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusImageList = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pbMail = new System.Windows.Forms.PictureBox();
+            this.pbSettings = new System.Windows.Forms.PictureBox();
             this.pbStatus = new System.Windows.Forms.PictureBox();
             this.lblUsername = new System.Windows.Forms.Label();
-            this.pbProfile = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.cmsRoom = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -65,8 +66,9 @@
             this.cmsUser.SuspendLayout();
             this.cmsRooms.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             this.cmsRoom.SuspendLayout();
@@ -138,30 +140,30 @@
             this.lvEmoticons.Alignment = System.Windows.Forms.ListViewAlignment.Left;
             this.lvEmoticons.BackColor = System.Drawing.Color.White;
             this.lvEmoticons.GridLines = true;
-            listViewItem1.StateImageIndex = 0;
-            listViewItem1.ToolTipText = ";)";
-            listViewItem2.ToolTipText = ":)";
-            listViewItem3.ToolTipText = "D\':";
-            listViewItem4.ToolTipText = ":(";
-            listViewItem5.ToolTipText = ":\'(";
-            listViewItem6.ToolTipText = ":l";
-            listViewItem7.ToolTipText = ":P";
-            listViewItem8.ToolTipText = ":laugh:";
-            listViewItem9.ToolTipText = ":D";
-            listViewItem10.ToolTipText = ":S";
-            listViewItem11.ToolTipText = ":angry:";
+            listViewItem7.StateImageIndex = 0;
+            listViewItem7.ToolTipText = ";)";
+            listViewItem8.ToolTipText = ":)";
+            listViewItem9.ToolTipText = "D\':";
+            listViewItem10.ToolTipText = ":(";
+            listViewItem11.ToolTipText = ":\'(";
+            listViewItem12.ToolTipText = ":l";
+            listViewItem13.ToolTipText = ":P";
+            listViewItem14.ToolTipText = ":laugh:";
+            listViewItem15.ToolTipText = ":D";
+            listViewItem16.ToolTipText = ":S";
+            listViewItem17.ToolTipText = ":angry:";
             this.lvEmoticons.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
             listViewItem7,
             listViewItem8,
             listViewItem9,
             listViewItem10,
-            listViewItem11});
+            listViewItem11,
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16,
+            listViewItem17});
             this.lvEmoticons.LabelWrap = false;
             this.lvEmoticons.LargeImageList = this.emoticonImageList;
             this.lvEmoticons.Location = new System.Drawing.Point(200, 415);
@@ -247,9 +249,10 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.panel1.Controls.Add(this.pbMail);
+            this.panel1.Controls.Add(this.pbSettings);
             this.panel1.Controls.Add(this.pbStatus);
             this.panel1.Controls.Add(this.lblUsername);
-            this.panel1.Controls.Add(this.pbProfile);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.pbClose);
             this.panel1.Location = new System.Drawing.Point(-1, -1);
@@ -258,6 +261,34 @@
             this.panel1.Size = new System.Drawing.Size(813, 48);
             this.panel1.TabIndex = 16;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbTitleBar_MouseDown);
+            // 
+            // pbMail
+            // 
+            this.pbMail.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbMail.Image = global::Client_Forms.Properties.Resources.icon_mail;
+            this.pbMail.Location = new System.Drawing.Point(736, 8);
+            this.pbMail.Name = "pbMail";
+            this.pbMail.Size = new System.Drawing.Size(30, 30);
+            this.pbMail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbMail.TabIndex = 21;
+            this.pbMail.TabStop = false;
+            this.pbMail.Click += new System.EventHandler(this.pbMail_Click);
+            this.pbMail.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbMail.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
+            // 
+            // pbSettings
+            // 
+            this.pbSettings.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbSettings.Image = global::Client_Forms.Properties.Resources.icon_settings;
+            this.pbSettings.Location = new System.Drawing.Point(700, 8);
+            this.pbSettings.Name = "pbSettings";
+            this.pbSettings.Size = new System.Drawing.Size(30, 30);
+            this.pbSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbSettings.TabIndex = 20;
+            this.pbSettings.TabStop = false;
+            this.pbSettings.Click += new System.EventHandler(this.pbSettings_Click);
+            this.pbSettings.MouseEnter += new System.EventHandler(this.PictureBoxHover);
+            this.pbSettings.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
             // pbStatus
             // 
@@ -281,19 +312,6 @@
             this.lblUsername.Size = new System.Drawing.Size(100, 23);
             this.lblUsername.TabIndex = 19;
             this.lblUsername.Text = "Username";
-            // 
-            // pbProfile
-            // 
-            this.pbProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbProfile.Image = global::Client_Forms.Properties.Resources.icon_profile;
-            this.pbProfile.Location = new System.Drawing.Point(733, 9);
-            this.pbProfile.Name = "pbProfile";
-            this.pbProfile.Size = new System.Drawing.Size(30, 30);
-            this.pbProfile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbProfile.TabIndex = 17;
-            this.pbProfile.TabStop = false;
-            this.pbProfile.MouseEnter += new System.EventHandler(this.PictureBoxHover);
-            this.pbProfile.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 
             // pictureBox1
             // 
@@ -368,9 +386,9 @@
             this.lvStatus.BackColor = System.Drawing.Color.White;
             this.lvStatus.GridLines = true;
             this.lvStatus.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem12,
-            listViewItem13,
-            listViewItem14});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
             this.lvStatus.LabelWrap = false;
             this.lvStatus.LargeImageList = this.statusImageList;
             this.lvStatus.Location = new System.Drawing.Point(311, 33);
@@ -415,8 +433,9 @@
             this.cmsRooms.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSettings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProfile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             this.cmsRoom.ResumeLayout(false);
@@ -442,7 +461,6 @@
         private System.Windows.Forms.ToolStripMenuItem createRoomToolStripMenuItem;
         private System.Windows.Forms.PictureBox pbBuzzer;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox pbProfile;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pbClose;
         private System.Windows.Forms.Label lblUsername;
@@ -451,6 +469,8 @@
         private System.Windows.Forms.ImageList statusImageList;
         private System.Windows.Forms.PictureBox pbStatus;
         private System.Windows.Forms.ListView lvStatus;
+        private System.Windows.Forms.PictureBox pbSettings;
+        private System.Windows.Forms.PictureBox pbMail;
     }
 }
 
