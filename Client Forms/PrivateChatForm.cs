@@ -307,7 +307,13 @@ namespace Client_Forms {
                     }
                     else {
                         //Camera is in use;
-                        MessageBox.Show( "La camara se encuentra en uso por otro chat", "Camara en uso", MessageBoxButtons.OK );
+                        if (Camera.OwnerChat == chatId) {
+                            Camera.Stop();
+                            Microphone.EndRecording();
+                        }
+                        else {
+                            MessageBox.Show( "La camara se encuentra en uso por otro chat", "Camara en uso", MessageBoxButtons.OK );
+                        }
                     }
                 }
                 else {
@@ -348,18 +354,16 @@ namespace Client_Forms {
         //camera new frame event
         public void SendCameraPacket( Bitmap bitmap ) {
             pbWebCamOut.Image = new Bitmap( bitmap, pbWebCamOut.Size );
-            using (Bitmap img = new Bitmap( bitmap, pbWebCamIn.Size )) {
-                if (Camera.CanSend) {
-                    //pictureBoxCam.Image = img;
-                    Packet packet = new Packet( PacketType.Video, client.ID);
-                    packet.data["bitmap"] = img;
-                    packet.data["partner"] = partner.username;
-                    //packet.tag["user"] = Header.Text
-                    client.SendPacket(packet);
-                    Camera.CanSend = false;
-                }
+            Bitmap img = new Bitmap( bitmap, pbWebCamIn.Size );
+            if (Camera.CanSend) {
+                //pictureBoxCam.Image = img;
+                Packet packet = new Packet( PacketType.Video, client.ID);
+                packet.data["bitmap"] = img;
+                packet.data["partner"] = partner.username;
+                //packet.tag["user"] = Header.Text
+                client.SendPacket(packet);
+                Camera.CanSend = false;
             }
-
         }
 
         public void ReceiveCameraPacket( Packet packet ) {

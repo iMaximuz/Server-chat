@@ -295,9 +295,15 @@ namespace Server {
                     }
                     break;
                 case PacketType.Video:
-                case PacketType.Video_Confirmation:
+                case PacketType.Video_Confirmation: 
                 case PacketType.Chat_File:
-                case PacketType.Chat_Buzzer_Private:
+                case PacketType.Chat_Buzzer_Private: {
+                        string username = (string)p.data["partner"];
+                        p.data["partner"] = sender.sesionInfo.username;
+                        ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
+                        server.SendPacket( client, p );
+                    }
+                    break;
                 case PacketType.Chat_Private:
                     {
                         string senderName = (string)p.data["name"];

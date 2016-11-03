@@ -30,8 +30,6 @@ namespace Client_Forms {
         IPAddress hostIPAddress;
         int port;
 
-        Thread receiveThread;
-        Thread sendThread;
 
         public Action OnConnect;
         public Action<string> OnError;
@@ -42,9 +40,13 @@ namespace Client_Forms {
         public Action OnServerDisconnect;
         public Action OnDisconnect;
 
-        Queue<Packet> messageQueue;
 
-        Mutex queueMutex;
+        Thread receiveThread;
+        Thread sendThread;
+        readonly object locker = new object();
+        Queue<Packet> messageQueue;
+        //Mutex queueMutex;
+        EventWaitHandle waitHandler = new AutoResetEvent( false );
 
         public Client() {
             sesionInfo = new ClientState("N/A");
@@ -57,7 +59,7 @@ namespace Client_Forms {
         public void Connect(IPAddress hostIP, int port) {
 
             messageQueue = new Queue<Packet>();
-            queueMutex = new Mutex();
+            //queueMutex = new Mutex();
 
             this.hostIPAddress = hostIP;
             this.port = port;
@@ -110,8 +112,8 @@ namespace Client_Forms {
                 if (isConnected) {
                     receiveThread = new Thread(ReadThread);
                     receiveThread.Start();
-                    //sendThread = new Thread(SendThread);
-                    //sendThread.Start();
+                    sendThread = new Thread(SendThread);
+                    sendThread.Start();
                     if (OnConnect != null)
                         OnConnect();
                 }
@@ -134,39 +136,54 @@ namespace Client_Forms {
 
         public void SendPacket(Packet p) {
             if (isConnected) {
-                queueMutex.WaitOne();
-                //messageQueue.Enqueue(p);
-                connectionSocket.Send(PacketFormater.Format(p));
-                queueMutex.ReleaseMutex();
+                //queueMutex.WaitOne();
+
+                lock (locker) {
+                    messageQueue.Enqueue( p );
+                }
+                waitHandler.Set();
+                
+                //connectionSocket.Send(PacketFormater.Format(p));
+                //queueMutex.ReleaseMutex();
             }
             else {
                 OnError("ERROR: This client is not connect to a server.");
             }
         }
 
-        //void SendThread()
-        //{
-        //    try
-        //    {
+        void SendThread() {
+            try {
 
-        //        while (true)
-        //        {
-        //            if(messageQueue.Count > 0)
-        //            {
-        //                queueMutex.WaitOne();
-        //                Packet p = messageQueue.Dequeue();
-        //                queueMutex.ReleaseMutex();
-        //                connectionSocket.Send(PacketFormater.Format(p)); ;
-        //                Thread.Sleep(12);
-        //            }
-        //            else { Thread.Sleep(50); }
-        //        }
-        //    }
-        //    catch (ThreadAbortException ex)
-        //    {
+                while (true) {
 
-        //    }
-        //}
+                    //if (messageQueue.Count > 0) {
+                    //    queueMutex.WaitOne();
+                    //    Packet p = messageQueue.Dequeue();
+                    //    queueMutex.ReleaseMutex();
+                    //    connectionSocket.Send( PacketFormater.Format( p ) ); ;
+                    //    Thread.Sleep( 12 );
+                    //}
+                    //else { Thread.Sleep( 50 ); }
+
+                    Packet packet = null;
+                    lock (locker) {
+                        if (messageQueue.Count > 0) {
+                            packet = messageQueue.Dequeue();
+                            if (packet == null) return;
+                        }
+                    }
+                    if (packet != null) {
+                        connectionSocket.Send( PacketFormater.Format( packet ) );
+                    }
+                    else
+                        waitHandler.WaitOne();
+                }
+            }
+            catch (ThreadAbortException ex) {
+
+            }
+        }
+
         void ReadThread() {
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
             int readBytes;
@@ -228,6 +245,9 @@ namespace Client_Forms {
             isConnected = false;
             connectionSocket.Shutdown(SocketShutdown.Both);
             connectionSocket.Close();
+            SendPacket( null );
+            sendThread.Join();
+            waitHandler.Close();
             OnDisconnect();
         }
 
@@ -235,17 +255,11 @@ namespace Client_Forms {
 
             switch (p.type) {
                 case PacketType.Server_Registration: {
-
                         ID = p.senderID;
-                        //WriteLine( "Connected to server." );
-                        //WriteLine( "Client id recieved: " + ID );
-
                         break;
                     }
                 case PacketType.Server_Closing: {
                         ShutdownClient();
-                        //TODO: Poder cambiar el texto del boton desde cualquier thread
-                        //btnConnect.Text = "Connect";
                         break;
                     }
                 default:
