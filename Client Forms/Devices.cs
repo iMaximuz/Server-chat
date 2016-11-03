@@ -37,8 +37,6 @@ namespace Client_Forms {
                     bufferedProvider.AddSamples( bytes, 0, bytes.Length );
                 } catch(InvalidOperationException ex) {
                     bufferedProvider.ClearBuffer();
-                    Dispose();
-                    Init( lastChannels );
                 }
             }
         }
