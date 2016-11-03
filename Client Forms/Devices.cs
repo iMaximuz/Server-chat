@@ -16,10 +16,12 @@ namespace Client_Forms {
         private static WaveFormat format;
         private static BufferedWaveProvider bufferedProvider;
         private static bool readyToPlay = false;
+        private static int lastChannels;
         //play audio from buffer
         //http://stackoverflow.com/questions/28792548/how-can-i-play-byte-array-of-audio-raw-data-using-naudio
         public static void Init( int channels ) {
             Dispose();
+            lastChannels = channels;
             speaker = new WaveOut();
             format = new WaveFormat( 8000, 16, channels );
             bufferedProvider = new BufferedWaveProvider( format );
@@ -31,7 +33,13 @@ namespace Client_Forms {
 
         public static void PlayBuffer( byte[] bytes ) {
             if (speaker.PlaybackState == PlaybackState.Playing || readyToPlay) {
-                bufferedProvider.AddSamples( bytes, 0, bytes.Length );
+                try {
+                    bufferedProvider.AddSamples( bytes, 0, bytes.Length );
+                } catch(InvalidOperationException ex) {
+                    bufferedProvider.ClearBuffer();
+                    Dispose();
+                    Init( lastChannels );
+                }
             }
         }
 
