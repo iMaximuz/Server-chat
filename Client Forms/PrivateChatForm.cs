@@ -281,6 +281,7 @@ namespace Client_Forms {
             if (Camera.OwnerChat == chatId) {
                 Camera.Stop();
                 Microphone.EndRecording();
+                Microphone.Dispose();
             }
             Dispose();
         }
@@ -309,6 +310,7 @@ namespace Client_Forms {
                         if (Camera.OwnerChat == chatId) {
                             Camera.Stop();
                             Microphone.EndRecording();
+                            Microphone.Dispose();
                         }
                         else {
                             MessageBox.Show( "La camara se encuentra en uso por otro chat", "Camara en uso", MessageBoxButtons.OK );

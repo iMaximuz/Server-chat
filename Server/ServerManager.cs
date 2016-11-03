@@ -158,8 +158,10 @@ namespace Server {
                         m = messageQueue.Dequeue();
                         if (!m.toEveryOne) {
                             //Verificar si el cliente aun sigue connectado
-                            if (m.socket != null) {
+                            try {
                                 m.socket.Send( PacketFormater.Format( m.packet ) );
+                            } catch(SocketException ex) {
+
                             }
                         }
                         else {

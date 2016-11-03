@@ -296,8 +296,8 @@ namespace Client_Forms {
             isConnected = false;
             connectionSocket.Shutdown(SocketShutdown.Both);
             connectionSocket.Close();
-            receiveThread.Abort();
             UdpReceiveThread.Abort();
+            receiveThread.Abort();
             OnDisconnect();
         }
 
