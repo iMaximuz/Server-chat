@@ -113,8 +113,10 @@ namespace Client_Forms {
 
                 if (isConnected) {
                     receiveThread = new Thread(ReadThread);
+                    receiveThread.Name = "Worker receive";
                     receiveThread.Start();
                     sendThread = new Thread(SendThread);
+                    sendThread.Name = "Worker send";
                     sendThread.Start();
                     if (OnConnect != null)
                         OnConnect();
@@ -157,16 +159,6 @@ namespace Client_Forms {
             try {
 
                 while (true) {
-
-                    //if (messageQueue.Count > 0) {
-                    //    queueMutex.WaitOne();
-                    //    Packet p = messageQueue.Dequeue();
-                    //    queueMutex.ReleaseMutex();
-                    //    connectionSocket.Send( PacketFormater.Format( p ) ); ;
-                    //    Thread.Sleep( 12 );
-                    //}
-                    //else { Thread.Sleep( 50 ); }
-
                     Packet packet = null;
                     lock (locker) {
                         if (messageQueue.Count > 0) {
@@ -187,6 +179,79 @@ namespace Client_Forms {
             }
         }
 
+
+        byte[] ReadSocketStream() {
+
+            byte[] result = null;
+
+            byte[] rawBuffer = new byte[connectionSocket.ReceiveBufferSize];
+            int readBytes = connectionSocket.Receive( rawBuffer );
+
+            if (readBytes > 0) {
+                result = new byte[readBytes];
+                Array.Copy( rawBuffer, result, readBytes );
+            }
+
+            return result;
+        }
+
+        void ReadAndExecutePacket(ref MemoryStream fullData) {
+            int packetSection = PacketFormater.GetPacketSize( fullData.ToArray() ) + sizeof( int );
+            
+            while(packetSection > fullData.Length) {
+                byte[] newData = ReadSocketStream();
+                fullData.Write( newData, 0, newData.Length );
+            }
+
+            byte[] packetBuffer = new byte[packetSection];
+
+            fullData.Seek( 0, SeekOrigin.Begin );
+            fullData.Read( packetBuffer, 0, packetSection );
+            Packet packet = PacketFormater.MakePacket( packetBuffer );
+
+            DefaultDispatchPacket( packet );
+
+            int extraBytes = (int)fullData.Length - packetSection;
+            byte[] extraBuffer = new byte[extraBytes];
+            fullData.Read( extraBuffer, 0, extraBytes );
+            fullData.Close();
+            fullData = new MemoryStream();
+            fullData.Write( extraBuffer, 0, extraBytes );
+        }
+
+        void ReadThread() {
+
+            MemoryStream dataStream = new MemoryStream();
+
+            try {
+                while (true) {
+
+                    byte[] incomingData = ReadSocketStream();
+                    if (incomingData != null) {
+                        dataStream.Write( incomingData, 0, incomingData.Length );
+                        while (dataStream.Length > 0) {
+                            ReadAndExecutePacket( ref dataStream );
+                        }
+                    }
+                    else {
+                        Debug.Assert( true );
+                        break;
+                    }
+                }
+            }
+            catch (SocketException ex) {
+                if (isConnected) {
+                    OnServerDisconnect();
+                    ShutdownClient();
+                }
+            }
+            catch (ObjectDisposedException ex) {
+                OnDisconnect();
+            }
+
+            dataStream.Close();
+        }
+/*
         void ReadThread() {
             //connectionSocket.ReceiveBufferSize = 1500;
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
@@ -196,16 +261,6 @@ namespace Client_Forms {
                 while (true) {
 
                     readBytes = connectionSocket.Receive(buffer);
-
-                    //Func<byte[]> getData = delegate() {
-
-                    //    readBytes = connectionSocket.Receive( buffer );
-                    //    byte[] sizedBuffer = new byte[readBytes];
-                    //    Array.Copy( buffer, sizedBuffer, readBytes );
-
-                    //    return sizedBuffer;
-                    //};
-
 
                     if (readBytes > 0) {
 
@@ -225,8 +280,13 @@ namespace Client_Forms {
 
                             while (totalBytes < fullBufferSize) {
                                 readBytes = connectionSocket.Receive(buffer);
-                                totalBytes += readBytes;
-                                ms.Write(buffer, 0, readBytes);
+                                if (readBytes + totalBytes <= fullBufferSize) {
+                                    totalBytes += readBytes;
+                                    ms.Write( buffer, 0, readBytes );
+                                }
+                                else {
+
+                                }
                             }
 
                             ms.Close();
@@ -300,14 +360,16 @@ namespace Client_Forms {
             }
 
         }
-
+*/
         void ShutdownClient() {
-            isConnected = false;
-            connectionSocket.Shutdown(SocketShutdown.Both);
-            connectionSocket.Close();
             SendPacket( null );
             sendThread.Join();
             waitHandler.Close();
+            isConnected = false;
+            connectionSocket.Shutdown(SocketShutdown.Both);
+            connectionSocket.Close();
+            receiveThread.Abort();
+
             OnDisconnect();
         }
 

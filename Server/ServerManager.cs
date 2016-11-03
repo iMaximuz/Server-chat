@@ -143,49 +143,60 @@ namespace Server {
             }
         }
 
+        byte[] ReadSocketStream(Socket socket) {
+
+            byte[] result = null;
+
+            byte[] rawBuffer = new byte[socket.ReceiveBufferSize];
+            int readBytes = socket.Receive( rawBuffer );
+
+            if (readBytes > 0) {
+                result = new byte[readBytes];
+                Array.Copy( rawBuffer, result, readBytes );
+            }
+
+            return result;
+        }
+
+        void ReadAndExecutePacket( ref MemoryStream fullData, ClientData client ) {
+            int packetSection = PacketFormater.GetPacketSize( fullData.ToArray() ) + sizeof( int );
+
+            while (packetSection > fullData.Length) {
+                byte[] newData = ReadSocketStream( client.socket );
+                fullData.Write( newData, 0, newData.Length );
+            }
+
+            byte[] packetBuffer = new byte[packetSection];
+
+            fullData.Seek( 0, SeekOrigin.Begin );
+            fullData.Read( packetBuffer, 0, packetSection );
+            Packet packet = PacketFormater.MakePacket( packetBuffer );
+
+            OnReceive( client, packet );
+
+            int extraBytes = (int)fullData.Length - packetSection;
+            byte[] extraBuffer = new byte[extraBytes];
+            fullData.Read( extraBuffer, 0, extraBytes );
+            fullData.Close();
+            fullData = new MemoryStream();
+            fullData.Write( extraBuffer, 0, extraBytes );
+        }
+
 
         public void ClientThread( object obj ) {
             ClientData client = (ClientData)obj;
             Socket socket = client.socket;
-
+            MemoryStream dataStream = new MemoryStream();
             //socket.ReceiveBufferSize = 200;
-
-            byte[] buffer;
-            int readBytes;
             try {
                 while (true) {
 
-                    buffer = new byte[socket.ReceiveBufferSize];
-                    readBytes = socket.Receive( buffer );
-
-                    if (readBytes > 0) {
-
-                        int packetSize = PacketFormater.GetPacketSize( buffer );
-
-                        if( packetSize == readBytes - sizeof( int ) ) {
-                            Packet packet = PacketFormater.MakePacket( buffer );
-                            OnReceive( client, packet );
+                    byte[] incomingData = ReadSocketStream(socket);
+                    if (incomingData != null) {
+                        dataStream.Write( incomingData, 0, incomingData.Length );
+                        while (dataStream.Length > 0) {
+                            ReadAndExecutePacket( ref dataStream, client );
                         }
-                        else {
-
-                            int totalBytes = readBytes;
-                            int fullBufferSize = packetSize + sizeof( int );
-                            byte[] fullPacketBuffer = new byte[fullBufferSize];
-                            MemoryStream ms = new MemoryStream( fullPacketBuffer );
-                            ms.Write( buffer, 0, buffer.Length );
-
-                            while(totalBytes < fullBufferSize) {
-                                readBytes = socket.Receive( buffer );
-                                totalBytes += readBytes;
-                                ms.Write( buffer, 0, readBytes );
-                            }
-
-                            ms.Close();
-
-                            Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
-                            OnReceive( client, packet );
-                        }
-
                     }
                     else {
                         OnClientDisconnect( client );
@@ -196,7 +207,109 @@ namespace Server {
             catch (ThreadAbortException ex) {
                 Console.WriteLine( "Client thread aborted" );
             }
+            dataStream.Close();
         }
+
+        //public void ClientThread( object obj ) {
+        //    ClientData client = (ClientData)obj;
+        //    Socket socket = client.socket;
+
+        //    //socket.ReceiveBufferSize = 200;
+
+        //    byte[] buffer;
+        //    int readBytes;
+        //    try {
+        //        while (true) {
+
+        //            buffer = new byte[socket.ReceiveBufferSize];
+        //            readBytes = socket.Receive( buffer );
+
+        //            if (readBytes > 0) {
+
+        //                int packetSize = PacketFormater.GetPacketSize( buffer );
+
+        //                if( packetSize == readBytes - sizeof( int ) ) {
+        //                    Packet packet = PacketFormater.MakePacket( buffer );
+        //                    OnReceive( client, packet );
+        //                }
+        //                else if (packetSize > readBytes - sizeof( int )) {
+
+        //                    int totalBytes = readBytes;
+        //                    int fullBufferSize = packetSize + sizeof( int );
+        //                    byte[] fullPacketBuffer = new byte[fullBufferSize];
+        //                    MemoryStream ms = new MemoryStream( fullPacketBuffer );
+        //                    ms.Write( buffer, 0, buffer.Length );
+
+        //                    while(totalBytes < fullBufferSize) {
+        //                        readBytes = socket.Receive( buffer );
+        //                        totalBytes += readBytes;
+        //                        ms.Write( buffer, 0, readBytes );
+        //                    }
+
+        //                    ms.Close();
+
+        //                    Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
+        //                    OnReceive( client, packet );
+        //                } else if (packetSize < readBytes - sizeof( int )) {
+
+        //                    int totalBytes = readBytes;
+        //                    MemoryStream ms = null;
+        //                    Packet packet = null;
+        //                    while (totalBytes > 0) {
+        //                        packetSize = PacketFormater.GetPacketSize( buffer );
+        //                        int packetSection = packetSize + sizeof( int );
+        //                        byte[] fullPacketBuffer = new byte[packetSection];
+
+        //                        if (packetSection <= totalBytes) {
+
+
+        //                            ms = new MemoryStream( fullPacketBuffer );
+        //                            ms.Write( buffer, 0, packetSection );
+        //                            ms.Close();
+
+        //                            packet = PacketFormater.MakePacket( fullPacketBuffer );
+        //                            OnReceive( client, packet );
+
+        //                            totalBytes -= packetSection;
+
+        //                            Array.Copy( buffer, packetSection, buffer, 0, buffer.Length - packetSection );
+        //                        }
+        //                        else {
+
+        //                            //totalBytes = readBytes;
+        //                            int residualBytes = totalBytes;
+
+        //                            ms = new MemoryStream( fullPacketBuffer );
+        //                            ms.Write( buffer, 0, residualBytes );
+
+        //                            while (totalBytes < packetSection) {
+        //                                readBytes = socket.Receive( buffer );
+        //                                totalBytes += readBytes;
+        //                                ms.Write( buffer, 0, readBytes );
+        //                            }
+
+        //                            ms.Close();
+
+        //                            packet = PacketFormater.MakePacket( fullPacketBuffer );
+        //                            OnReceive( client, packet );
+
+        //                        }
+
+        //                    }
+
+        //                }
+
+        //            }
+        //            else {
+        //                OnClientDisconnect( client );
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    catch (ThreadAbortException ex) {
+        //        Console.WriteLine( "Client thread aborted" );
+        //    }
+        //}
 
         public void Shutdown() {
             isOnline = false;
