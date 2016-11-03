@@ -30,9 +30,8 @@ namespace Client_Forms {
         }
 
         public static void PlayBuffer( byte[] bytes ) {
-            if (readyToPlay) {
+            if (speaker.PlaybackState == PlaybackState.Playing || readyToPlay) {
                 bufferedProvider.AddSamples( bytes, 0, bytes.Length );
-                speaker.Play();
             }
         }
 
@@ -44,8 +43,8 @@ namespace Client_Forms {
             if (speaker != null) {
                 speaker.Stop();
                 speaker.Dispose();
-                readyToPlay = false;
             }
+            readyToPlay = false;
         }
     }
     static class Camera {

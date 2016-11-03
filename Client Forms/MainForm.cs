@@ -311,6 +311,10 @@ namespace Client_Forms {
                         Speaker.Init( channels );
                     }
                     break;
+                case PacketType.Audio_Stop: {
+                        Speaker.Dispose();
+                    }
+                    break;
                 case PacketType.Video:
                 case PacketType.Video_Confirmation:
                 case PacketType.Chat_File:

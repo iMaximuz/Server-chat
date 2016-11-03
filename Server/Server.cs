@@ -297,7 +297,8 @@ namespace Server {
                 case PacketType.Video_Confirmation: 
                 case PacketType.Chat_File:
                 case PacketType.Chat_Buzzer_Private:
-                case PacketType.Audio_SetUp: {
+                case PacketType.Audio_SetUp:
+                case PacketType.Audio_Stop: {
                         string username = (string)p.data["partner"];
                         p.data["partner"] = sender.sesionInfo.username;
                         ClientData client = server.clients.Find( x => x.sesionInfo.username == username );

@@ -157,7 +157,8 @@ namespace Server_Utilities {
         Video,
         Video_Confirmation,
         Load_Private_Chat,
-        Audio_SetUp
+        Audio_SetUp,
+        Audio_Stop
     }
 
     public enum UdpPacketType {

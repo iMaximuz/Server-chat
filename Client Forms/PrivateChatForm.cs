@@ -311,6 +311,9 @@ namespace Client_Forms {
                             Camera.Stop();
                             Microphone.EndRecording();
                             Microphone.Dispose();
+                            Packet packet = new Packet( PacketType.Audio_Stop, client.ID );
+                            packet.data.Add( "partner", partner.username );
+                            client.SendPacket( packet );
                         }
                         else {
                             MessageBox.Show( "La camara se encuentra en uso por otro chat", "Camara en uso", MessageBoxButtons.OK );
