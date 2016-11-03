@@ -307,7 +307,7 @@
             // 
             this.pbVideo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pbVideo.Image = global::Client_Forms.Properties.Resources.icon_video;
-            this.pbVideo.Location = new System.Drawing.Point(541, 529);
+            this.pbVideo.Location = new System.Drawing.Point(488, 529);
             this.pbVideo.Name = "pbVideo";
             this.pbVideo.Size = new System.Drawing.Size(40, 40);
             this.pbVideo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -335,7 +335,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(42)))), ((int)(((byte)(56)))));
-            this.ClientSize = new System.Drawing.Size(809, 581);
+            this.ClientSize = new System.Drawing.Size(811, 581);
             this.ControlBox = false;
             this.Controls.Add(this.pbGame);
             this.Controls.Add(this.pbVideo);

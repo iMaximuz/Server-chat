@@ -36,11 +36,11 @@ namespace Server {
 
             if (ans[0] != 'y') {
                 WriteLine( "Starting server on " + NetData.GetIP4Address() );
-                serverAddress = new IPEndPoint( IPAddress.Parse( NetData.GetIP4Address() ), NetData.PORT );
+                serverAddress = new IPEndPoint( IPAddress.Parse( NetData.GetIP4Address() ), NetData.TCP_PORT );
             }
             else {
                 WriteLine( "Starting server on " + NetData.localhost );
-                serverAddress = new IPEndPoint( NetData.localhost, NetData.PORT );
+                serverAddress = new IPEndPoint( NetData.localhost, NetData.TCP_PORT );
             }
 
             server = new ServerManager( serverAddress );
@@ -50,6 +50,7 @@ namespace Server {
             server.OnClientConnect = ( client ) => { WriteLine( "Client connected..." ); SendRegistrationPacket( client ); SendWelcomeMessage( client ); };
             server.OnClientDisconnect = ( client ) => { WriteLine( "Client correclty disconnected: " + client.sesionInfo.username ); };
             server.OnReceive = DispatchPacket;
+            server.OnUdpReceive = DispatchUdpPacket;
             server.OnShutdown = () => { WriteLine( "Server closed..." ); };
 
             server.Start();
@@ -61,9 +62,7 @@ namespace Server {
 
             }
 
-            
-
-
+           
             WriteLine( "Server offline..." );
             Console.ReadKey();
         }
@@ -297,7 +296,8 @@ namespace Server {
                 case PacketType.Video:
                 case PacketType.Video_Confirmation: 
                 case PacketType.Chat_File:
-                case PacketType.Chat_Buzzer_Private: {
+                case PacketType.Chat_Buzzer_Private:
+                case PacketType.Audio_SetUp: {
                         string username = (string)p.data["partner"];
                         p.data["partner"] = sender.sesionInfo.username;
                         ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
@@ -348,6 +348,21 @@ namespace Server {
             }
 
 
+        }
+
+        public static void DispatchUdpPacket(ClientData sender, UdpPacket p ) {
+            switch (p.PacketType) {
+                case UdpPacketType.Audio: {
+                        int usernameSize = p.ReadInt( 0 );
+                        string username = Encoding.ASCII.GetString( p.ReadData( usernameSize, sizeof( int ) ) );
+                        ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
+                        server.SendUdpPacket( client.udpEndpoint, p );
+                    }
+                    break;
+                default:
+                    Console.WriteLine( "Unhandled datagram from " + sender.udpEndpoint );
+                    break;
+            }
         }
 
         public static void SendWelcomeMessage( ClientData client ) {

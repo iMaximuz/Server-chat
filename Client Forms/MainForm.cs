@@ -29,7 +29,7 @@ namespace Client_Forms {
         public static extern bool ReleaseCapture();
 
         IPAddress connectionAddress = NetData.remotehost;
-        int PORT = NetData.PORT;
+        int PORT = NetData.TCP_PORT;
 
 
         LoginForm login;
@@ -69,7 +69,8 @@ namespace Client_Forms {
             client.OnConnectionFail = ( s ) => { MessageBox.Show( s, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error ); this.Invoke( closeLoadingFrm ); };
 
             client.OnPacketReceived = DispatchPacket;
-       
+            client.OnUdpPacketReceived = DispatchUdpPacket;
+
             client.OnServerDisconnect = () => {
                 txtIn.WriteLine( this, "ERROR 500: An existing connection was forcibly closed by the server, please restart the aplication.", Color.Red);
             };
@@ -305,6 +306,11 @@ namespace Client_Forms {
                         }
                         break;
                     }
+                case PacketType.Audio_SetUp: {
+                        int channels = (int)p.data["channels"];
+                        Speaker.Init( channels );
+                    }
+                    break;
                 case PacketType.Video:
                 case PacketType.Video_Confirmation:
                 case PacketType.Chat_File:
@@ -336,6 +342,21 @@ namespace Client_Forms {
 
             }
 
+        }
+
+        void DispatchUdpPacket( UdpPacket p ) {
+            switch (p.PacketType) {
+                case UdpPacketType.Audio: {
+                        int usernameSize = p.ReadInt( 0 );
+                        int bufferSize = p.ReadInt( sizeof(int) + usernameSize );
+                        byte[] buffer = p.ReadData( bufferSize, sizeof( int ) + usernameSize + sizeof( int ) );
+                        Speaker.PlayBuffer( buffer );
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         delegate void StartTimerDelegate();

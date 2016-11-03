@@ -25,7 +25,8 @@ namespace Client_Forms {
         public ClientState sesionInfo;
 
         Socket connectionSocket;
-        Socket udpSocket;
+        UdpClient udpSocket;
+        IPEndPoint UdpEndpoint;
 
         IPEndPoint hostAddress;
         IPAddress hostIPAddress;
@@ -37,12 +38,13 @@ namespace Client_Forms {
         public Action<string> OnConnectionFail;
 
         public Action<Packet> OnPacketReceived;
-
+        public Action<UdpPacket> OnUdpPacketReceived;
         public Action OnServerDisconnect;
         public Action OnDisconnect;
 
 
         Thread receiveThread;
+        Thread UdpReceiveThread;
         Thread sendThread;
         readonly object locker = new object();
         Queue<Packet> messageQueue;
@@ -82,7 +84,18 @@ namespace Client_Forms {
             if (!isConnected) {
                 attemtingConnection = true;
                 connectionSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                udpSocket = new Socket( AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp );
+                bool validPort = false;
+                int increment = 0;
+                while (!validPort) {
+                    try {
+                        udpSocket = new UdpClient( NetData.UDP_CLIENT_PORT + increment );
+                        validPort = true;
+                    }
+                    catch (SocketException ex) {
+                        increment++;
+                    }
+                }
+                //udpSocket = new Socket( AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp );
                 // Try to connect to host
                 int connAttempts = 0;
 
@@ -112,6 +125,13 @@ namespace Client_Forms {
                 }
 
                 if (isConnected) {
+                    UdpEndpoint = new IPEndPoint( hostIPAddress, NetData.UDP_PORT );
+                    udpSocket.Connect( UdpEndpoint );
+
+                    UdpReceiveThread = new Thread( UdpReadThread );
+                    UdpReceiveThread.Name = "Worker UDP receive";
+                    UdpReceiveThread.Start();
+
                     receiveThread = new Thread(ReadThread);
                     receiveThread.Name = "Worker receive";
                     receiveThread.Start();
@@ -153,6 +173,10 @@ namespace Client_Forms {
             else {
                 OnError("ERROR: This client is not connect to a server.");
             }
+        }
+        public void SendUdpPacket(UdpPacket p) {
+            byte[] packetBytes = p.ToBytes();
+            udpSocket.Send( packetBytes, packetBytes.Length );
         }
 
         void SendThread() {
@@ -251,116 +275,20 @@ namespace Client_Forms {
 
             dataStream.Close();
         }
-/*
-        void ReadThread() {
-            //connectionSocket.ReceiveBufferSize = 1500;
-            byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
-            int readBytes;
 
+        void UdpReadThread() {
             try {
                 while (true) {
-
-                    readBytes = connectionSocket.Receive(buffer);
-
-                    if (readBytes > 0) {
-
-                        int packetSize = PacketFormater.GetPacketSize(buffer);
-
-                        if (packetSize == readBytes - sizeof(int)) {
-                            Packet packet = PacketFormater.MakePacket(buffer);
-                            DefaultDispatchPacket(packet);
-                        }
-                        else if(packetSize > readBytes - sizeof( int )){
-
-                            int totalBytes = readBytes;
-                            int fullBufferSize = packetSize + sizeof(int);
-                            byte[] fullPacketBuffer = new byte[fullBufferSize];
-                            MemoryStream ms = new MemoryStream(fullPacketBuffer);
-                            ms.Write(buffer, 0, readBytes);
-
-                            while (totalBytes < fullBufferSize) {
-                                readBytes = connectionSocket.Receive(buffer);
-                                if (readBytes + totalBytes <= fullBufferSize) {
-                                    totalBytes += readBytes;
-                                    ms.Write( buffer, 0, readBytes );
-                                }
-                                else {
-
-                                }
-                            }
-
-                            ms.Close();
-
-                            Packet packet = PacketFormater.MakePacket(fullPacketBuffer);
-                            DefaultDispatchPacket(packet);
-                        } else if( packetSize < readBytes - sizeof( int )) {
-
-                            int totalBytes = readBytes;
-                            MemoryStream ms = null;
-                            Packet packet = null;
-                            while (totalBytes > 0) {
-                                packetSize = PacketFormater.GetPacketSize( buffer );
-                                int packetSection = packetSize + sizeof( int );
-                                byte[] fullPacketBuffer = new byte[packetSection];
-
-                                if (packetSection <= totalBytes) {
-                                    
-
-                                    ms = new MemoryStream( fullPacketBuffer );
-                                    ms.Write( buffer, 0, packetSection );
-                                    ms.Close();
-
-                                    packet = PacketFormater.MakePacket( fullPacketBuffer );
-                                    DefaultDispatchPacket( packet );
-
-                                    totalBytes -= packetSection;
-
-                                    Array.Copy( buffer, packetSection, buffer, 0, buffer.Length - packetSection );
-                                }
-                                else {
-
-                                    //totalBytes = readBytes;
-                                    int residualBytes = totalBytes;
-
-                                    ms = new MemoryStream( fullPacketBuffer );
-                                    ms.Write( buffer, 0, residualBytes );
-
-                                    while (totalBytes < packetSection) {
-                                        readBytes = connectionSocket.Receive( buffer );
-                                        totalBytes += readBytes;
-                                        ms.Write( buffer, 0, readBytes );
-                                    }
-
-                                    ms.Close();
-
-                                    packet = PacketFormater.MakePacket( fullPacketBuffer );
-                                    DefaultDispatchPacket( packet );
-
-                                }
-
-                            }
-
-                        }
-                    }
-                    else {
-                        Debug.Assert(true);
-                        break;
-                    }
-
+                    byte[] receivedData = udpSocket.Receive( ref UdpEndpoint );
+                    UdpPacket packet = UdpPacket.CreateFromStream( receivedData );
+                    OnUdpPacketReceived( packet );
                 }
             }
-            catch (SocketException ex) {
-                if (isConnected) {
-                    OnServerDisconnect();
-                    ShutdownClient();
-                }
-            }
-            catch (ObjectDisposedException ex) {
-                OnDisconnect();
-            }
+            catch(ThreadAbortException ex) {
 
+            }
         }
-*/
+
         void ShutdownClient() {
             SendPacket( null );
             sendThread.Join();
@@ -369,7 +297,7 @@ namespace Client_Forms {
             connectionSocket.Shutdown(SocketShutdown.Both);
             connectionSocket.Close();
             receiveThread.Abort();
-
+            UdpReceiveThread.Abort();
             OnDisconnect();
         }
 
@@ -378,6 +306,10 @@ namespace Client_Forms {
             switch (p.type) {
                 case PacketType.Server_Registration: {
                         ID = p.senderID;
+
+                        UdpPacket udpRegistration = new UdpPacket( UdpPacketType.Client_Registration );
+                        udpRegistration.WriteData( Encoding.ASCII.GetBytes( ID ) );
+                        SendUdpPacket( udpRegistration );
                         break;
                     }
                 case PacketType.Server_Closing: {

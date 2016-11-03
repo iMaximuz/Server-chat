@@ -84,6 +84,55 @@ namespace Server_Utilities {
 
     }
 
+    public class UdpPacket {
+        private MemoryStream data;
+        private byte[] dataBytes;
+        private UdpPacketType packetType;
+        public UdpPacketType PacketType {
+            get { return packetType; }
+        }
+        public byte[] Data {
+            get {
+                if (dataBytes == null) {
+                    dataBytes = data.ToArray();
+                }
+                return dataBytes;
+            }
+        }
+
+        public byte[] ReadData( int lenght, int position ) { return dataBytes.Skip( position ).Take( lenght ).ToArray(); }
+        public int ReadInt( int position ) { return BitConverter.ToInt32( dataBytes, position ); }
+        public void WriteData( byte[] bytes ) { data.Write( bytes, 0, bytes.Length ); }
+        public void WriteData( byte[] bytes, int offset ) { data.Write( bytes, offset, bytes.Length - offset ); }
+
+        public UdpPacket( UdpPacketType packetType ) {
+            data = new MemoryStream();
+            this.packetType = packetType;
+        }
+        protected UdpPacket( UdpPacketType packetType, byte[] bytes ) {
+            data = new MemoryStream();
+            dataBytes = bytes;
+            this.packetType = packetType;
+        }
+        public byte[] ToBytes() {
+            using (MemoryStream stream = new MemoryStream()) {
+                stream.Write( BitConverter.GetBytes( (int)packetType ), 0, sizeof( int ) );
+                if (dataBytes == null) {
+                    byte[] bytes = data.ToArray();
+                    stream.Write( bytes, 0, bytes.Length );
+                }
+                else {
+                    stream.Write( dataBytes, 0, dataBytes.Length );
+                }
+                return stream.ToArray();
+            }
+        }
+        public static UdpPacket CreateFromStream( byte[] bytes ) {
+            UdpPacketType packetType = (UdpPacketType)BitConverter.ToInt32( bytes, 0 );
+            UdpPacket packet = new UdpPacket( packetType, bytes.Skip( 4 ).ToArray() );
+            return packet;
+        }
+    }
 
     public enum PacketType {
         Server_Registration,
@@ -107,6 +156,13 @@ namespace Server_Utilities {
         Chat_File,
         Video,
         Video_Confirmation,
-        Load_Private_Chat
+        Load_Private_Chat,
+        Audio_SetUp
     }
+
+    public enum UdpPacketType {
+        Client_Registration,
+        Audio
+    }
+
 }

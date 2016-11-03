@@ -15,6 +15,7 @@ namespace Server {
         public ClientState sesionInfo;
         public Socket socket;
         public Thread thread;
+        public IPEndPoint udpEndpoint;
         public string id;
 
         public ClientData( ParameterizedThreadStart ts, Socket clientScoket ) {

@@ -20,15 +20,17 @@ namespace Server {
         public bool isOnline = false;
 
         Socket listenSocket;
-        Socket udpListenSocket;
+        UdpClient udpSocket;
 
         Thread listenThread;
+        Thread udpThread;
         Thread sendThread;
         IPEndPoint address;
 
         public Action OnStarUp;
         public Action<ClientData> OnClientConnect;
         public Action<ClientData, Packet> OnReceive;
+        public Action<ClientData, UdpPacket> OnUdpReceive;
         public Action<ClientData> OnClientDisconnect;
         public Action OnShutdown;
 
@@ -58,16 +60,24 @@ namespace Server {
         public void Start() {
             if (!isOnline) {
                 listenSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-                udpListenSocket = new Socket( AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp );
+
+                udpSocket = new UdpClient( NetData.UDP_PORT );
+
+
                 clients = new List<ClientData>();
                 chatRooms = new List<ChatRoom>();
                 try {
                     listenSocket.Bind( address );
                     isOnline = true;
                     listenThread = new Thread( ListenThread );
+                    listenThread.Name = "Worker listen";
                     listenThread.Start();
                     sendThread = new Thread( SendThread );
+                    sendThread.Name = "Worker send";
                     sendThread.Start();
+                    udpThread = new Thread( UDPListenThread );
+                    udpThread.Name = "Worker UDP listen";
+                    udpThread.Start();
                     database = new ServerDatabase();
                     database.ReadXml( dataBasePath );
                     OnStarUp();
@@ -110,7 +120,33 @@ namespace Server {
 
         //UDP Listen thread
         void UDPListenThread() {
+            try {
+                while (true) {
+                    IPEndPoint remoteEP = new IPEndPoint( IPAddress.Any, NetData.UDP_PORT );
+                    byte[] receivedData = udpSocket.Receive( ref remoteEP );
 
+
+                    UdpPacket packet = UdpPacket.CreateFromStream( receivedData );
+
+                    if (packet.PacketType == UdpPacketType.Client_Registration) {
+                        Console.WriteLine( "Datagram received from " + remoteEP.ToString() );
+                        string id = Encoding.ASCII.GetString( packet.Data );
+                        ClientData client = clients.Find( x => x.id == id );
+                        client.udpEndpoint = remoteEP;
+                    }
+                    else {
+
+                        ClientData client = clients.Find( x => x.udpEndpoint.Address.ToString() == remoteEP.Address.ToString() && x.udpEndpoint.Port == remoteEP.Port );
+
+                        OnUdpReceive( client, packet );
+                    }
+
+
+                }
+            }
+            catch(ThreadAbortException ex) {
+                Console.WriteLine( "Udp Thread aborted" );
+            }
         }
 
         void SendThread() {
@@ -210,107 +246,6 @@ namespace Server {
             dataStream.Close();
         }
 
-        //public void ClientThread( object obj ) {
-        //    ClientData client = (ClientData)obj;
-        //    Socket socket = client.socket;
-
-        //    //socket.ReceiveBufferSize = 200;
-
-        //    byte[] buffer;
-        //    int readBytes;
-        //    try {
-        //        while (true) {
-
-        //            buffer = new byte[socket.ReceiveBufferSize];
-        //            readBytes = socket.Receive( buffer );
-
-        //            if (readBytes > 0) {
-
-        //                int packetSize = PacketFormater.GetPacketSize( buffer );
-
-        //                if( packetSize == readBytes - sizeof( int ) ) {
-        //                    Packet packet = PacketFormater.MakePacket( buffer );
-        //                    OnReceive( client, packet );
-        //                }
-        //                else if (packetSize > readBytes - sizeof( int )) {
-
-        //                    int totalBytes = readBytes;
-        //                    int fullBufferSize = packetSize + sizeof( int );
-        //                    byte[] fullPacketBuffer = new byte[fullBufferSize];
-        //                    MemoryStream ms = new MemoryStream( fullPacketBuffer );
-        //                    ms.Write( buffer, 0, buffer.Length );
-
-        //                    while(totalBytes < fullBufferSize) {
-        //                        readBytes = socket.Receive( buffer );
-        //                        totalBytes += readBytes;
-        //                        ms.Write( buffer, 0, readBytes );
-        //                    }
-
-        //                    ms.Close();
-
-        //                    Packet packet = PacketFormater.MakePacket( fullPacketBuffer );
-        //                    OnReceive( client, packet );
-        //                } else if (packetSize < readBytes - sizeof( int )) {
-
-        //                    int totalBytes = readBytes;
-        //                    MemoryStream ms = null;
-        //                    Packet packet = null;
-        //                    while (totalBytes > 0) {
-        //                        packetSize = PacketFormater.GetPacketSize( buffer );
-        //                        int packetSection = packetSize + sizeof( int );
-        //                        byte[] fullPacketBuffer = new byte[packetSection];
-
-        //                        if (packetSection <= totalBytes) {
-
-
-        //                            ms = new MemoryStream( fullPacketBuffer );
-        //                            ms.Write( buffer, 0, packetSection );
-        //                            ms.Close();
-
-        //                            packet = PacketFormater.MakePacket( fullPacketBuffer );
-        //                            OnReceive( client, packet );
-
-        //                            totalBytes -= packetSection;
-
-        //                            Array.Copy( buffer, packetSection, buffer, 0, buffer.Length - packetSection );
-        //                        }
-        //                        else {
-
-        //                            //totalBytes = readBytes;
-        //                            int residualBytes = totalBytes;
-
-        //                            ms = new MemoryStream( fullPacketBuffer );
-        //                            ms.Write( buffer, 0, residualBytes );
-
-        //                            while (totalBytes < packetSection) {
-        //                                readBytes = socket.Receive( buffer );
-        //                                totalBytes += readBytes;
-        //                                ms.Write( buffer, 0, readBytes );
-        //                            }
-
-        //                            ms.Close();
-
-        //                            packet = PacketFormater.MakePacket( fullPacketBuffer );
-        //                            OnReceive( client, packet );
-
-        //                        }
-
-        //                    }
-
-        //                }
-
-        //            }
-        //            else {
-        //                OnClientDisconnect( client );
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    catch (ThreadAbortException ex) {
-        //        Console.WriteLine( "Client thread aborted" );
-        //    }
-        //}
-
         public void Shutdown() {
             isOnline = false;
             CloseAllConnections();
@@ -328,6 +263,12 @@ namespace Server {
                 messageQueue.Enqueue( new Message( dest, packet ) );
             }
         }
+
+        public void SendUdpPacket(IPEndPoint remoteEp, UdpPacket packet) {
+            byte[] packetBytes = packet.ToBytes();
+            udpSocket.Send( packetBytes, packetBytes.Length, remoteEp );
+        }
+
 
         //SendPacket mandará el packete a todos los clientes agregandalos a la fila de envios
         public void SendPacketToAll(Packet packet ) {

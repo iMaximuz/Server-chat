@@ -190,7 +190,7 @@ namespace Client_Forms {
                     {
                         Camera.CanSend = true;
                     }break;
-                default:
+                        default:
                     txtIn.WriteLine( this, "ERROR: Packet type not supported", Color.Red);
                     break;
             }
@@ -292,17 +292,16 @@ namespace Client_Forms {
                 if (Camera.Detect()) {
                     if (!Camera.IsRunning) {
                         StartWebcam();
-                        //Packet packet = new Packet( PacketType.WebCamRequest );
-                        //packet.tag["chatID"] = chatID;
-                        //packet.tag["sender"] = ClientSession.username;
-                        //packet.tag["channels"] = Microphone.Channels;
-                        //ClientSession.Connection.SendPacket( packet );
-                        //Camera.OwnerChat = chatID;
-                        //Camera.Start();
-                        //Camera.OnNewFrameCallback(SendCameraPacket);
+                        Packet packet = new Packet( PacketType.Audio_SetUp, client.ID );
+                        packet.data.Add( "partner", partner.username );
+                        packet.data.Add( "channels", Microphone.Channels );
+                        client.SendPacket( packet );
                         ////start audio record
-                        //Microphone.OnAudioInCallback(SendAudioStream);
-                        //Microphone.StartRecording();
+                        Microphone.OnAudioInCallback( SendAudioStream );
+                        Microphone.StartRecording();
+
+                        //Speaker.Init();
+                        //Speaker.PlayBuffer();
 
                     }
                     else {
@@ -334,22 +333,24 @@ namespace Client_Forms {
             }
         }
 
-        //public void SendAudioStream( byte[] bytes ) {
-        //    UdpPacket packet = new UdpPacket( UdpPacketType.AudioStream );
-        //    packet.WriteData( BitConverter.GetBytes( chatID ) );
-        //    packet.WriteData( BitConverter.GetBytes( (int)bytes.Length ) );
-        //    packet.WriteData( bytes );
-        //    //Get string bytes
-        //    //https://msdn.microsoft.com/en-us/library/ds4kkd55(v=vs.110).aspx
-        //    string username = ClientSession.username;
-        //    byte[] stringBytes = Encoding.Unicode.GetBytes( username );
-        //    //System.Buffer.BlockCopy(username.ToCharArray(), 0, stringBytes, 0, stringBytes.Length);
-        //    packet.WriteData( BitConverter.GetBytes( stringBytes.Length ) );
-        //    packet.WriteData( stringBytes );
-        //    //wave format
+        public void SendAudioStream( byte[] bytes ) {
+            UdpPacket packet = new UdpPacket( UdpPacketType.Audio );
+            packet.WriteData( BitConverter.GetBytes( partner.username.Length ) );
+            packet.WriteData( Encoding.ASCII.GetBytes( partner.username ) );
+            //packet.WriteData();
+            packet.WriteData( BitConverter.GetBytes( (int)bytes.Length ) );
+            packet.WriteData( bytes );
+            //Get string bytes
+            //https://msdn.microsoft.com/en-us/library/ds4kkd55(v=vs.110).aspx
+            //string username = ClientSession.username;
+            //byte[] stringBytes = Encoding.Unicode.GetBytes( username );
+            //System.Buffer.BlockCopy(username.ToCharArray(), 0, stringBytes, 0, stringBytes.Length);
+            //packet.WriteData( BitConverter.GetBytes( stringBytes.Length ) );
+            //packet.WriteData( stringBytes );
+            //wave format
 
-        //    ClientSession.Connection.SendUdpPacket( packet );
-        //}
+            client.SendUdpPacket( packet );
+        }
 
         //camera new frame event
         public void SendCameraPacket( Bitmap bitmap ) {

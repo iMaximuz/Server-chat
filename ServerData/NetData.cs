@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
-
-
+using System.Net.Sockets;
 
 namespace Server_Utilities {
     public static class NetData {
-        public static int PORT = 4040;
+        public static int TCP_PORT = 4040;
+        public static int UDP_PORT = 4041;
+        public static int UDP_CLIENT_PORT = 4042;
         public static IPAddress localhost = IPAddress.Parse("127.0.0.1");
         public static IPAddress remotehost = IPAddress.Parse("192.168.0.109");
         public static string GetIP4Address() {
@@ -25,6 +26,11 @@ namespace Server_Utilities {
             return "127.0.0.1";
         }
 
+    }
+
+    public class UdpState {
+        UdpClient client;
+        IPEndPoint endPoint;
     }
 
 }
