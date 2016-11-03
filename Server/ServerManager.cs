@@ -20,6 +20,7 @@ namespace Server {
         public bool isOnline = false;
 
         Socket listenSocket;
+        Socket udpListenSocket;
 
         Thread listenThread;
         Thread sendThread;
@@ -57,6 +58,7 @@ namespace Server {
         public void Start() {
             if (!isOnline) {
                 listenSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+                udpListenSocket = new Socket( AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp );
                 clients = new List<ClientData>();
                 chatRooms = new List<ChatRoom>();
                 try {
@@ -104,6 +106,11 @@ namespace Server {
             catch (ThreadAbortException ex) {
                 Console.WriteLine( "Listen Thread aborted" );
             } 
+        }
+
+        //UDP Listen thread
+        void UDPListenThread() {
+
         }
 
         void SendThread() {

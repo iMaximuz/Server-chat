@@ -28,7 +28,7 @@ namespace Client_Forms {
         [DllImportAttribute( "user32.dll" )]
         public static extern bool ReleaseCapture();
 
-        IPAddress connectionAddress = NetData.localhost;
+        IPAddress connectionAddress = NetData.remotehost;
         int PORT = NetData.PORT;
 
 

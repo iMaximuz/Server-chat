@@ -25,6 +25,7 @@ namespace Client_Forms {
         public ClientState sesionInfo;
 
         Socket connectionSocket;
+        Socket udpSocket;
 
         IPEndPoint hostAddress;
         IPAddress hostIPAddress;
@@ -81,6 +82,7 @@ namespace Client_Forms {
             if (!isConnected) {
                 attemtingConnection = true;
                 connectionSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                udpSocket = new Socket( AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp );
                 // Try to connect to host
                 int connAttempts = 0;
 
@@ -174,6 +176,7 @@ namespace Client_Forms {
                     }
                     if (packet != null) {
                         connectionSocket.Send( PacketFormater.Format( packet ) );
+                        Thread.Sleep( 10 );
                     }
                     else
                         waitHandler.WaitOne();
@@ -185,15 +188,25 @@ namespace Client_Forms {
         }
 
         void ReadThread() {
+            //connectionSocket.ReceiveBufferSize = 1500;
             byte[] buffer = new byte[connectionSocket.ReceiveBufferSize];
             int readBytes;
-
-            connectionSocket.ReceiveBufferSize = 200;
 
             try {
                 while (true) {
 
                     readBytes = connectionSocket.Receive(buffer);
+
+                    //Func<byte[]> getData = delegate() {
+
+                    //    readBytes = connectionSocket.Receive( buffer );
+                    //    byte[] sizedBuffer = new byte[readBytes];
+                    //    Array.Copy( buffer, sizedBuffer, readBytes );
+
+                    //    return sizedBuffer;
+                    //};
+
+
                     if (readBytes > 0) {
 
                         int packetSize = PacketFormater.GetPacketSize(buffer);
@@ -202,13 +215,13 @@ namespace Client_Forms {
                             Packet packet = PacketFormater.MakePacket(buffer);
                             DefaultDispatchPacket(packet);
                         }
-                        else {
+                        else if(packetSize > readBytes - sizeof( int )){
 
                             int totalBytes = readBytes;
                             int fullBufferSize = packetSize + sizeof(int);
                             byte[] fullPacketBuffer = new byte[fullBufferSize];
                             MemoryStream ms = new MemoryStream(fullPacketBuffer);
-                            ms.Write(buffer, 0, buffer.Length);
+                            ms.Write(buffer, 0, readBytes);
 
                             while (totalBytes < fullBufferSize) {
                                 readBytes = connectionSocket.Receive(buffer);
@@ -220,6 +233,53 @@ namespace Client_Forms {
 
                             Packet packet = PacketFormater.MakePacket(fullPacketBuffer);
                             DefaultDispatchPacket(packet);
+                        } else if( packetSize < readBytes - sizeof( int )) {
+
+                            int totalBytes = readBytes;
+                            MemoryStream ms = null;
+                            Packet packet = null;
+                            while (totalBytes > 0) {
+                                packetSize = PacketFormater.GetPacketSize( buffer );
+                                int packetSection = packetSize + sizeof( int );
+                                byte[] fullPacketBuffer = new byte[packetSection];
+
+                                if (packetSection <= totalBytes) {
+                                    
+
+                                    ms = new MemoryStream( fullPacketBuffer );
+                                    ms.Write( buffer, 0, packetSection );
+                                    ms.Close();
+
+                                    packet = PacketFormater.MakePacket( fullPacketBuffer );
+                                    DefaultDispatchPacket( packet );
+
+                                    totalBytes -= packetSection;
+
+                                    Array.Copy( buffer, packetSection, buffer, 0, buffer.Length - packetSection );
+                                }
+                                else {
+
+                                    //totalBytes = readBytes;
+                                    int residualBytes = totalBytes;
+
+                                    ms = new MemoryStream( fullPacketBuffer );
+                                    ms.Write( buffer, 0, residualBytes );
+
+                                    while (totalBytes < packetSection) {
+                                        readBytes = connectionSocket.Receive( buffer );
+                                        totalBytes += readBytes;
+                                        ms.Write( buffer, 0, readBytes );
+                                    }
+
+                                    ms.Close();
+
+                                    packet = PacketFormater.MakePacket( fullPacketBuffer );
+                                    DefaultDispatchPacket( packet );
+
+                                }
+
+                            }
+
                         }
                     }
                     else {
