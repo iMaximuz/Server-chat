@@ -12,3 +12,19 @@ C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.Pr
 C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client WPF.csproj.GenerateResource.Cache
 C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.exe
 C:\Users\LuisAdrian\Source\Repos\Server-chat2\Client WPF\obj\Debug\Client_WPF.pdb
+D:\Proyectos\Repositorios\Server-chat\Client WPF\bin\Debug\Client_WPF.exe.config
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client_WPF.exe
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client_WPF.pdb
+D:\Proyectos\Repositorios\Server-chat\Client WPF\bin\Debug\Client_WPF.exe
+D:\Proyectos\Repositorios\Server-chat\Client WPF\bin\Debug\Client_WPF.pdb
+D:\Proyectos\Repositorios\Server-chat\Client WPF\bin\Debug\ServerData.dll
+D:\Proyectos\Repositorios\Server-chat\Client WPF\bin\Debug\ServerData.pdb
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client WPF.csprojResolveAssemblyReference.cache
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\WPFGame.g.cs
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\App.g.cs
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client_WPF_MarkupCompile.cache
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client_WPF_MarkupCompile.lref
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\WPFGame.baml
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client_WPF.g.resources
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client_WPF.Properties.Resources.resources
+D:\Proyectos\Repositorios\Server-chat\Client WPF\obj\Debug\Client WPF.csproj.GenerateResource.Cache

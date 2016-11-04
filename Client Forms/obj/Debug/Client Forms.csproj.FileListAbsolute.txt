@@ -55,3 +55,5 @@ D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\AForge.xml
 D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\AForge.Video.DirectShow.xml
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.MailDialog.resources
 D:\Proyectos\Repositorios\Server-chat\Client Forms\obj\Debug\Client_Forms.SettingsDialog.resources
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\Client_WPF.exe
+D:\Proyectos\Repositorios\Server-chat\Client Forms\bin\Debug\Client_WPF.pdb

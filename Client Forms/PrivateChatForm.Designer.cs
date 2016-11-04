@@ -327,6 +327,7 @@
             this.pbGame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbGame.TabIndex = 30;
             this.pbGame.TabStop = false;
+            this.pbGame.Click += new System.EventHandler(this.pbGame_Click);
             this.pbGame.MouseEnter += new System.EventHandler(this.PictureBoxHover);
             this.pbGame.MouseLeave += new System.EventHandler(this.PictureBoxLeave);
             // 

@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 
 namespace Client_Forms {
     public partial class PrivateChatForm : Form {
@@ -25,6 +26,7 @@ namespace Client_Forms {
 
         string chatId;
 
+        Client_WPF.WPFGame game;
         MainForm owner;
         Client client;
         ClientState partner;
@@ -90,6 +92,7 @@ namespace Client_Forms {
                 if (!client.isConnected)
                     txtIn.WriteLine( this, "ERROR: Your message could not be sent.", Color.Red );
             }
+
             txtOut.Text = "";
             txtOut.Focus();
 
@@ -283,6 +286,7 @@ namespace Client_Forms {
                 Microphone.EndRecording();
                 Microphone.Dispose();
             }
+            game.Close();
             Dispose();
         }
 
@@ -414,6 +418,10 @@ namespace Client_Forms {
             pbStatus.Image = statusImageList.Images[(int)partner.state];
         }
 
-
+        private void pbGame_Click( object sender, EventArgs e ) {
+            game = new Client_WPF.WPFGame();
+            ElementHost.EnableModelessKeyboardInterop( game );
+            game.Show();
+        }
     }
 }

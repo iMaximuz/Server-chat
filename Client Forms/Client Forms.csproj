@@ -167,6 +167,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Client WPF\Client WPF.csproj">
+      <Project>{df1fd9ac-87eb-41d9-acaa-def85ae602b6}</Project>
+      <Name>Client WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServerData\Server Utilities.csproj">
       <Project>{bd0b51ac-14bc-4c23-9d0f-1dfed9b69527}</Project>
       <Name>Server Utilities</Name>

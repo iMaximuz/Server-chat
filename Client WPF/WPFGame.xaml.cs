@@ -10,16 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Client_WPF {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for WPFGame.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
+    public partial class WPFGame : Window {
+        public WPFGame() {
             InitializeComponent();
+            Title = "Tic Tac Toe";
         }
     }
 }
