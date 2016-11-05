@@ -37,7 +37,7 @@ namespace Client_WPF {
 
         public WPFGame( ) {
             InitializeComponent();
-            Title = "P" + playerNumber + "Tic Tac Toe";
+            Title = "P " + playerNumber + "Tic Tac Toe";
 
             board = new GameBoard( new Point( canvas.Width / 2 - BOARD_SIZE * 0.5, canvas.Height / 2 - BOARD_SIZE * 0.5 ), new Point( BOARD_SIZE, BOARD_SIZE ), 5, Colors.Aqua );
 
