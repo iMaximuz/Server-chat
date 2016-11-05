@@ -353,7 +353,28 @@ namespace Server {
 
         public static void DispatchUdpPacket(ClientData sender, UdpPacket p ) {
             switch (p.PacketType) {
+                case UdpPacketType.Game_Start:
+                case UdpPacketType.Game_End:
+                case UdpPacketType.Game_Restart:
+                case UdpPacketType.Game_Cursor:
+                case UdpPacketType.Game_Click: {
+
+                        int usernameSize = p.ReadInt( 0 );
+                        string username = Encoding.ASCII.GetString( p.ReadData( usernameSize, sizeof( int ) ) );
+                        ClientData client = server.clients.Find( x => x.sesionInfo.username == username );
+                        UdpPacket redirect = new UdpPacket( p.PacketType );
+                        redirect.WriteData( BitConverter.GetBytes( sender.sesionInfo.username.Length ) );
+                        redirect.WriteData( Encoding.ASCII.GetBytes( sender.sesionInfo.username ) );
+                        redirect.WriteData( p.Data );
+
+                        server.SendUdpPacket( client.udpEndpoint, redirect );
+
+                    }
+                    break;
                 case UdpPacketType.Audio: {
+
+
+
                         int usernameSize = p.ReadInt( 0 );
                         string username = Encoding.ASCII.GetString( p.ReadData( usernameSize, sizeof( int ) ) );
                         ClientData client = server.clients.Find( x => x.sesionInfo.username == username );

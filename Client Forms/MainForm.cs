@@ -358,7 +358,34 @@ namespace Client_Forms {
                         Speaker.PlayBuffer( buffer );
                     }
                     break;
-
+                case UdpPacketType.Game_Start:
+                case UdpPacketType.Game_End:
+                case UdpPacketType.Game_Restart:
+                case UdpPacketType.Game_Cursor:
+                case UdpPacketType.Game_Click: {
+                        if (client.isLoggedIn) {
+                            int usernameSize = p.ReadInt( 0 );
+                            string key = Encoding.ASCII.GetString( p.ReadData( usernameSize, 4 ) );
+                            if (chats.ContainsKey( key )) {
+                                if (!chats[key].IsDisposed) {
+                                    chats[key].DispatchUdpPacket( p );
+                                }
+                            //    else {
+                            //        ClientState user = loggedUsers.Find( x => x.username == key );
+                            //        chats[key] = new PrivateChatForm( ref user );
+                            //        chats[key].ShowSafe( this );
+                            //        chats[key].DispatchUdpPacket( p );
+                            //    }
+                            //}
+                            //else {
+                            //    ClientState user = loggedUsers.Find( x => x.username == key );
+                            //    chats.Add( key, new PrivateChatForm( ref user ) );
+                            //    chats[key].ShowSafe( this );
+                            //    chats[key].DispatchPacket( p );
+                            }
+                        }
+                    }
+                    break;
                 default:
                     break;
             }

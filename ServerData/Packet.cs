@@ -101,7 +101,17 @@ namespace Server_Utilities {
         }
 
         public byte[] ReadData( int lenght, int position ) { return dataBytes.Skip( position ).Take( lenght ).ToArray(); }
+        public byte[] ReadData( int lenght ) {
+            byte[] readData = new byte[lenght];
+            data.Read( readData, 0, lenght );
+            return readData;
+        }
         public int ReadInt( int position ) { return BitConverter.ToInt32( dataBytes, position ); }
+        public int ReadInt() {
+            byte[] integer = new byte[4];
+            data.Read( integer, 0, 4 );
+            return BitConverter.ToInt32( integer, 0 );
+        }
         public void WriteData( byte[] bytes ) { data.Write( bytes, 0, bytes.Length ); }
         public void WriteData( byte[] bytes, int offset ) { data.Write( bytes, offset, bytes.Length - offset ); }
 
@@ -110,8 +120,9 @@ namespace Server_Utilities {
             this.packetType = packetType;
         }
         protected UdpPacket( UdpPacketType packetType, byte[] bytes ) {
-            data = new MemoryStream();
             dataBytes = bytes;
+            data = new MemoryStream( dataBytes );
+            data.Position = 0;
             this.packetType = packetType;
         }
         public byte[] ToBytes() {

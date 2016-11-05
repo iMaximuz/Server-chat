@@ -199,6 +199,31 @@ namespace Client_Forms {
             }
 
         }
+        delegate void DispatchPacketDelegate( UdpPacket p );
+        public void DispatchUdpPacket( UdpPacket p ) {
+            if (this.InvokeRequired) {
+                DispatchPacketDelegate dispatch = new DispatchPacketDelegate( DispatchUdpPacket );
+                this.Invoke( dispatch, new object[] { p }) ;
+            }
+            else {
+                switch (p.PacketType) {
+                    case UdpPacketType.Game_Start:
+                        game = new Client_WPF.WPFGame( client, partner.username, 2 );
+                        ElementHost.EnableModelessKeyboardInterop( game );
+                        game.Show();
+                        break;
+                    case UdpPacketType.Game_End:
+                        game.Close();
+                        break;
+                    case UdpPacketType.Game_Restart:
+                    case UdpPacketType.Game_Cursor:
+                    case UdpPacketType.Game_Click: {
+                            game.DispatchPacket( p );
+                        }
+                        break;
+                }
+            }
+        }
 
 
         delegate void StartTimerDelegate();
@@ -286,7 +311,13 @@ namespace Client_Forms {
                 Microphone.EndRecording();
                 Microphone.Dispose();
             }
-            game.Close();
+            if (game != null) {
+                UdpPacket packet = new UdpPacket( UdpPacketType.Game_End );
+                packet.WriteData( BitConverter.GetBytes( partner.username.Length ) );
+                packet.WriteData( Encoding.ASCII.GetBytes( partner.username ) );
+                client.SendUdpPacket( packet );
+                game.Close();
+            }
             Dispose();
         }
 
@@ -419,7 +450,13 @@ namespace Client_Forms {
         }
 
         private void pbGame_Click( object sender, EventArgs e ) {
-            game = new Client_WPF.WPFGame();
+
+            UdpPacket startGame = new UdpPacket( UdpPacketType.Game_Start );
+            startGame.WriteData( BitConverter.GetBytes( partner.username.Length ) );
+            startGame.WriteData( Encoding.ASCII.GetBytes( partner.username ) );
+            client.SendUdpPacket( startGame );
+
+            game = new Client_WPF.WPFGame( client, partner.username, 1 );
             ElementHost.EnableModelessKeyboardInterop( game );
             game.Show();
         }
