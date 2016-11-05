@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="Tic Tac Toe" Height="300" Width="300" KeyDown="Window_KeyDown" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" MouseMove="Window_MouseMove">
     <Grid>
-        <Canvas x:Name="canvas" Background="Black" MouseDown="canvas_MouseDown" Width="300" Height="300" Cursor="None"/>
+        <Canvas x:Name="canvas" Background="White" MouseDown="canvas_MouseDown" Width="300" Height="300" Cursor="None"/>
     </Grid>
 </Window>

@@ -25,7 +25,7 @@ namespace Client_WPF {
 
         private TimeSpan timeSpan = new TimeSpan( 0, 0, 0, 0, 16 );
 
-        float BOARD_SIZE = 150;
+        float BOARD_SIZE = 180;
 
         bool yourTurn = true;
 
@@ -39,7 +39,12 @@ namespace Client_WPF {
             InitializeComponent();
             Title = "P " + playerNumber + "Tic Tac Toe";
 
-            board = new GameBoard( new Point( canvas.Width / 2 - BOARD_SIZE * 0.5, canvas.Height / 2 - BOARD_SIZE * 0.5 ), new Point( BOARD_SIZE, BOARD_SIZE ), 5, Colors.Aqua );
+            ImageBrush backgroundImage = new ImageBrush();
+            backgroundImage.ImageSource = new BitmapImage( new Uri( @"bg.jpg", UriKind.Relative ) );
+            this.Background = backgroundImage;
+
+            canvas.Background = backgroundImage;
+            board = new GameBoard( new Point( canvas.Width / 2 - BOARD_SIZE * 0.5, canvas.Height / 2 - BOARD_SIZE * 0.5 ), new Point( BOARD_SIZE, BOARD_SIZE ), 6, Colors.Black );
 
             playerCursors = new Cursor[2];
             playerCursors[0] = new Cursor( "P1", new Point( 0, 0 ), new Point( 5, 5 ), Colors.Red );
@@ -56,16 +61,19 @@ namespace Client_WPF {
 
         public WPFGame(Client client, string partnerName, int playerNumber) {
             InitializeComponent();
-            Title = "P " + playerNumber + "Tic Tac Toe";
+            Title = "P" + playerNumber + " Tic Tac Toe";
 
             this.client = client;
             this.partner = partnerName;
             this.playerNumber = playerNumber;
             if (playerNumber == 2) yourTurn = false;
 
+            ImageBrush backgroundImage = new ImageBrush( );
+            backgroundImage.ImageSource = new BitmapImage( new Uri( @"bg.jpg", UriKind.Relative ) );
+            this.Background = backgroundImage;
 
-            canvas.Background = Brushes.White;
-            board = new GameBoard( new Point( canvas.Width / 2 - BOARD_SIZE * 0.5, canvas.Height / 2 - BOARD_SIZE * 0.5 ), new Point( BOARD_SIZE, BOARD_SIZE ), 5, Colors.Black );
+            canvas.Background = backgroundImage;
+            board = new GameBoard( new Point( canvas.Width / 2 - BOARD_SIZE * 0.5, canvas.Height / 2 - BOARD_SIZE * 0.5 ), new Point( BOARD_SIZE, BOARD_SIZE ), 6, Colors.Black );
 
             playerCursors = new Cursor[2];
             playerCursors[0] = new Cursor( "P1", new Point( 0, 0 ), new Point( 5, 5 ), Colors.Red );
@@ -81,7 +89,7 @@ namespace Client_WPF {
         }
 
         private void RestartGame() {
-            Title = "P " + playerNumber + "Tic Tac Toe";
+            Title = "P" + playerNumber + " Tic Tac Toe";
             board.ResetGame();
             if (playerNumber == 2) yourTurn = false;
             else yourTurn = true;
@@ -89,7 +97,7 @@ namespace Client_WPF {
 
 
         private void Window_KeyDown( object sender, KeyEventArgs e ) {
-            if (e.Key == Key.R && board.GameState > GameState.CrossWins) {
+            if (e.Key == Key.R && board.GameState >= GameState.CrossWins) {
                 RestartGame();
                 if (partner != null) {
                     UdpPacket packet = new UdpPacket( UdpPacketType.Game_Restart );
