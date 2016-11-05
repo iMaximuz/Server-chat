@@ -58,6 +58,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Circle.cs" />
+    <Compile Include="Cross.cs" />
+    <Compile Include="Cursor.cs" />
+    <Compile Include="GameBoard.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="WPFGame.xaml.cs">
       <DependentUpon>WPFGame.xaml</DependentUpon>
     </Compile>

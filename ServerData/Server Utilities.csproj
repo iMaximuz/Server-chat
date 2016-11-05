@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatRoom.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="ClientState.cs" />
     <Compile Include="Encryption.cs" />
+    <Compile Include="KnownFolders.cs" />
     <Compile Include="NetData.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PrivateMessage.cs" />

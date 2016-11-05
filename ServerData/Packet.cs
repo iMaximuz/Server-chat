@@ -163,7 +163,12 @@ namespace Server_Utilities {
 
     public enum UdpPacketType {
         Client_Registration,
-        Audio
+        Audio,
+        Game_Start,
+        Game_End,
+        Game_Restart,
+        Game_Cursor,
+        Game_Click
     }
 
 }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
-using Server_Utilities;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Client_Forms {
+namespace Server_Utilities {
     public class Client {
 
         public string ID;
-        string filePath = KnownFolders.GetPath(KnownFolder.Downloads);
+        string filePath = KnownFolders.GetPath( KnownFolder.Downloads );
 
         public bool isConnected = false;
         public bool attemtingConnection = false;
@@ -52,28 +51,28 @@ namespace Client_Forms {
         EventWaitHandle waitHandler = new AutoResetEvent( false );
 
         public Client() {
-            sesionInfo = new ClientState("N/A");
+            sesionInfo = new ClientState( "N/A" );
         }
 
-        public Client(string username) {
-            sesionInfo = new ClientState(username);
+        public Client( string username ) {
+            sesionInfo = new ClientState( username );
         }
 
-        public void Connect(IPAddress hostIP, int port) {
+        public void Connect( IPAddress hostIP, int port ) {
 
             messageQueue = new Queue<Packet>();
             //queueMutex = new Mutex();
 
             this.hostIPAddress = hostIP;
             this.port = port;
-            this.hostAddress = new IPEndPoint(hostIP, port);
+            this.hostAddress = new IPEndPoint( hostIP, port );
 
-            AttemptConnection connect = new AttemptConnection(ConnectToServer);
+            AttemptConnection connect = new AttemptConnection( ConnectToServer );
 
             if (!isConnected) {
                 if (!attemtingConnection) {
 
-                    connect.BeginInvoke(null, null);
+                    connect.BeginInvoke( null, null );
                 }
             }
 
@@ -83,7 +82,7 @@ namespace Client_Forms {
         void ConnectToServer() {
             if (!isConnected) {
                 attemtingConnection = true;
-                connectionSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                connectionSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
                 bool validPort = false;
                 int increment = 0;
                 while (!validPort) {
@@ -108,18 +107,18 @@ namespace Client_Forms {
                     try {
 
                         connAttempts++;
-                        connectionSocket.Connect(hostAddress);
+                        connectionSocket.Connect( hostAddress );
                         isConnected = true;
                         break;
                     }
                     catch (SocketException ex) {
 
                         if (OnError != null)
-                            OnError("Could not connect to host... Attempt " + connAttempts.ToString());
+                            OnError( "Could not connect to host... Attempt " + connAttempts.ToString() );
 
                         if (connAttempts == 10) {
                             if (OnConnectionFail != null)
-                                OnConnectionFail(ex.Message);
+                                OnConnectionFail( ex.Message );
                         }
                     }
                 }
@@ -132,10 +131,10 @@ namespace Client_Forms {
                     UdpReceiveThread.Name = "Worker UDP receive";
                     UdpReceiveThread.Start();
 
-                    receiveThread = new Thread(ReadThread);
+                    receiveThread = new Thread( ReadThread );
                     receiveThread.Name = "Worker receive";
                     receiveThread.Start();
-                    sendThread = new Thread(SendThread);
+                    sendThread = new Thread( SendThread );
                     sendThread.Name = "Worker send";
                     sendThread.Start();
                     if (OnConnect != null)
@@ -148,17 +147,17 @@ namespace Client_Forms {
         public void Disconnect() {
             if (isConnected) {
 
-                Packet packet = new Packet(PacketType.Client_LogOut, ID);
-                packet.data.Add("username", sesionInfo.username);
+                Packet packet = new Packet( PacketType.Client_LogOut, ID );
+                packet.data.Add( "username", sesionInfo.username );
 
                 //TODO: Change it to a Queue
-                SendPacket(packet);
+                SendPacket( packet );
 
                 ShutdownClient();
             }
         }
 
-        public void SendPacket(Packet p) {
+        public void SendPacket( Packet p ) {
             if (isConnected) {
                 //queueMutex.WaitOne();
 
@@ -166,15 +165,15 @@ namespace Client_Forms {
                     messageQueue.Enqueue( p );
                 }
                 waitHandler.Set();
-                
+
                 //connectionSocket.Send(PacketFormater.Format(p));
                 //queueMutex.ReleaseMutex();
             }
             else {
-                OnError("ERROR: This client is not connect to a server.");
+                OnError( "ERROR: This client is not connect to a server." );
             }
         }
-        public void SendUdpPacket(UdpPacket p) {
+        public void SendUdpPacket( UdpPacket p ) {
             byte[] packetBytes = p.ToBytes();
             udpSocket.Send( packetBytes, packetBytes.Length );
         }
@@ -219,10 +218,10 @@ namespace Client_Forms {
             return result;
         }
 
-        void ReadAndExecutePacket(ref MemoryStream fullData) {
+        void ReadAndExecutePacket( ref MemoryStream fullData ) {
             int packetSection = PacketFormater.GetPacketSize( fullData.ToArray() ) + sizeof( int );
-            
-            while(packetSection > fullData.Length) {
+
+            while (packetSection > fullData.Length) {
                 byte[] newData = ReadSocketStream();
                 fullData.Write( newData, 0, newData.Length );
             }
@@ -284,7 +283,7 @@ namespace Client_Forms {
                     OnUdpPacketReceived( packet );
                 }
             }
-            catch(ThreadAbortException ex) {
+            catch (ThreadAbortException ex) {
 
             }
         }
@@ -294,14 +293,14 @@ namespace Client_Forms {
             sendThread.Join();
             waitHandler.Close();
             isConnected = false;
-            connectionSocket.Shutdown(SocketShutdown.Both);
+            connectionSocket.Shutdown( SocketShutdown.Both );
             connectionSocket.Close();
             UdpReceiveThread.Abort();
             receiveThread.Abort();
             OnDisconnect();
         }
 
-        void DefaultDispatchPacket(Packet p) {
+        void DefaultDispatchPacket( Packet p ) {
 
             switch (p.type) {
                 case PacketType.Server_Registration: {
@@ -317,7 +316,7 @@ namespace Client_Forms {
                         break;
                     }
                 default:
-                    OnPacketReceived(p);
+                    OnPacketReceived( p );
                     break;
             }
 
@@ -329,9 +328,4 @@ namespace Client_Forms {
         }
 
     }
-
-
-
-
-
 }
