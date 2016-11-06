@@ -234,7 +234,7 @@ namespace Client_Forms {
             else {
                 switch (p.PacketType) {
                     case UdpPacketType.Game_Start:
-                        game = new Client_WPF.WPFGame( client, partner.username, 2 );
+                        game = new Client_WPF.WPFGame( client, partner.username, client.sesionInfo.username, partner.username, 2 );
                         ElementHost.EnableModelessKeyboardInterop( game );
                         game.Show();
                         break;
@@ -482,7 +482,7 @@ namespace Client_Forms {
             startGame.WriteData( Encoding.ASCII.GetBytes( partner.username ) );
             client.SendUdpPacket( startGame );
 
-            game = new Client_WPF.WPFGame( client, partner.username, 1 );
+            game = new Client_WPF.WPFGame( client, client.sesionInfo.username, partner.username, partner.username, 1 );
             ElementHost.EnableModelessKeyboardInterop( game );
             game.Show();
         }

@@ -32,11 +32,14 @@ namespace Client_Forms {
         }
 
         public static void PlayBuffer( byte[] bytes ) {
-            if (speaker.PlaybackState == PlaybackState.Playing || readyToPlay) {
-                try {
-                    bufferedProvider.AddSamples( bytes, 0, bytes.Length );
-                } catch(InvalidOperationException ex) {
-                    bufferedProvider.ClearBuffer();
+            if (speaker != null) {
+                if (speaker.PlaybackState == PlaybackState.Playing || readyToPlay) {
+                    try {
+                        bufferedProvider.AddSamples( bytes, 0, bytes.Length );
+                    }
+                    catch (InvalidOperationException ex) {
+                        bufferedProvider.ClearBuffer();
+                    }
                 }
             }
         }

@@ -34,6 +34,13 @@ namespace Client_WPF {
 
         Client client;
         string partner;
+        
+
+        TextBlock P1Name;
+        string playerName;
+        TextBlock P2Name;
+        string player2Name;
+
 
         public WPFGame( ) {
             InitializeComponent();
@@ -57,9 +64,18 @@ namespace Client_WPF {
             timer.Interval = timeSpan;
             timer.Start();
 
+            P1Name = new TextBlock();
+            P2Name = new TextBlock();
+
+            P1Name.Text = "P1: iMaximuz.";
+            P2Name.Text = "P2: Elidachi.";
+
+            P1Name.Foreground = Brushes.Red;
+            P2Name.Foreground = Brushes.Blue;
+
         }
 
-        public WPFGame(Client client, string partnerName, int playerNumber) {
+        public WPFGame(Client client, string p1Name, string p2Name, string partnerName, int playerNumber) {
             InitializeComponent();
             Title = "P" + playerNumber + " Tic Tac Toe";
 
@@ -85,6 +101,18 @@ namespace Client_WPF {
 
             timer.Interval = timeSpan;
             timer.Start();
+
+            this.playerName = p1Name;
+            this.player2Name = p2Name;
+
+            P1Name = new TextBlock();
+            P2Name = new TextBlock();
+
+            P1Name.Text = "P1: " + playerName;
+            P2Name.Text = "P2: " + player2Name;
+
+            P1Name.Foreground = Brushes.Red;
+            P2Name.Foreground = Brushes.Blue;
 
         }
 
@@ -115,6 +143,15 @@ namespace Client_WPF {
             board.Render( canvas );
             playerCursors[0].Render( canvas );
             playerCursors[1].Render( canvas );
+
+            Canvas.SetLeft( P1Name, 15 );
+            Canvas.SetTop( P1Name, 10 );
+            Canvas.SetLeft( P2Name, 15 );
+            Canvas.SetTop( P2Name, 25 );
+
+            canvas.Children.Add( P1Name );
+            canvas.Children.Add( P2Name );
+
         }
 
         private void canvas_MouseDown( object sender, MouseButtonEventArgs e ) {
@@ -132,15 +169,15 @@ namespace Client_WPF {
                 else if (board.GameState == GameState.Draw)
                     Title = "Draw";
 
-                if (board.GameState == GameState.CrossWins && board.GameState == GameState.CircleWins) {
+                if (board.GameState == GameState.CrossWins || board.GameState == GameState.CircleWins) {
                     if (client != null) {
                         Packet p = new Packet( PacketType.Game_Victory, client.ID );
                         client.SendPacket( p );
                         //client.sesionInfo.gameVictories++;
                     }
-                    if (state == GameState.ValidMove) {
-                        yourTurn = false;
-                    }
+                }
+                if (state == GameState.ValidMove) {
+                    yourTurn = false;
                 }
             }
 
