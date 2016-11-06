@@ -39,6 +39,7 @@ namespace Client_Forms {
         }
 
         private void pbClose_Click( object sender, EventArgs e ) {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 

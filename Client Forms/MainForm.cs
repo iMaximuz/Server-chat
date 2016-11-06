@@ -102,7 +102,12 @@ namespace Client_Forms {
             loadingForm.ShowDialog( this );
             if (client.isConnected) {
                 login = new LoginForm();
-                login.ShowDialog( this );
+                DialogResult result = login.ShowDialog( this );
+
+                if (result == DialogResult.Cancel) {
+                    client.Disconnect();
+                    this.Close();
+                }
                 
             }
             else {
@@ -454,14 +459,6 @@ namespace Client_Forms {
             lvEmoticons.Visible = false;
             txtOut.Focus();
         }
-        private void pbStatus_Click( object sender, EventArgs e ) {
-            lvStatus.Visible = !lvEmoticons.Visible;
-            lvStatus.Focus();
-        }
-        private void lvStatus_Leave( object sender, EventArgs e ) {
-            lvStatus.Visible = false;
-            txtOut.Focus();
-        }
 
         private void lvEmoticons_SelectedIndexChanged( object sender, EventArgs e ) {
             if (lvEmoticons.SelectedIndices.Count > 0) {
@@ -472,11 +469,20 @@ namespace Client_Forms {
             }
         }
 
+        private void pbStatus_Click( object sender, EventArgs e ) {
+            lvStatus.Visible = !lvStatus.Visible;
+            lvStatus.Focus();
+        }
+        private void lvStatus_Leave( object sender, EventArgs e ) {
+            lvStatus.Visible = false;
+            txtOut.Focus();
+        }
+
         private void lvStatus_SelectedIndexChanged( object sender, EventArgs e ) {
             if (lvStatus.SelectedIndices.Count > 0) {
-                int i = lvStatus.SelectedIndices[0]; 
-                if (i != (int)client.sesionInfo.state) {
-                    lvStatus.Items[i].Selected = false;
+                int i = lvStatus.SelectedIndices[0];
+                lvStatus.Items[i].Selected = false;
+                if ((i+1) != (int)client.sesionInfo.state) {
                     pbStatus.Image = statusImageList.Images[i + 1]; //NOTA: Esto es mientras no tenemos el modo desconectado
                     client.sesionInfo.state = (State)(i + 1);
                     Packet p = new Packet( PacketType.User_Status_Change, client.ID );
