@@ -231,7 +231,7 @@ namespace Client_Forms {
                             loggedUsers = (List<ClientState>)p.data["users"];
                             int victories = (int)p.data["victories"];
 
-                            login.Close( this );
+                            login.Success();
 
                             client.sesionInfo.userID = userID;
                             client.sesionInfo.username = username;

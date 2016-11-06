@@ -32,6 +32,7 @@ namespace Client_Forms {
 
         private void LoginForm_Load( object sender, EventArgs e ) {
             owner = (MainForm)Owner;
+            //DialogResult = DialogResult.OK;
         }
 
         public LoginForm() {
@@ -72,6 +73,18 @@ namespace Client_Forms {
                 FailDelegate fail = new FailDelegate( Fail );
                 this.Invoke( fail );
             }
+        }
+        delegate void SuccessDelegate();
+        public void Success() {
+             if (!this.InvokeRequired) {
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else {
+                SuccessDelegate success = new SuccessDelegate( Success );
+                this.Invoke( success );
+            }
+            
         }
 
         private void pbTitleBar_MouseDown( object sender, MouseEventArgs e ) {
