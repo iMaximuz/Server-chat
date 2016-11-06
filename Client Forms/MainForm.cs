@@ -61,6 +61,8 @@ namespace Client_Forms {
             Color.LightBlue
         };
 
+        int audioChannels;
+
 
         public MainForm() {
             InitializeComponent();
@@ -340,6 +342,7 @@ namespace Client_Forms {
                     }
                 case PacketType.Audio_SetUp: {
                         int channels = (int)p.data["channels"];
+                        audioChannels = channels;
                         Speaker.Init( channels );
                     }
                     break;
@@ -389,13 +392,18 @@ namespace Client_Forms {
 
         }
 
+        delegate void InitDelegate( int channels );
+
         void DispatchUdpPacket( UdpPacket p ) {
             switch (p.PacketType) {
                 case UdpPacketType.Audio: {
                         int usernameSize = p.ReadInt( 0 );
                         int bufferSize = p.ReadInt( sizeof(int) + usernameSize );
                         byte[] buffer = p.ReadData( bufferSize, sizeof( int ) + usernameSize + sizeof( int ) );
-                        Speaker.PlayBuffer( buffer );
+
+                        if( !Speaker.PlayBuffer( buffer ) ) {
+                            Speaker.Init( audioChannels );
+                        }
                     }
                     break;
                 case UdpPacketType.Game_Start:

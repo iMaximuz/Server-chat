@@ -6,7 +6,7 @@
     <password>admin</password>
     <admin>true</admin>
     <state>0</state>
-    <gameVictories>22</gameVictories>
+    <gameVictories>31</gameVictories>
   </User>
   <User>
     <UserID>1</UserID>
@@ -28,7 +28,7 @@
     <password>123</password>
     <admin>false</admin>
     <state>0</state>
-    <gameVictories>31</gameVictories>
+    <gameVictories>32</gameVictories>
   </User>
   <ChatRoom>
     <ChatRoomID>0</ChatRoomID>
@@ -753,5 +753,12 @@ A
     <message>hey</message>
     <encrypted>false</encrypted>
     <date>2016-11-06T05:54:18.7429287-06:00</date>
+  </PM>
+  <PM>
+    <SenderID>3</SenderID>
+    <ReceiverID>0</ReceiverID>
+    <message>hey</message>
+    <encrypted>false</encrypted>
+    <date>2016-11-06T06:13:16.2170039-06:00</date>
   </PM>
 </ServerDatabase>
