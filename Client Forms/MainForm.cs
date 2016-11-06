@@ -369,14 +369,14 @@ namespace Client_Forms {
                                 }
                                 else {
                                     ClientState user = loggedUsers.Find( x => x.username == key );
-                                    chats[key] = new PrivateChatForm( ref user );
+                                    chats[key] = new PrivateChatForm(this, ref user );
                                     chats[key].ShowSafe( this );
                                     chats[key].DispatchPacket( p );
                                 }
                             }
                             else {
                                 ClientState user = loggedUsers.Find( x => x.username == key );
-                                chats.Add( key, new PrivateChatForm( ref user ) );
+                                chats.Add( key, new PrivateChatForm(this, ref user ) );
                                 chats[key].ShowSafe( this );
                                 chats[key].DispatchPacket( p );
                             }
@@ -580,12 +580,12 @@ namespace Client_Forms {
             ClientState user = loggedUsers.Find( x => x.username == partner );
 
             if (!chats.ContainsKey( partner )) {
-                chats.Add( partner, new PrivateChatForm( ref user ) );
-                chats[partner].Show( this );
+                chats.Add( partner, new PrivateChatForm(this, ref user ) );
+                chats[partner].Show(  );
             }
             else if (chats[partner].IsDisposed) {
-                chats[partner] = new PrivateChatForm( ref user );
-                chats[partner].Show(this);
+                chats[partner] = new PrivateChatForm(this, ref user );
+                chats[partner].Show();
             }
 
 

@@ -184,15 +184,17 @@ namespace Server {
         byte[] ReadSocketStream(Socket socket) {
 
             byte[] result = null;
+            try {
+                byte[] rawBuffer = new byte[socket.ReceiveBufferSize];
+                int readBytes = socket.Receive( rawBuffer );
 
-            byte[] rawBuffer = new byte[socket.ReceiveBufferSize];
-            int readBytes = socket.Receive( rawBuffer );
+                if (readBytes > 0) {
+                    result = new byte[readBytes];
+                    Array.Copy( rawBuffer, result, readBytes );
+                }
+            }catch(SocketException e) {
 
-            if (readBytes > 0) {
-                result = new byte[readBytes];
-                Array.Copy( rawBuffer, result, readBytes );
             }
-
             return result;
         }
 

@@ -56,16 +56,16 @@ namespace Client_Forms {
             InitializeComponent();
         }
 
-        public PrivateChatForm(ref ClientState partner) {
+        public PrivateChatForm(MainForm parent, ref ClientState partner) {
             InitializeComponent();
             this.partner = partner;
             chatId = Guid.NewGuid().ToString();
-
+            owner = parent;
+            client = owner.client;
         }
 
         private void PrivateChatForm_Load( object sender, EventArgs e ) {
-            owner = (MainForm)Owner;
-            client = owner.client;
+
             lblUsername.Text = partner.username;
             pbStatus.Image = statusImageList.Images[(int)partner.state];
 

@@ -96,7 +96,7 @@ namespace Client_Forms {
         }
 
         static void ShowForm(Form form, Form parent) {
-            form.Show( parent );
+            form.Show();
         }
 
         static void SetEmoticons( this RichTextBox rtb ) {
