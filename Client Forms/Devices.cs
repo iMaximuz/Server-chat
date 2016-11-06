@@ -106,6 +106,7 @@ namespace Client_Forms {
     }
     //http://stackoverflow.com/questions/15101889/hearing-the-incoming-audio-from-mic
     static class Microphone {
+        public static bool CanSend = false;
         private static WaveIn audioInput = null;
         private static Action<byte[]> onAudioIn;
         public static void OnAudioInCallback( Action<byte[]> callback ) {

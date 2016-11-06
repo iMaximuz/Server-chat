@@ -170,6 +170,7 @@ namespace Server_Utilities {
         Load_Private_Chat,
         Audio_SetUp,
         Audio_Stop,
+        Audio_Confirmation,
         Game_Victory
     }
 

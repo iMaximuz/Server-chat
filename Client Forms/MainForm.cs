@@ -342,8 +342,12 @@ namespace Client_Forms {
                     }
                 case PacketType.Audio_SetUp: {
                         int channels = (int)p.data["channels"];
+                        string partner = (string)p.data["partner"];
                         audioChannels = channels;
                         Speaker.Init( channels );
+                        Packet packet = new Packet( PacketType.Audio_Confirmation, client.ID );
+                        packet.data.Add( "partner", partner );
+                        client.SendPacket( packet );
                     }
                     break;
                 case PacketType.Audio_Stop: {
@@ -355,7 +359,8 @@ namespace Client_Forms {
                 case PacketType.Chat_File:
                 case PacketType.Chat_Buzzer_Private:
                 case PacketType.Chat_Private:
-                case PacketType.Load_Private_Chat: {
+                case PacketType.Load_Private_Chat:
+                case PacketType.Audio_Confirmation: {
                         if (client.isLoggedIn) {
                             string key = (string)p.data["partner"];
                             if (chats.ContainsKey( key )) {
@@ -401,9 +406,8 @@ namespace Client_Forms {
                         int bufferSize = p.ReadInt( sizeof(int) + usernameSize );
                         byte[] buffer = p.ReadData( bufferSize, sizeof( int ) + usernameSize + sizeof( int ) );
 
-                        if( !Speaker.PlayBuffer( buffer ) ) {
-                            Speaker.Init( audioChannels );
-                        }
+                        Speaker.PlayBuffer( buffer );
+
                     }
                     break;
                 case UdpPacketType.Game_Start:
