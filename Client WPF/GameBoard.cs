@@ -96,7 +96,7 @@ namespace Client_WPF {
                 obj.Render( canvas );
             }
 
-            if(gameState >= GameState.CrossWins) {
+            if(gameState == GameState.CrossWins || gameState == GameState.CircleWins) {
                 Canvas.SetLeft( winingLine, Position.X );
                 Canvas.SetTop( winingLine, Position.Y );
                 canvas.Children.Add( winingLine );
