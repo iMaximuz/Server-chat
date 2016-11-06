@@ -131,8 +131,16 @@ namespace Client_WPF {
                     Title = "P2 Wins!";
                 else if (board.GameState == GameState.Draw)
                     Title = "Draw";
-                if (state == GameState.ValidMove) {
-                    yourTurn = false;
+
+                if (board.GameState == GameState.CrossWins && board.GameState == GameState.CircleWins) {
+                    if (client != null) {
+                        Packet p = new Packet( PacketType.Game_Victory, client.ID );
+                        client.SendPacket( p );
+                        client.sesionInfo.gameVictories++;
+                    }
+                    if (state == GameState.ValidMove) {
+                        yourTurn = false;
+                    }
                 }
             }
 

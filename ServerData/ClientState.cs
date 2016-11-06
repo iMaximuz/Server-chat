@@ -20,6 +20,7 @@ namespace Server_Utilities {
         public int userID;
         public int chatroomID;
         public string username;
+        public int gameVictories;
 
         public ClientState(string username) {
             this.username = username;

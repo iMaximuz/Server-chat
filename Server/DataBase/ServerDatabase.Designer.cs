@@ -555,6 +555,8 @@ namespace Server.DataBase {
             
             private global::System.Data.DataColumn columnstate;
             
+            private global::System.Data.DataColumn columngameVictories;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public UserDataTable() {
@@ -630,6 +632,14 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn gameVictoriesColumn {
+                get {
+                    return this.columngameVictories;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -665,14 +675,15 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public UserRow AddUserRow(string username, string password, bool admin, int state) {
+            public UserRow AddUserRow(string username, string password, bool admin, int state, int gameVictories) {
                 UserRow rowUserRow = ((UserRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         username,
                         password,
                         admin,
-                        state};
+                        state,
+                        gameVictories};
                 rowUserRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowUserRow);
                 return rowUserRow;
@@ -707,6 +718,7 @@ namespace Server.DataBase {
                 this.columnpassword = base.Columns["password"];
                 this.columnadmin = base.Columns["admin"];
                 this.columnstate = base.Columns["state"];
+                this.columngameVictories = base.Columns["gameVictories"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -722,6 +734,8 @@ namespace Server.DataBase {
                 base.Columns.Add(this.columnadmin);
                 this.columnstate = new global::System.Data.DataColumn("state", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnstate);
+                this.columngameVictories = new global::System.Data.DataColumn("gameVictories", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columngameVictories);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("UserKey1", new global::System.Data.DataColumn[] {
                                 this.columnUserID}, true));
                 this.columnUserID.AutoIncrement = true;
@@ -2708,6 +2722,22 @@ namespace Server.DataBase {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int gameVictories {
+                get {
+                    if (this.IsgameVictoriesNull()) {
+                        return 0;
+                    }
+                    else {
+                        return ((int)(this[this.tableUser.gameVictoriesColumn]));
+                    }
+                }
+                set {
+                    this[this.tableUser.gameVictoriesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsusernameNull() {
                 return this.IsNull(this.tableUser.usernameColumn);
             }
@@ -2752,6 +2782,18 @@ namespace Server.DataBase {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetstateNull() {
                 this[this.tableUser.stateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsgameVictoriesNull() {
+                return this.IsNull(this.tableUser.gameVictoriesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetgameVictoriesNull() {
+                this[this.tableUser.gameVictoriesColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

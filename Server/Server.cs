@@ -186,11 +186,13 @@ namespace Server {
                         if (query.Count() > 0) {
 
                             int id = query.ElementAt( 0 ).UserID;
+                            int victories = query.ElementAt( 0 ).gameVictories;
 
                             sender.sesionInfo.userID = id;
                             sender.sesionInfo.username = username;
                             sender.sesionInfo.state = State.Online;
                             sender.sesionInfo.chatroomID = 0;
+                            sender.sesionInfo.gameVictories = victories;
 
                             List<ClientState> users = new List<ClientState>();
                             foreach (ClientData client in server.clients) {
@@ -202,6 +204,7 @@ namespace Server {
 
                             confirmation.data.Add( "id", id );
                             confirmation.data.Add( "username", username );
+                            confirmation.data.Add( "victories", victories );
                             confirmation.data.Add( "chatrooms", server.chatRooms );
                             confirmation.data.Add( "users", users );
 
@@ -341,6 +344,11 @@ namespace Server {
 
                         server.SendPacket( sender, p );
 
+                    }
+                    break;
+                case PacketType.Game_Victory: {
+                        sender.sesionInfo.gameVictories++;
+                        server.PlayerWon( sender.sesionInfo.username );
                     }
                     break;
                 default:

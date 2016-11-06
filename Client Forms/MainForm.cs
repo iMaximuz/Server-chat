@@ -43,7 +43,24 @@ namespace Client_Forms {
         Stopwatch pingStopWatch;
         Point windowPosition;
         float elapsedBuzzTime = 0;
-        
+
+        String[] prefixes = {
+            "Newbie",
+            "Casual",
+            "Pro",
+            "Veteran",
+            "Master",
+            "God"};
+
+        Color[] prefixColors = {
+            Color.White,
+            Color.Gray,
+            Color.GreenYellow,
+            Color.Green,
+            Color.Gold,
+            Color.LightBlue
+        };
+
 
         public MainForm() {
             InitializeComponent();
@@ -99,12 +116,16 @@ namespace Client_Forms {
                 DispatchCommand( txtOut.Text );
             }
             else {
+                int prefix = client.sesionInfo.gameVictories;
+                prefix = prefix / 10;
                 if (client.isConnected) {
                     Packet p = new Packet( PacketType.Chat, client.ID );
                     p.data.Add( "chatroomid", client.sesionInfo.chatroomID );
                     p.data.Add( "name", client.sesionInfo.username );
                     bool encrypting = Properties.Settings.Default.EncryptMessages;
                     p.data.Add( "encrypted", encrypting );
+                    p.data.Add( "prefix", prefix );
+
                     if (encrypting) {
                         string encryptedMessage = Encryption.EncryptString( txtOut.Text, client.sesionInfo.username );
                         p.data.Add( "message", encryptedMessage );
@@ -117,6 +138,7 @@ namespace Client_Forms {
                     client.SendPacket( p );
 
                 }
+                txtIn.Write( this, "[" + prefixes[prefix] + "] ", prefixColors[prefix] );
                 txtIn.WriteLine( this, client.sesionInfo.username + ": " + txtOut.Text );
                 if (!client.isConnected)
                     txtIn.WriteLine( this, "ERROR: Your message could not be sent.", Color.Red);
@@ -281,9 +303,11 @@ namespace Client_Forms {
                             bool encrypted = (bool)p.data["encrypted"];
                             string message = (string)p.data["message"];
                             string name = (string)p.data["name"];
+                            int prefix = (int)p.data["prefix"];
                             if (encrypted) {
                                 message = Encryption.EncryptString( message, name );
                             }
+                            txtIn.Write( this, "[" + prefixes[prefix] + "] ", prefixColors[prefix] );
                             txtIn.WriteLine( this, name + ": " + message );
                         }
                         break;

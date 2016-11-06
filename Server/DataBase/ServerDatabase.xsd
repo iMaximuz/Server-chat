@@ -20,6 +20,7 @@
               <xs:element name="password" msprop:Generator_ColumnVarNameInTable="columnpassword" msprop:Generator_ColumnPropNameInRow="password" msprop:Generator_ColumnPropNameInTable="passwordColumn" msprop:Generator_UserColumnName="password" type="xs:string" minOccurs="0" />
               <xs:element name="admin" msprop:Generator_ColumnVarNameInTable="columnadmin" msprop:Generator_ColumnPropNameInRow="admin" msprop:Generator_ColumnPropNameInTable="adminColumn" msprop:Generator_UserColumnName="admin" type="xs:boolean" minOccurs="0" />
               <xs:element name="state" msprop:Generator_ColumnVarNameInTable="columnstate" msprop:Generator_ColumnPropNameInRow="state" msprop:Generator_ColumnPropNameInTable="stateColumn" msprop:Generator_UserColumnName="state" type="xs:int" minOccurs="0" />
+              <xs:element name="gameVictories" msprop:nullValue="0" msprop:Generator_ColumnPropNameInRow="gameVictories" msprop:Generator_ColumnVarNameInTable="columngameVictories" msprop:Generator_ColumnPropNameInTable="gameVictoriesColumn" msprop:Generator_UserColumnName="gameVictories" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

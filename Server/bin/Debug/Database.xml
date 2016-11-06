@@ -6,6 +6,7 @@
     <password>admin</password>
     <admin>true</admin>
     <state>0</state>
+    <gameVictories>21</gameVictories>
   </User>
   <User>
     <UserID>1</UserID>
@@ -27,6 +28,7 @@
     <password>123</password>
     <admin>false</admin>
     <state>0</state>
+    <gameVictories>24</gameVictories>
   </User>
   <ChatRoom>
     <ChatRoomID>0</ChatRoomID>
@@ -672,5 +674,20 @@ A
     <message>&#x8;M&#xB;&#xE;&#xC;&#x7;[</message>
     <encrypted>true</encrypted>
     <date>2016-11-05T03:12:39.9741739-06:00</date>
+  </PM>
+  <PM>
+    <SenderID>3</SenderID>
+    <ReceiverID>0</ReceiverID>
+    <message>&#x1A;&#x2;&#x3;
+&#xC;&#x1E;</message>
+    <encrypted>true</encrypted>
+    <date>2016-11-06T03:57:46.8675581-06:00</date>
+  </PM>
+  <PM>
+    <SenderID>3</SenderID>
+    <ReceiverID>0</ReceiverID>
+    <message>&#x8;M&#xB;&#xE;&#xC;&#x7;</message>
+    <encrypted>true</encrypted>
+    <date>2016-11-06T03:59:44.0673878-06:00</date>
   </PM>
 </ServerDatabase>

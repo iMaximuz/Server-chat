@@ -425,5 +425,17 @@ namespace Server {
 
         }
 
+        public void PlayerWon(string username ) {
+
+            ServerDatabase.UserDataTable userTable = database.User;
+
+            var query = from usuario in userTable where usuario.username == username select usuario;
+
+            if(query.Count() > 0) {
+                query.ElementAt( 0 ).gameVictories++;
+            }
+            database.WriteXml( dataBasePath );
+        }
+
     }
 }
