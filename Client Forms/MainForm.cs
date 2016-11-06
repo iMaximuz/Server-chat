@@ -224,6 +224,7 @@ namespace Client_Forms {
                             string username = (string)p.data["username"];
                             chatRooms = (List<ChatRoom>)p.data["chatrooms"];
                             loggedUsers = (List<ClientState>)p.data["users"];
+                            int victories = (int)p.data["victories"];
 
                             login.Close( this );
 
@@ -231,6 +232,7 @@ namespace Client_Forms {
                             client.sesionInfo.username = username;
                             client.sesionInfo.state = State.Online;
                             client.sesionInfo.chatroomID = 0;
+                            client.sesionInfo.gameVictories = victories;
 
                             lblUsername.ChangeText( this, username );
 
@@ -365,6 +367,15 @@ namespace Client_Forms {
                                 chats[key].ShowSafe( this );
                                 chats[key].DispatchPacket( p );
                             }
+                        }
+                    }
+                    break;
+                case PacketType.Game_Victory: {
+                        client.sesionInfo.gameVictories++;
+                        int prefix = client.sesionInfo.gameVictories;
+                        if (prefix % 10 == 0) {
+                            prefix = prefix / 10;
+                            txtIn.WriteLine( this, "Rank Up!! you are now a [" + prefixes[prefix] + "]", prefixColors[prefix] );
                         }
                     }
                     break;

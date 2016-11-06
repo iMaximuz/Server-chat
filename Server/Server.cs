@@ -349,6 +349,7 @@ namespace Server {
                 case PacketType.Game_Victory: {
                         sender.sesionInfo.gameVictories++;
                         server.PlayerWon( sender.sesionInfo.username );
+                        server.SendPacket( sender, p );
                     }
                     break;
                 default:

@@ -136,7 +136,7 @@ namespace Client_WPF {
                     if (client != null) {
                         Packet p = new Packet( PacketType.Game_Victory, client.ID );
                         client.SendPacket( p );
-                        client.sesionInfo.gameVictories++;
+                        //client.sesionInfo.gameVictories++;
                     }
                     if (state == GameState.ValidMove) {
                         yourTurn = false;
